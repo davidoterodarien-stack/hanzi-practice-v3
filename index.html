@@ -1285,6 +1285,7 @@ function App() {
       onAdmin: () => setScreen({ name: 'admin' }),
       onPrueba: (game) => setScreen({ name: 'prueba', game }),
       pruebaProgress: progress.prueba || {},
+      onRefuerzo: () => setScreen({ name: 'refuerzo' }),
       onDownload: () => downloadResumen(vocab, progress, lessons, playerName),
       playerName,
       onChangeName: () => { localStorage.removeItem(NAME_KEY); setPlayerName(''); },
@@ -1318,6 +1319,14 @@ function App() {
       savedResult: lastResults[key] || null,
       onSaveResult: (result) => setLastResult(screen.lessonId, screen.mode, result),
       onClearResult: () => clearLastResult(screen.lessonId, screen.mode),
+    });
+  } else if (screen.name === 'refuerzo') {
+    const missedWords = getMissedWords(progress);
+    const allWords = lessons.flatMap(id => vocab[id]);
+    content = html(RefuerzoSession, {
+      words: missedWords, allWords,
+      onBack: () => setScreen({ name: 'home' }),
+      playerName,
     });
   } else if (screen.name === 'admin') {
     content = html(AdminPanel, {
@@ -1362,7 +1371,7 @@ function App() {
 }
 
 // ----------------- Home -----------------
-function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson, onAdmin, onPrueba, pruebaProgress, onDownload, playerName, onChangeName }) {
+function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson, onAdmin, onPrueba, pruebaProgress, onDownload, onRefuerzo, playerName, onChangeName }) {
   return html(React.Fragment, null,
     html('div', { className: 'topbar' },
       html('div', { className: 'brand' },
@@ -1435,6 +1444,24 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             hasStar && html('div', { style: { fontSize: 20 } }, '⭐'),
           );
         })
+      ),
+      html('h2', { className: 'section-title' }, 'Reforcemos'),
+      html('button', {
+        style: {
+          display: 'flex', alignItems: 'center', gap: 14,
+          width: '100%', marginTop: 0, marginBottom: 12,
+          background: 'linear-gradient(135deg, var(--lacquer) 0%, var(--lacquer-dark) 100%)',
+          color: '#fff', border: 'none', borderRadius: 'var(--radius)',
+          padding: '16px 20px', cursor: 'pointer', textAlign: 'left',
+          boxShadow: '0 4px 16px rgba(193,67,43,0.28)',
+        },
+        onClick: onRefuerzo,
+      },
+        html('span', { style: { fontSize: 22 } }, '💪'),
+        html('span', null,
+          html('div', { style: { fontWeight: 800, fontSize: 15 } }, 'Práctica personalizada'),
+          html('div', { style: { fontSize: 12, opacity: 0.8, fontWeight: 600, marginTop: 2 } }, 'Ejercicios con tus palabras para reforzar'),
+        ),
       ),
       html('button', {
         className: 'download-resumen-btn',
@@ -1863,6 +1890,260 @@ function ResultScreen({ percent, mode, completed, reviewWords, onRetry, onHome, 
         html('button', { className: 'secondary-btn', onClick: onHome }, 'Volver al inicio'),
       ),
       html(ReviewList, { reviewWords })
+    )
+  );
+}
+
+// ----------------- Refuerzo: helpers -----------------
+function getMissedWords(progress) {
+  const all = [];
+  const lp = progress.lessons || {};
+  Object.keys(lp).forEach(lid => {
+    ['match', 'cards', 'quiz'].forEach(mode => {
+      (lp[lid][mode + '_missed'] || []).forEach(w => { if (w && w.hanzi) all.push(w); });
+    });
+  });
+  const pp = progress.prueba || {};
+  ['clas', 'dialogo', 'orden', 'audio'].forEach(game => {
+    (pp[game + '_missed'] || []).forEach(w => { if (w && w.hanzi) all.push(w); });
+  });
+  const seen = new Set();
+  return all.filter(w => {
+    if (seen.has(w.hanzi)) return false;
+    seen.add(w.hanzi);
+    return true;
+  });
+}
+
+// ----------------- Refuerzo: Tarjetas de estudio -----------------
+function StudyCardsPhase({ words, onDone, onBack }) {
+  const [deck] = useState(() => shuffle([...words]));
+  const [index, setIndex] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+  const w = deck[index];
+  const isLast = index === deck.length - 1;
+  return html(React.Fragment, null,
+    html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
+      html('div', { className: 'header-row' },
+        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('h1', null, 'Tarjetas de estudio'),
+        html('div', { className: 'flash-counter' }, (index + 1) + '/' + deck.length),
+      ),
+      html('div', { style: { padding: '16px 16px 0' } },
+        html('div', {
+          onClick: () => setFlipped(f => !f),
+          style: {
+            minHeight: 220, borderRadius: 20, background: '#fff',
+            boxShadow: 'var(--shadow-paper)', cursor: 'pointer',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+            padding: '32px 24px', gap: 14, marginBottom: 24, transition: 'background 0.2s',
+          }
+        },
+          !flipped
+            ? html(React.Fragment, null,
+                html('div', { className: 'hanzi-font', style: { fontSize: 72, color: 'var(--lacquer)', lineHeight: 1.1 } }, w.hanzi),
+                html('div', { style: { fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 8 } }, '👆 Tocá para ver'),
+              )
+            : html(React.Fragment, null,
+                html('div', { className: 'hanzi-font', style: { fontSize: 52, color: 'var(--lacquer)', lineHeight: 1.1, marginBottom: 4 } }, w.hanzi),
+                html('div', { style: { fontSize: 20, fontWeight: 800, color: 'var(--lacquer-dark)', letterSpacing: 1 } }, w.pinyin),
+                html('div', { style: { fontSize: 16, color: 'var(--ink-mid)', fontWeight: 600, textAlign: 'center', marginTop: 6 } }, w.es),
+              ),
+        ),
+        html('div', { style: { display: 'flex', gap: 12 } },
+          html('button', {
+            className: 'secondary-btn', style: { margin: 0, flex: 1 },
+            disabled: index === 0,
+            onClick: () => { setFlipped(false); setIndex(i => i - 1); },
+          }, '← Anterior'),
+          isLast
+            ? html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onDone }, '¡Listo! →')
+            : html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: () => { setFlipped(false); setIndex(i => i + 1); } }, 'Siguiente →'),
+        ),
+      ),
+    )
+  );
+}
+
+// ----------------- Refuerzo: Quiz genérico -----------------
+function buildRefuerzoMC(words, allWords, mode) {
+  return shuffle([...words]).map(w => {
+    let show, hint, correct, distractor;
+    if (mode === 'pinyin') { show = w.hanzi; hint = w.es; correct = w.pinyin; distractor = x => x.pinyin; }
+    else if (mode === 'hanzi') { show = w.es; hint = w.pinyin; correct = w.hanzi; distractor = x => x.hanzi; }
+    else { show = w.hanzi; hint = w.pinyin; correct = w.es; distractor = x => x.es; }
+    const pool = shuffle([...allWords].filter(x => x.hanzi !== w.hanzi && distractor(x) !== correct));
+    const options = shuffle([correct, ...pool.slice(0, 2).map(distractor)]);
+    return { show, hint, correct, options };
+  });
+}
+
+function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }) {
+  const [questions] = useState(() => buildRefuerzoMC(words, allWords, mode));
+  const [index, setIndex] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [correct, setCorrect] = useState(0);
+  const [correctRef, setCorrectRef] = useState(0);
+  const [missed, setMissed] = useState([]);
+  const [done, setDone] = useState(false);
+
+  const q = questions[index];
+  const isHanzi = mode === 'hanzi';
+  const isCorrect = selected !== null && selected === q.correct;
+
+  const handlePick = (opt) => {
+    if (selected !== null) return;
+    setSelected(opt);
+    const ok = opt === q.correct;
+    const nc = correct + (ok ? 1 : 0);
+    setCorrectRef(nc);
+    if (ok) setCorrect(nc);
+    else {
+      const orig = words.find(w => (mode === 'pinyin' || mode === 'es' ? w.hanzi : w.es) === q.show) || {};
+      setMissed(m => [...m, orig]);
+    }
+  };
+
+  const handleNext = () => {
+    const next = index + 1;
+    if (next >= questions.length) {
+      setDone(true);
+      if (onDone) onDone();
+    } else { setIndex(next); setSelected(null); }
+  };
+
+  if (done) return html(PruebaResult, {
+    percent: Math.round((correctRef / questions.length) * 100),
+    total: questions.length, correct: correctRef, missed,
+    onRetry: () => { setIndex(0); setSelected(null); setCorrect(0); setCorrectRef(0); setMissed([]); setDone(false); },
+    onBack, playerName,
+  });
+
+  return html(React.Fragment, null,
+    html('main', { style: { paddingTop: 18 } },
+      html('div', { className: 'header-row' },
+        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('h1', null, title),
+        html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
+      ),
+      html('div', { className: 'flash-score-row' },
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), correct + ' correctas'),
+      ),
+      html('div', { style: { padding: '16px 16px 0' } },
+        html('div', { style: { background: '#fff', borderRadius: 20, boxShadow: 'var(--shadow-paper)', padding: '28px 24px', textAlign: 'center', marginBottom: 20 } },
+          isHanzi
+            ? html(React.Fragment, null,
+                html('div', { style: { fontSize: 16, color: 'var(--ink-mid)', fontWeight: 600, marginBottom: 10 } }, q.show),
+                html('div', { style: { fontSize: 15, color: 'var(--lacquer-dark)', fontWeight: 700, letterSpacing: 0.5 } }, q.hint),
+              )
+            : html(React.Fragment, null,
+                html('div', { className: 'hanzi-font', style: { fontSize: 60, color: 'var(--lacquer)', lineHeight: 1.1, marginBottom: 8 } }, q.show),
+                html('div', { style: { fontSize: 14, color: 'var(--ink-soft)', fontWeight: 600 } }, q.hint),
+              ),
+        ),
+        selected !== null
+          ? html(React.Fragment, null,
+              html('div', { style: {
+                borderRadius: 16, padding: '18px 20px', textAlign: 'center', fontWeight: 800, marginBottom: 16,
+                background: isCorrect ? 'var(--jade-light)' : '#FDE4DD',
+                color: isCorrect ? 'var(--jade-dark)' : 'var(--lacquer-dark)',
+              }},
+                html('div', { style: { fontSize: 36 } }, isCorrect ? '✓' : '✗'),
+                html('div', { style: { fontSize: 18, marginTop: 4 } }, isCorrect ? '¡Correcto!' : 'Correcto: ' + q.correct),
+              ),
+              html('button', { className: 'primary-btn', onClick: handleNext },
+                index < questions.length - 1 ? 'Siguiente →' : 'Ver resultado'
+              ),
+            )
+          : html('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+              q.options.map((opt, i) => html('button', {
+                key: i, className: 'quiz-option',
+                style: {
+                  textAlign: 'center',
+                  fontFamily: isHanzi ? 'Noto Serif SC, serif' : 'Nunito, sans-serif',
+                  fontSize: isHanzi ? 24 : 15,
+                },
+                onClick: () => handlePick(opt),
+              }, String.fromCharCode(65 + i) + '.  ' + opt)),
+            ),
+      ),
+    )
+  );
+}
+
+// ----------------- Refuerzo: Session hub -----------------
+const REFUERZO_EXERCISES = [
+  { id: 'cards',  icon: '📖', label: 'Tarjetas de estudio',    sub: 'Repasá hanzi, pinyin y significado' },
+  { id: 'es',     icon: '🇪🇸', label: '¿Qué significa?',        sub: 'Ves el hanzi, elegís el significado' },
+  { id: 'pinyin', icon: '🔤', label: '¿Cómo suena?',            sub: 'Ves el hanzi, elegís el pinyin' },
+  { id: 'hanzi',  icon: '汉', label: '¿Cómo se escribe?',       sub: 'Ves el significado, elegís el hanzi' },
+  { id: 'match',  icon: '🔗', label: 'Emparejamiento',          sub: 'Une hanzi con su pinyin y significado' },
+];
+
+function RefuerzoSession({ words, allWords, onBack, playerName }) {
+  const [current, setCurrent] = useState(null);
+  const [done, setDone] = useState(new Set());
+
+  const markDone = (id) => { setDone(prev => new Set([...prev, id])); setCurrent(null); };
+  const goBack = () => setCurrent(null);
+  const noop = () => {};
+
+  if (current === 'cards') return html(StudyCardsPhase, { words, onDone: () => markDone('cards'), onBack: goBack });
+  if (current === 'es')    return html(RefuerzoMC, { words, allWords, mode: 'es',    title: '¿Qué significa?',   onDone: () => markDone('es'),    onBack: goBack, playerName });
+  if (current === 'pinyin') return html(RefuerzoMC, { words, allWords, mode: 'pinyin', title: '¿Cómo suena?',     onDone: () => markDone('pinyin'), onBack: goBack, playerName });
+  if (current === 'hanzi')  return html(RefuerzoMC, { words, allWords, mode: 'hanzi',  title: '¿Cómo se escribe?', onDone: () => markDone('hanzi'),  onBack: goBack, playerName });
+  if (current === 'match')  return html(MatchGame, {
+    words, lessonId: null,
+    onBack: goBack, onHome: goBack,
+    onFinish: () => markDone('match'),
+    nextAction: null, savedResult: null, onSaveResult: noop, onClearResult: noop,
+  });
+
+  // Hub
+  const allDone = done.size === REFUERZO_EXERCISES.length;
+  return html(React.Fragment, null,
+    html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
+      html('div', { className: 'header-row' },
+        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('div', null,
+          html('h1', null, 'Reforcemos'),
+          html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, 'Práctica personalizada · ' + words.length + ' palabras'),
+        ),
+        html('div', { style: { fontSize: 13, fontWeight: 800, color: done.size === REFUERZO_EXERCISES.length ? 'var(--jade)' : 'var(--ink-soft)' } },
+          done.size + '/' + REFUERZO_EXERCISES.length + ' ✓'
+        ),
+      ),
+      html('div', { style: { padding: '0 16px' } },
+        html('div', { style: { display: 'flex', gap: 6, marginBottom: 20 } },
+          REFUERZO_EXERCISES.map((e, i) => html('div', {
+            key: e.id,
+            style: {
+              flex: 1, height: 5, borderRadius: 4,
+              background: done.has(e.id) ? 'var(--jade)' : 'var(--paper-deep)',
+            }
+          }))
+        ),
+        allDone && html('div', { style: {
+          background: 'var(--jade-light)', borderRadius: 16, padding: '16px 20px',
+          textAlign: 'center', marginBottom: 20, fontWeight: 800, color: 'var(--jade-dark)',
+        }},
+          html('div', { style: { fontSize: 32 } }, '🎉'),
+          html('div', { style: { fontSize: 17, marginTop: 6 } }, '¡Completaste todos los ejercicios!'),
+        ),
+        REFUERZO_EXERCISES.map(e => html('button', {
+          key: e.id,
+          className: 'prueba-card',
+          style: { marginBottom: 10, opacity: 1 },
+          onClick: () => setCurrent(e.id),
+        },
+          html('div', { className: 'prueba-icon', style: { fontFamily: 'Noto Serif SC, serif', fontSize: e.id === 'hanzi' ? 22 : 20, background: done.has(e.id) ? 'var(--jade-light)' : 'var(--paper)' } }, e.icon),
+          html('div', { style: { flex: 1 } },
+            html('div', { className: 'mode-title' }, e.label),
+            html('div', { className: 'mode-sub' }, e.sub),
+          ),
+          done.has(e.id) && html('div', { style: { fontSize: 20, color: 'var(--jade)' } }, '✓'),
+        )),
+      ),
     )
   );
 }
