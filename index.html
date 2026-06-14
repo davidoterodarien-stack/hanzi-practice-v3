@@ -1732,10 +1732,19 @@ function FlashcardGame({ words, lessonId, onBack, onHome, onFinish, nextAction, 
 }
 
 // ----------------- Quiz -----------------
+const FLAG_RE = /^\p{Emoji_Presentation}/u;
+function sameCategory(a, b) {
+  // Si ambas tienen bandera (países) o ambas no tienen, son misma categoría
+  return FLAG_RE.test(a.es) === FLAG_RE.test(b.es);
+}
 function buildQuizQuestions(words) {
   const picked = shuffle(words).slice(0, Math.min(8, words.length));
   return picked.map(w => {
-    const distractors = shuffle(words.filter(x => x.es !== w.es)).slice(0, 3).map(x => x.es);
+    // Preferir distractores de la misma categoría (países con países, palabras con palabras)
+    const samePool = shuffle(words.filter(x => x.es !== w.es && sameCategory(w, x)));
+    const diffPool = shuffle(words.filter(x => x.es !== w.es && !sameCategory(w, x)));
+    const pool = [...samePool, ...diffPool];
+    const distractors = pool.slice(0, 3).map(x => x.es);
     const options = shuffle([w.es, ...distractors]);
     return { hanzi: w.hanzi, pinyin: w.pinyin, correct: w.es, options };
   });
@@ -2075,7 +2084,7 @@ function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }
 const REFUERZO_EXERCISES = [
   { id: 'cards',  icon: '📖', label: 'Tarjetas de estudio',    sub: 'Repasá hanzi, pinyin y significado' },
   { id: 'es',     icon: '🇪🇸', label: '¿Qué significa?',        sub: 'Ves el hanzi, elegís el significado' },
-  { id: 'pinyin', icon: '🔤', label: '¿Cómo suena?',            sub: 'Ves el hanzi, elegís el pinyin' },
+  { id: 'pinyin', icon: '🔤', label: '¿Cuál es el pinyin?',      sub: 'Ves el hanzi, elegís el pinyin' },
   { id: 'hanzi',  icon: '汉', label: '¿Cómo se escribe?',       sub: 'Ves el significado, elegís el hanzi' },
   { id: 'match',  icon: '🔗', label: 'Emparejamiento',          sub: 'Une hanzi con su pinyin y significado' },
 ];
@@ -2090,7 +2099,7 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
 
   if (current === 'cards') return html(StudyCardsPhase, { words, onDone: () => markDone('cards'), onBack: goBack });
   if (current === 'es')    return html(RefuerzoMC, { words, allWords, mode: 'es',    title: '¿Qué significa?',   onDone: () => markDone('es'),    onBack: goBack, playerName });
-  if (current === 'pinyin') return html(RefuerzoMC, { words, allWords, mode: 'pinyin', title: '¿Cómo suena?',     onDone: () => markDone('pinyin'), onBack: goBack, playerName });
+  if (current === 'pinyin') return html(RefuerzoMC, { words, allWords, mode: 'pinyin', title: '¿Cuál es el pinyin?',     onDone: () => markDone('pinyin'), onBack: goBack, playerName });
   if (current === 'hanzi')  return html(RefuerzoMC, { words, allWords, mode: 'hanzi',  title: '¿Cómo se escribe?', onDone: () => markDone('hanzi'),  onBack: goBack, playerName });
   if (current === 'match')  return html(MatchGame, {
     words, lessonId: null,
