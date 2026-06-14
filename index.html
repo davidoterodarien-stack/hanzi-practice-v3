@@ -715,7 +715,7 @@
 <script>
 const SUPABASE_URL = 'https://pwqwlfrlaxnybnkdauvk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable__0T0_tkgiEdgUGtwMoSHjA_xRd8btWE';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 </script>
 <script>
 const { useState, useEffect, useMemo } = React;
@@ -1219,7 +1219,7 @@ function App() {
 
   // Cargar vocab desde Supabase al iniciar (sin bloquear la UI)
   useEffect(() => {
-    supabase.from('vocabulary').select('lesson,hanzi,pinyin,es').then(({ data, error }) => {
+    db.from('vocabulary').select('lesson,hanzi,pinyin,es').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
         const remote = supabaseRowsToVocab(data);
         setVocab(remote);
@@ -1919,23 +1919,23 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
+    db.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoadingSession(false);
     });
-    const { data: listener } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    const { data: listener } = db.auth.onAuthStateChange((_e, s) => setSession(s));
     return () => listener.subscription.unsubscribe();
   }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoginStatus(null);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await db.auth.signInWithPassword({ email, password });
     if (error) setLoginStatus({ type: 'err', msg: error.message });
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     setStatus(null);
   };
 
@@ -1963,9 +1963,9 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
         if (rows.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron filas. Revisá el formato.' }); setUploading(false); return; }
 
         // Borrar vocab anterior y subir el nuevo
-        const { error: delErr } = await supabase.from('vocabulary').delete().neq('id', 0);
+        const { error: delErr } = await db.from('vocabulary').delete().neq('id', 0);
         if (delErr) throw delErr;
-        const { error: insErr } = await supabase.from('vocabulary').insert(rows);
+        const { error: insErr } = await db.from('vocabulary').insert(rows);
         if (insErr) throw insErr;
 
         const newVocab = supabaseRowsToVocab(rows);
