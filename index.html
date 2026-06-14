@@ -879,12 +879,12 @@ function shuffle(arr) {
   return a;
 }
 
-const LESSON_THEMES = {
+const LESSON_THEMES = Object.assign({
   "5": { name: "En el campus", icon: "宿" },
   "6": { name: "El clima y el tiempo", icon: "天" },
   "7": { name: "Presentaciones", icon: "介" },
   "8": { name: "La familia", icon: "家" },
-};
+}, JSON.parse(localStorage.getItem('hanzi-lesson-themes') || '{}'));
 
 // ----------------- Prueba data -----------------
 const CLASIFICADOR_QUESTIONS = [
@@ -1217,13 +1217,18 @@ function App() {
   const [screen, setScreen] = useState({ name: 'home' });
   const [lastResults, setLastResults] = useState({});
 
-  // Cargar vocab desde Supabase al iniciar (sin bloquear la UI)
+  // Cargar vocab y temas desde Supabase al iniciar (sin bloquear la UI)
   useEffect(() => {
     db.from('vocabulary').select('lesson,hanzi,pinyin,es').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
         const remote = supabaseRowsToVocab(data);
         setVocab(remote);
         localStorage.setItem(VOCAB_KEY, JSON.stringify(remote));
+      }
+    });
+    db.from('lesson_themes').select('lesson,name,icon').then(({ data, error }) => {
+      if (!error && data && data.length > 0) {
+        data.forEach(r => { LESSON_THEMES[r.lesson] = { name: r.name, icon: r.icon || r.lesson }; });
       }
     });
   }, []);
@@ -1918,6 +1923,40 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   const [status, setStatus] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+  // gestión de lecciones
+  const [renamingLesson, setRenamingLesson] = useState(null); // id de lección que se está renombrando
+  const [renameValue, setRenameValue] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(null); // id de lección a eliminar
+
+  const handleRenameLesson = (id) => {
+    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    setRenamingLesson(id);
+    setRenameValue(theme.name);
+  };
+
+  const handleRenameSave = async (id) => {
+    if (renameValue.trim()) {
+      const theme = { ...(LESSON_THEMES[id] || {}), name: renameValue.trim() };
+      LESSON_THEMES[id] = theme;
+      // Guardar en Supabase (para todos)
+      await db.from('lesson_themes').upsert({ lesson: id, name: theme.name, icon: theme.icon || id });
+      // Guardar en localStorage (fallback offline)
+      const saved = JSON.parse(localStorage.getItem('hanzi-lesson-themes') || '{}');
+      saved[id] = theme;
+      localStorage.setItem('hanzi-lesson-themes', JSON.stringify(saved));
+      setStatus({ type: 'ok', msg: '✅ Nombre de Lección ' + id + ' actualizado para todos.' });
+    }
+    setRenamingLesson(null);
+  };
+
+  const handleDeleteLesson = (id) => {
+    const newVocab = { ...vocab };
+    delete newVocab[id];
+    onVocabUpdate(newVocab);
+    setConfirmDelete(null);
+    setStatus({ type: 'ok', msg: 'Lección ' + id + ' eliminada.' });
+  };
+
   useEffect(() => {
     db.auth.getSession().then(({ data }) => {
       setSession(data.session);
@@ -1939,38 +1978,52 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     setStatus(null);
   };
 
-  // Subir CSV a Supabase
+  // nueva lección
+  const [newLessonId, setNewLessonId] = useState('');
+  const [newLessonName, setNewLessonName] = useState('');
+  const [newLessonIcon, setNewLessonIcon] = useState('');
+
+  // Agregar nueva lección desde CSV (3 columnas: hanzi, pinyin, significado)
   const handleCsvUpload = async () => {
     if (!csvFile) { setStatus({ type: 'err', msg: 'Seleccioná un archivo CSV primero.' }); return; }
+    if (!newLessonId.trim()) { setStatus({ type: 'err', msg: 'Ingresá el número o ID de la lección.' }); return; }
+    if (!newLessonName.trim()) { setStatus({ type: 'err', msg: 'Ingresá el nombre de la lección.' }); return; }
+    if (vocab[newLessonId.trim()]) { setStatus({ type: 'err', msg: 'Ya existe una lección con ese número. Eliminala primero o usá otro número.' }); return; }
     setUploading(true);
     setStatus(null);
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
+        const lid = newLessonId.trim();
         const lines = e.target.result.split('\n').map(l => l.trim()).filter(Boolean);
-        // Detectar separador: coma o punto y coma
         const sep = lines[0].includes(';') ? ';' : ',';
-        // Saltar header si empieza con texto no-hanzi
-        const startIdx = /^[a-zA-Z]/.test(lines[0]) ? 1 : 0;
+        // Saltar header si la primera celda no parece hanzi
+        const startIdx = /^[a-zA-Z]/.test(lines[0].split(sep)[0]) ? 1 : 0;
         const rows = [];
         lines.slice(startIdx).forEach(line => {
           const parts = line.split(sep).map(p => p.trim().replace(/^"|"$/g, ''));
-          // Espera: lesson, hanzi, pinyin, es
-          if (parts.length >= 4 && parts[1]) {
-            rows.push({ lesson: parts[0], hanzi: parts[1], pinyin: parts[2], es: parts[3] });
+          // 3 columnas: hanzi, pinyin, significado
+          if (parts.length >= 3 && parts[0]) {
+            rows.push({ lesson: lid, hanzi: parts[0], pinyin: parts[1], es: parts[2] });
           }
         });
-        if (rows.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron filas. Revisá el formato.' }); setUploading(false); return; }
+        if (rows.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron filas. El CSV debe tener 3 columnas: hanzi, pinyin, significado.' }); setUploading(false); return; }
 
-        // Borrar vocab anterior y subir el nuevo
-        const { error: delErr } = await db.from('vocabulary').delete().neq('id', 0);
-        if (delErr) throw delErr;
+        // Insertar en Supabase (sin borrar las demás lecciones)
         const { error: insErr } = await db.from('vocabulary').insert(rows);
         if (insErr) throw insErr;
 
-        const newVocab = supabaseRowsToVocab(rows);
+        // Guardar tema en Supabase
+        const icon = newLessonIcon.trim() || rows[0].hanzi[0];
+        await db.from('lesson_themes').upsert({ lesson: lid, name: newLessonName.trim(), icon });
+
+        // Actualizar estado local
+        LESSON_THEMES[lid] = { name: newLessonName.trim(), icon };
+        const newVocab = { ...vocab, [lid]: rows.map(r => ({ hanzi: r.hanzi, pinyin: r.pinyin, es: r.es })) };
         onVocabUpdate(newVocab);
-        setStatus({ type: 'ok', msg: '✅ ' + rows.length + ' palabras subidas a Supabase y disponibles para todos.' });
+
+        setStatus({ type: 'ok', msg: '✅ Lección ' + lid + ' "' + newLessonName.trim() + '" creada con ' + rows.length + ' palabras para todos.' });
+        setNewLessonId(''); setNewLessonName(''); setNewLessonIcon(''); setCsvFile(null);
       } catch (err) {
         setStatus({ type: 'err', msg: 'Error: ' + err.message });
       }
@@ -1979,18 +2032,17 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     reader.readAsText(csvFile);
   };
 
-  // Modo texto manual (igual que antes)
-  const handleApply = () => {
-    if (!text.trim()) { setStatus({ type: 'err', msg: 'Pegá el contenido del vocabulario antes de aplicar.' }); return; }
+  // Eliminar lección (local + Supabase)
+  const handleDeleteLesson = async (id) => {
     try {
-      const parsed = parseVocabText(text);
-      const wordCount = Object.values(parsed).reduce((acc, arr) => acc + arr.length, 0);
-      if (wordCount === 0) { setStatus({ type: 'err', msg: 'No se encontraron palabras.' }); return; }
-      onVocabUpdate(parsed);
-      setStatus({ type: 'ok', msg: 'Listo: ' + wordCount + ' palabras cargadas localmente.' });
-    } catch (err) {
-      setStatus({ type: 'err', msg: 'Error: ' + err.message });
-    }
+      await db.from('vocabulary').delete().eq('lesson', id);
+      await db.from('lesson_themes').delete().eq('lesson', id);
+    } catch (e) { /* silencioso si no estaba en Supabase */ }
+    const newVocab = { ...vocab };
+    delete newVocab[id];
+    onVocabUpdate(newVocab);
+    setConfirmDelete(null);
+    setStatus({ type: 'ok', msg: '✅ Lección ' + id + ' eliminada para todos.' });
   };
 
   const handleReset = () => {
@@ -2026,26 +2078,94 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
               html('button', { className: 'secondary-btn', style: { margin: 0, padding: '6px 14px', fontSize: 13 }, onClick: handleLogout }, 'Cerrar sesión'),
             ),
 
-            // Subir CSV
+            // ── Nueva lección desde CSV ──
             html('div', null,
-              html('label', null, '📂 Subir vocabulario (CSV)'),
+              html('label', null, '➕ Agregar nueva lección'),
               html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
-                'El archivo debe tener columnas: ', html('strong', null, 'leccion, hanzi, pinyin, significado'),
-                ' (separadas por coma o punto y coma). La primera fila puede ser el encabezado.'
+                'El CSV debe tener ', html('strong', null, '3 columnas: hanzi, pinyin, significado'),
+                '. La primera fila puede ser el encabezado. Se agrega sin borrar las lecciones existentes.'
               ),
               html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8, fontSize: 12 } },
-                'leccion,hanzi,pinyin,significado\n5,餐厅,cāntīng,comedor\n5,在,zài,estar en'
+                'hanzi,pinyin,significado\n餐厅,cāntīng,comedor\n在,zài,estar en'
+              ),
+              html('div', { style: { display: 'flex', gap: 8, marginBottom: 8 } },
+                html('input', {
+                  type: 'text', placeholder: 'Nº lección (ej: 9)',
+                  value: newLessonId, onChange: e => setNewLessonId(e.target.value),
+                  style: { width: 110, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Nunito, sans-serif' },
+                }),
+                html('input', {
+                  type: 'text', placeholder: 'Nombre (ej: Los colores)',
+                  value: newLessonName, onChange: e => setNewLessonName(e.target.value),
+                  style: { flex: 1, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Nunito, sans-serif' },
+                }),
+                html('input', {
+                  type: 'text', placeholder: '图 ícono',
+                  value: newLessonIcon, onChange: e => setNewLessonIcon(e.target.value),
+                  style: { width: 70, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Noto Serif SC, serif', textAlign: 'center' },
+                }),
               ),
               html('input', {
                 type: 'file', accept: '.csv',
-                style: { margin: '8px 0', width: '100%' },
+                style: { margin: '4px 0 10px', width: '100%' },
                 onChange: (e) => setCsvFile(e.target.files[0] || null),
               }),
               html('button', {
                 className: 'primary-btn',
                 onClick: handleCsvUpload,
-                disabled: uploading || !csvFile,
-              }, uploading ? '⏳ Subiendo...' : '⬆ Subir a Supabase (para todos)'),
+                disabled: uploading || !csvFile || !newLessonId.trim() || !newLessonName.trim(),
+              }, uploading ? '⏳ Creando lección...' : '➕ Crear lección para todos'),
+            ),
+
+            html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
+
+            // ── Gestión de lecciones ──
+            html('div', null,
+              html('label', null, '📚 Lecciones cargadas'),
+              html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
+                Object.keys(vocab).sort().map(id => {
+                  const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+                  const count = vocab[id].length;
+                  const isRenaming = renamingLesson === id;
+                  const isConfirmingDelete = confirmDelete === id;
+                  return html('div', {
+                    key: id,
+                    style: { background: '#fff', borderRadius: 12, padding: '10px 14px', boxShadow: 'var(--shadow-paper)', display: 'flex', flexDirection: 'column', gap: 6 }
+                  },
+                    html('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+                      html('span', { className: 'hanzi-font', style: { fontSize: 22, color: 'var(--lacquer)', minWidth: 32 } }, theme.icon || id),
+                      isRenaming
+                        ? html('input', {
+                            autoFocus: true,
+                            value: renameValue,
+                            onChange: e => setRenameValue(e.target.value),
+                            onKeyDown: e => { if (e.key === 'Enter') handleRenameSave(id); if (e.key === 'Escape') setRenamingLesson(null); },
+                            style: { flex: 1, padding: '6px 10px', borderRadius: 8, border: '2px solid var(--jade)', fontSize: 14, fontFamily: 'Nunito, sans-serif' }
+                          })
+                        : html('div', { style: { flex: 1 } },
+                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, 'Lección ' + id + ' · ' + theme.name),
+                            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, count + ' palabras'),
+                          ),
+                      isRenaming
+                        ? html(React.Fragment, null,
+                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, '✓ Guardar'),
+                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, '✕'),
+                          )
+                        : html(React.Fragment, null,
+                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 } }, '✏️'),
+                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18 } }, '🗑️'),
+                          ),
+                    ),
+                    isConfirmingDelete && html('div', { style: { background: '#FDE4DD', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
+                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar Lección ' + id + ' y sus ' + count + ' palabras?'),
+                      html('div', { style: { display: 'flex', gap: 6 } },
+                        html('button', { onClick: () => handleDeleteLesson(id), style: { background: 'var(--lacquer)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'Eliminar'),
+                        html('button', { onClick: () => setConfirmDelete(null), style: { background: 'none', border: '2px solid var(--paper-deep)', borderRadius: 8, padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, 'Cancelar'),
+                      ),
+                    ),
+                  );
+                })
+              ),
             ),
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
