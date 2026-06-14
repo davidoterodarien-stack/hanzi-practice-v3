@@ -1972,57 +1972,82 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   };
 
   // nueva lección
-  const [newLessonId, setNewLessonId] = useState('');
-  const [newLessonName, setNewLessonName] = useState('');
-  const [newLessonIcon, setNewLessonIcon] = useState('');
 
-  // Agregar nueva lección desde CSV (3 columnas: hanzi, pinyin, significado)
+  // Parsea CSV con formato: Lección, 汉字, Pīnyīn, Significado en español
+  // Agrupa automáticamente por número de lección
+  const parseCsvMultiLesson = (text) => {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    const sep = lines[0].includes(';') ? ';' : ',';
+    // Saltar encabezado si la primera celda empieza con "Lecci"
+    const startIdx = /^lecci/i.test(lines[0].split(sep)[0]) ? 1 : 0;
+    const lessons = {}; // { id: { name, icon, words: [] } }
+    lines.slice(startIdx).forEach(line => {
+      // Parsear respetando comillas
+      const parts = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') { inQ = !inQ; }
+        else if (c === sep && !inQ) { parts.push(cur.trim()); cur = ''; }
+        else { cur += c; }
+      }
+      parts.push(cur.trim());
+      if (parts.length < 4) return;
+      const [lecCol, hanzi, pinyin, es] = parts;
+      if (!hanzi || !pinyin || !es) return;
+      // Extraer número de lección: "Lección 3 — ..." → "3"
+      const numMatch = lecCol.match(/lecci[oó]n\s+(\d+)/i);
+      if (!numMatch) return;
+      const lid = numMatch[1];
+      if (!lessons[lid]) {
+        // Nombre: lo que viene después de "—" en la primera aparición
+        const nameMatch = lecCol.match(/[—-]\s*(.+)/);
+        const rawName = nameMatch ? nameMatch[1].trim() : ('Lección ' + lid);
+        // Ícono: primer carácter chino del nombre
+        const iconMatch = rawName.match(/[一-鿿]/);
+        lessons[lid] = { name: rawName, icon: iconMatch ? iconMatch[0] : lid, words: [] };
+      }
+      lessons[lid].words.push({ lesson: lid, hanzi, pinyin, es });
+    });
+    return lessons;
+  };
+
+  // Subir CSV multi-lección al Supabase
   const handleCsvUpload = async () => {
     if (!csvFile) { setStatus({ type: 'err', msg: 'Seleccioná un archivo CSV primero.' }); return; }
-    if (!newLessonId.trim()) { setStatus({ type: 'err', msg: 'Ingresá el número o ID de la lección.' }); return; }
-    if (!newLessonName.trim()) { setStatus({ type: 'err', msg: 'Ingresá el nombre de la lección.' }); return; }
-    if (vocab[newLessonId.trim()]) { setStatus({ type: 'err', msg: 'Ya existe una lección con ese número. Eliminala primero o usá otro número.' }); return; }
     setUploading(true);
     setStatus(null);
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
-        const lid = newLessonId.trim();
-        const lines = e.target.result.split('\n').map(l => l.trim()).filter(Boolean);
-        const sep = lines[0].includes(';') ? ';' : ',';
-        // Saltar header si la primera celda no parece hanzi
-        const startIdx = /^[a-zA-Z]/.test(lines[0].split(sep)[0]) ? 1 : 0;
-        const rows = [];
-        lines.slice(startIdx).forEach(line => {
-          const parts = line.split(sep).map(p => p.trim().replace(/^"|"$/g, ''));
-          // 3 columnas: hanzi, pinyin, significado
-          if (parts.length >= 3 && parts[0]) {
-            rows.push({ lesson: lid, hanzi: parts[0], pinyin: parts[1], es: parts[2] });
-          }
-        });
-        if (rows.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron filas. El CSV debe tener 3 columnas: hanzi, pinyin, significado.' }); setUploading(false); return; }
+        const lessons = parseCsvMultiLesson(e.target.result);
+        const lessonIds = Object.keys(lessons);
+        if (lessonIds.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron lecciones. Verificá el formato del CSV.' }); setUploading(false); return; }
 
-        // Insertar en Supabase (sin borrar las demás lecciones)
-        const { error: insErr } = await db.from('vocabulary').insert(rows);
-        if (insErr) throw insErr;
+        let totalWords = 0;
+        const newVocab = { ...vocab };
 
-        // Guardar tema en Supabase
-        const icon = newLessonIcon.trim() || rows[0].hanzi[0];
-        await db.from('lesson_themes').upsert({ lesson: lid, name: newLessonName.trim(), icon });
+        for (const lid of lessonIds) {
+          const { name, icon, words } = lessons[lid];
+          // Borrar palabras existentes de esa lección en Supabase antes de insertar
+          await db.from('vocabulary').delete().eq('lesson', lid);
+          const { error: insErr } = await db.from('vocabulary').insert(words);
+          if (insErr) throw insErr;
+          await db.from('lesson_themes').upsert({ lesson: lid, name, icon });
+          LESSON_THEMES[lid] = { name, icon };
+          newVocab[lid] = words.map(w => ({ hanzi: w.hanzi, pinyin: w.pinyin, es: w.es }));
+          totalWords += words.length;
+        }
 
-        // Actualizar estado local
-        LESSON_THEMES[lid] = { name: newLessonName.trim(), icon };
-        const newVocab = { ...vocab, [lid]: rows.map(r => ({ hanzi: r.hanzi, pinyin: r.pinyin, es: r.es })) };
         onVocabUpdate(newVocab);
-
-        setStatus({ type: 'ok', msg: '✅ Lección ' + lid + ' "' + newLessonName.trim() + '" creada con ' + rows.length + ' palabras para todos.' });
-        setNewLessonId(''); setNewLessonName(''); setNewLessonIcon(''); setCsvFile(null);
+        setStatus({ type: 'ok', msg: '✅ ' + lessonIds.length + ' lección(es) cargadas con ' + totalWords + ' palabras en total para todos los usuarios.' });
+        setCsvFile(null);
       } catch (err) {
         setStatus({ type: 'err', msg: 'Error: ' + err.message });
       }
       setUploading(false);
     };
-    reader.readAsText(csvFile);
+    reader.readAsText(csvFile, 'UTF-8');
   };
 
   // Eliminar lección (local + Supabase)
@@ -2086,41 +2111,25 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             // ── Nueva lección desde CSV ──
             html('div', null,
-              html('label', null, '➕ Agregar nueva lección'),
+              html('label', null, '➕ Cargar lecciones desde CSV'),
               html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
-                'El CSV debe tener ', html('strong', null, '3 columnas: hanzi, pinyin, significado'),
-                '. La primera fila puede ser el encabezado. Se agrega sin borrar las lecciones existentes.'
+                'El archivo puede contener ', html('strong', null, 'una o varias lecciones'),
+                '. Las lecciones y nombres se detectan automáticamente. Si ya existe una lección con el mismo número, se reemplaza.'
               ),
-              html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8, fontSize: 12 } },
-                'hanzi,pinyin,significado\n餐厅,cāntīng,comedor\n在,zài,estar en'
-              ),
-              html('div', { style: { display: 'flex', gap: 8, marginBottom: 8 } },
-                html('input', {
-                  type: 'text', placeholder: 'Nº lección (ej: 9)',
-                  value: newLessonId, onChange: e => setNewLessonId(e.target.value),
-                  style: { width: 110, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Nunito, sans-serif' },
-                }),
-                html('input', {
-                  type: 'text', placeholder: 'Nombre (ej: Los colores)',
-                  value: newLessonName, onChange: e => setNewLessonName(e.target.value),
-                  style: { flex: 1, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Nunito, sans-serif' },
-                }),
-                html('input', {
-                  type: 'text', placeholder: '图 ícono',
-                  value: newLessonIcon, onChange: e => setNewLessonIcon(e.target.value),
-                  style: { width: 70, padding: '10px 12px', borderRadius: 10, border: '2px solid var(--paper-deep)', fontSize: 14, fontFamily: 'Noto Serif SC, serif', textAlign: 'center' },
-                }),
+              html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8, fontSize: 12, whiteSpace: 'pre' } },
+                'Lección,Nº,Pīnyīn,汉字,Tipo,Significado en español\nLección 1 — 你好 (Nǐ hǎo),1,nǐ,你,Pr.,tú\nLección 1 — 你好 (Nǐ hǎo),2,hǎo,好,A,bien / bueno'
               ),
               html('input', {
                 type: 'file', accept: '.csv',
-                style: { margin: '4px 0 10px', width: '100%' },
+                style: { margin: '8px 0 10px', width: '100%' },
                 onChange: (e) => setCsvFile(e.target.files[0] || null),
               }),
+              csvFile && html('p', { className: 'admin-note', style: { margin: '0 0 8px', color: 'var(--ink-mid)' } }, '📄 ' + csvFile.name),
               html('button', {
                 className: 'primary-btn',
                 onClick: handleCsvUpload,
-                disabled: uploading || !csvFile || !newLessonId.trim() || !newLessonName.trim(),
-              }, uploading ? '⏳ Creando lección...' : '➕ Crear lección para todos'),
+                disabled: uploading || !csvFile,
+              }, uploading ? '⏳ Subiendo lecciones...' : '➕ Subir a Supabase para todos'),
             ),
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
