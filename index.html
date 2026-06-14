@@ -2185,6 +2185,35 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             ),
           ),
 
+      // ── Reiniciar progreso (visible para todos) ──
+      html('div', { style: { borderTop: '1px solid var(--paper-deep)', paddingTop: 16, marginTop: 8 } },
+        html('label', null, '🔄 Mi progreso'),
+        html('p', { className: 'admin-note', style: { margin: '6px 0 12px' } },
+          'Borra todo tu progreso local: puntajes, estrellas, nombre y errores guardados. No afecta a otros usuarios.'
+        ),
+        confirmDelete === 'reset'
+          ? html('div', { style: { background: '#FDE4DD', borderRadius: 12, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 } },
+              html('span', { style: { fontWeight: 800, fontSize: 14, color: 'var(--lacquer-dark)' } }, '¿Seguro que querés borrar todo tu progreso? Esta acción no se puede deshacer.'),
+              html('div', { style: { display: 'flex', gap: 8 } },
+                html('button', {
+                  className: 'primary-btn', style: { margin: 0, background: 'var(--lacquer)' },
+                  onClick: () => {
+                    localStorage.removeItem(STORAGE_KEY);
+                    localStorage.removeItem(NAME_KEY);
+                    setConfirmDelete(null);
+                    setTimeout(() => window.location.reload(), 300);
+                  }
+                }, '🗑️ Sí, borrar todo'),
+                html('button', { className: 'secondary-btn', style: { margin: 0 }, onClick: () => setConfirmDelete(null) }, 'Cancelar'),
+              ),
+            )
+          : html('button', {
+              className: 'secondary-btn',
+              style: { borderColor: 'var(--lacquer)', color: 'var(--lacquer)' },
+              onClick: () => setConfirmDelete('reset'),
+            }, '🔄 Reiniciar mi progreso'),
+      ),
+
       status && html('div', { className: 'admin-status ' + (status.type === 'ok' ? 'ok' : 'err') }, status.msg),
     )
   );
