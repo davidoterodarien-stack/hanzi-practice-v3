@@ -1949,13 +1949,6 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     setRenamingLesson(null);
   };
 
-  const handleDeleteLesson = (id) => {
-    const newVocab = { ...vocab };
-    delete newVocab[id];
-    onVocabUpdate(newVocab);
-    setConfirmDelete(null);
-    setStatus({ type: 'ok', msg: 'Lección ' + id + ' eliminada.' });
-  };
 
   useEffect(() => {
     db.auth.getSession().then(({ data }) => {
