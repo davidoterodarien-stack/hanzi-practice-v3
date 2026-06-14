@@ -2038,6 +2038,19 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     setStatus({ type: 'ok', msg: '✅ Lección ' + id + ' eliminada para todos.' });
   };
 
+  const handleApply = () => {
+    if (!text.trim()) { setStatus({ type: 'err', msg: 'Pegá el contenido del vocabulario antes de aplicar.' }); return; }
+    try {
+      const parsed = parseVocabText(text);
+      const wordCount = Object.values(parsed).reduce((acc, arr) => acc + arr.length, 0);
+      if (wordCount === 0) { setStatus({ type: 'err', msg: 'No se encontraron palabras.' }); return; }
+      onVocabUpdate(parsed);
+      setStatus({ type: 'ok', msg: 'Listo: ' + wordCount + ' palabras cargadas localmente.' });
+    } catch (err) {
+      setStatus({ type: 'err', msg: 'Error: ' + err.message });
+    }
+  };
+
   const handleReset = () => {
     localStorage.removeItem(VOCAB_KEY);
     setStatus({ type: 'ok', msg: 'Vocabulario original restaurado.' });
