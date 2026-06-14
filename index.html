@@ -1222,8 +1222,10 @@ function App() {
     db.from('vocabulary').select('lesson,hanzi,pinyin,es').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
         const remote = supabaseRowsToVocab(data);
-        setVocab(remote);
-        localStorage.setItem(VOCAB_KEY, JSON.stringify(remote));
+        // Merge: DEFAULT_VOCAB base + Supabase encima (Supabase gana si hay conflicto)
+        const merged = { ...DEFAULT_VOCAB, ...remote };
+        setVocab(merged);
+        localStorage.setItem(VOCAB_KEY, JSON.stringify(merged));
       }
     });
     db.from('lesson_themes').select('lesson,name,icon').then(({ data, error }) => {
