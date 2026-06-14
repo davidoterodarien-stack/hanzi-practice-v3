@@ -711,6 +711,12 @@
 
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://pwqwlfrlaxnybnkdauvk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable__0T0_tkgiEdgUGtwMoSHjA_xRd8btWE';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+</script>
 <script>
 const { useState, useEffect, useMemo } = React;
 const { createRoot } = ReactDOM;
@@ -1210,6 +1216,17 @@ function App() {
   const [progress, setProgress] = useState(loadProgress);
   const [screen, setScreen] = useState({ name: 'home' });
   const [lastResults, setLastResults] = useState({});
+
+  // Cargar vocab desde Supabase al iniciar (sin bloquear la UI)
+  useEffect(() => {
+    supabase.from('vocabulary').select('lesson,hanzi,pinyin,es').then(({ data, error }) => {
+      if (!error && data && data.length > 0) {
+        const remote = supabaseRowsToVocab(data);
+        setVocab(remote);
+        localStorage.setItem(VOCAB_KEY, JSON.stringify(remote));
+      }
+    });
+  }, []);
   const [playerName, setPlayerName] = useState(() => localStorage.getItem(NAME_KEY) || '');
 
   useEffect(() => { saveProgress(progress); }, [progress]);
@@ -1877,37 +1894,114 @@ function parseVocabText(text) {
   return result;
 }
 
-function AdminPanel({ vocab, onBack, onVocabUpdate }) {
-  const [text, setText] = useState('');
-  const [status, setStatus] = useState(null);
+// Helper: convierte filas de Supabase al formato { "5": [{hanzi,pinyin,es},...], ... }
+function supabaseRowsToVocab(rows) {
+  const vocab = {};
+  rows.forEach(r => {
+    if (!vocab[r.lesson]) vocab[r.lesson] = [];
+    vocab[r.lesson].push({ hanzi: r.hanzi, pinyin: r.pinyin, es: r.es });
+  });
+  return vocab;
+}
 
+function AdminPanel({ vocab, onBack, onVocabUpdate }) {
+  const [session, setSession] = useState(null);
+  const [loadingSession, setLoadingSession] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginStatus, setLoginStatus] = useState(null);
+
+  // texto manual (modo legacy)
+  const [text, setText] = useState('');
+  // archivo CSV
+  const [csvFile, setCsvFile] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setLoadingSession(false);
+    });
+    const { data: listener } = supabase.auth.onAuthStateChange((_e, s) => setSession(s));
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginStatus(null);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) setLoginStatus({ type: 'err', msg: error.message });
+  };
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    setStatus(null);
+  };
+
+  // Subir CSV a Supabase
+  const handleCsvUpload = async () => {
+    if (!csvFile) { setStatus({ type: 'err', msg: 'Seleccioná un archivo CSV primero.' }); return; }
+    setUploading(true);
+    setStatus(null);
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const lines = e.target.result.split('\n').map(l => l.trim()).filter(Boolean);
+        // Detectar separador: coma o punto y coma
+        const sep = lines[0].includes(';') ? ';' : ',';
+        // Saltar header si empieza con texto no-hanzi
+        const startIdx = /^[a-zA-Z]/.test(lines[0]) ? 1 : 0;
+        const rows = [];
+        lines.slice(startIdx).forEach(line => {
+          const parts = line.split(sep).map(p => p.trim().replace(/^"|"$/g, ''));
+          // Espera: lesson, hanzi, pinyin, es
+          if (parts.length >= 4 && parts[1]) {
+            rows.push({ lesson: parts[0], hanzi: parts[1], pinyin: parts[2], es: parts[3] });
+          }
+        });
+        if (rows.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron filas. Revisá el formato.' }); setUploading(false); return; }
+
+        // Borrar vocab anterior y subir el nuevo
+        const { error: delErr } = await supabase.from('vocabulary').delete().neq('id', 0);
+        if (delErr) throw delErr;
+        const { error: insErr } = await supabase.from('vocabulary').insert(rows);
+        if (insErr) throw insErr;
+
+        const newVocab = supabaseRowsToVocab(rows);
+        onVocabUpdate(newVocab);
+        setStatus({ type: 'ok', msg: '✅ ' + rows.length + ' palabras subidas a Supabase y disponibles para todos.' });
+      } catch (err) {
+        setStatus({ type: 'err', msg: 'Error: ' + err.message });
+      }
+      setUploading(false);
+    };
+    reader.readAsText(csvFile);
+  };
+
+  // Modo texto manual (igual que antes)
   const handleApply = () => {
-    if (!text.trim()) {
-      setStatus({ type: 'err', msg: 'Pegá el contenido del vocabulario antes de aplicar.' });
-      return;
-    }
+    if (!text.trim()) { setStatus({ type: 'err', msg: 'Pegá el contenido del vocabulario antes de aplicar.' }); return; }
     try {
       const parsed = parseVocabText(text);
-      const lessonCount = Object.keys(parsed).length;
       const wordCount = Object.values(parsed).reduce((acc, arr) => acc + arr.length, 0);
-      if (wordCount === 0) {
-        setStatus({ type: 'err', msg: 'No se encontraron palabras. Revisá el formato (carácter | pinyin | significado).' });
-        return;
-      }
+      if (wordCount === 0) { setStatus({ type: 'err', msg: 'No se encontraron palabras.' }); return; }
       onVocabUpdate(parsed);
-      setStatus({ type: 'ok', msg: 'Listo: se cargaron ' + wordCount + ' palabras en ' + lessonCount + ' lecciones.' });
-    } catch (e) {
-      setStatus({ type: 'err', msg: 'Error al procesar el texto: ' + e.message });
+      setStatus({ type: 'ok', msg: 'Listo: ' + wordCount + ' palabras cargadas localmente.' });
+    } catch (err) {
+      setStatus({ type: 'err', msg: 'Error: ' + err.message });
     }
   };
 
   const handleReset = () => {
     localStorage.removeItem(VOCAB_KEY);
-    setStatus({ type: 'ok', msg: 'Se restauró el vocabulario original.' });
+    setStatus({ type: 'ok', msg: 'Vocabulario original restaurado.' });
     setTimeout(() => window.location.reload(), 600);
   };
 
   const totalWords = Object.values(vocab).reduce((acc, arr) => acc + arr.length, 0);
+
+  if (loadingSession) return html('main', { style: { paddingTop: 40, textAlign: 'center' } }, '⏳ Cargando...');
 
   return html('main', { style: { paddingTop: '18px' } },
     html('div', { className: 'header-row' },
@@ -1915,29 +2009,70 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       html('h1', null, 'Administrar'),
     ),
     html('div', { className: 'admin-panel' },
+
+      // ── Info vocab actual ──
       html('div', null,
         html('label', null, 'Vocabulario actual'),
         html('p', { className: 'admin-note', style: { marginTop: 6 } },
-          totalWords + ' palabras cargadas en ' + Object.keys(vocab).length + ' lecciones.'
+          totalWords + ' palabras en ' + Object.keys(vocab).length + ' lecciones.'
         )
       ),
-      html('div', null,
-        html('label', null, 'Cargar nuevo vocabulario'),
-        html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
-          'Pegá el texto extraído de tu Word/PDF. Formato esperado por línea: "Lección N" para iniciar un capítulo, y luego filas con carácter, pinyin y significado separados por tabulación o por "|". Ejemplo:'
-        ),
-        html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8 } },
-          'Lección 5' + String.fromCharCode(10) + '餐厅 | cāntīng | comedor' + String.fromCharCode(10) + '在 | zài | estar, en'
-        ),
-        html('textarea', {
-          value: text,
-          onChange: (e) => setText(e.target.value),
-          placeholder: 'Pegá aquí el texto del vocabulario...'
-        })
-      ),
+
+      // ── Panel admin (solo si hay sesión) ──
+      session
+        ? html(React.Fragment, null,
+            html('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--jade-light)', borderRadius: 12, padding: '10px 14px' } },
+              html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--jade-dark)' } }, '🔓 Admin: ' + session.user.email),
+              html('button', { className: 'secondary-btn', style: { margin: 0, padding: '6px 14px', fontSize: 13 }, onClick: handleLogout }, 'Cerrar sesión'),
+            ),
+
+            // Subir CSV
+            html('div', null,
+              html('label', null, '📂 Subir vocabulario (CSV)'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
+                'El archivo debe tener columnas: ', html('strong', null, 'leccion, hanzi, pinyin, significado'),
+                ' (separadas por coma o punto y coma). La primera fila puede ser el encabezado.'
+              ),
+              html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8, fontSize: 12 } },
+                'leccion,hanzi,pinyin,significado\n5,餐厅,cāntīng,comedor\n5,在,zài,estar en'
+              ),
+              html('input', {
+                type: 'file', accept: '.csv',
+                style: { margin: '8px 0', width: '100%' },
+                onChange: (e) => setCsvFile(e.target.files[0] || null),
+              }),
+              html('button', {
+                className: 'primary-btn',
+                onClick: handleCsvUpload,
+                disabled: uploading || !csvFile,
+              }, uploading ? '⏳ Subiendo...' : '⬆ Subir a Supabase (para todos)'),
+            ),
+
+            html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
+
+            // Modo texto manual
+            html('div', null,
+              html('label', null, '✏️ Cargar vocabulario (texto manual)'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Solo afecta tu navegador local.'),
+              html('textarea', { value: text, onChange: (e) => setText(e.target.value), placeholder: 'Pegá aquí el texto...' }),
+              html('button', { className: 'secondary-btn', onClick: handleApply }, 'Aplicar localmente'),
+            ),
+            html('button', { className: 'secondary-btn', onClick: handleReset }, 'Restaurar vocabulario original'),
+          )
+
+        // ── Login ──
+        : html('div', null,
+            html('label', null, '🔐 Acceso admin'),
+            html('p', { className: 'admin-note', style: { marginBottom: 14 } }, 'Solo el administrador puede cargar vocabulario para todos los usuarios.'),
+            html('form', { onSubmit: handleLogin, style: { display: 'flex', flexDirection: 'column', gap: 10 } },
+              html('input', { type: 'email', placeholder: 'Email', value: email, onChange: e => setEmail(e.target.value), style: { padding: '12px 14px', borderRadius: 12, border: '2px solid var(--paper-deep)', fontSize: 15, fontFamily: 'Nunito, sans-serif' } }),
+              html('input', { type: 'password', placeholder: 'Contraseña', value: password, onChange: e => setPassword(e.target.value), style: { padding: '12px 14px', borderRadius: 12, border: '2px solid var(--paper-deep)', fontSize: 15, fontFamily: 'Nunito, sans-serif' } }),
+              loginStatus && html('div', { className: 'admin-status err' }, loginStatus.msg),
+              html('button', { type: 'submit', className: 'primary-btn', style: { marginTop: 4 } }, 'Iniciar sesión'),
+            ),
+          ),
+
       status && html('div', { className: 'admin-status ' + (status.type === 'ok' ? 'ok' : 'err') }, status.msg),
-      html('button', { className: 'primary-btn', onClick: handleApply }, 'Aplicar cambios'),
-      html('button', { className: 'secondary-btn', onClick: handleReset }, 'Restaurar vocabulario original'),
     )
   );
 }
