@@ -1462,7 +1462,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
       ),
       html('h2', { className: 'section-title' }, 'Elegí una lección'),
       html('div', { className: 'lesson-grid' },
-        lessons.map(id => {
+        lessons.filter(id => id !== '9' && id !== '10').map(id => {
           const words = vocab[id];
           const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: words[0]?.hanzi?.[0] || '汉' };
           const lp = progress.lessons[id] || {};
@@ -1482,6 +1482,47 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             ),
           );
         })
+      ),
+
+      // ── Módulos especiales ──
+      vocab['9'] && html(React.Fragment, null,
+        html('h2', { className: 'section-title' }, 'Aprende los países'),
+        html('button', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: 14, width: '100%', marginBottom: 14,
+            background: '#fff', border: '2px solid var(--paper-deep)', borderRadius: 'var(--radius)',
+            padding: '14px 18px', cursor: 'pointer', textAlign: 'left',
+            boxShadow: 'var(--shadow-paper)',
+          },
+          onClick: () => onSelectLesson('9'),
+        },
+          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '国'),
+          html('div', null,
+            html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Nombres de países en chino'),
+            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } },
+              (vocab['9'] ? vocab['9'].length : 0) + ' países · Latinoamérica, Europa, Asia'
+            ),
+          ),
+        ),
+      ),
+
+      vocab['10'] && html(React.Fragment, null,
+        html('h2', { className: 'section-title' }, 'Aprende los números'),
+        html('button', {
+          style: {
+            display: 'flex', alignItems: 'center', gap: 14, width: '100%', marginBottom: 14,
+            background: '#fff', border: '2px solid var(--paper-deep)', borderRadius: 'var(--radius)',
+            padding: '14px 18px', cursor: 'pointer', textAlign: 'left',
+            boxShadow: 'var(--shadow-paper)',
+          },
+          onClick: () => onSelectLesson('10'),
+        },
+          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '数'),
+          html('div', null,
+            html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Del 0 al 100 en chino'),
+            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, '0 al 10 · decenas del 20 al 100'),
+          ),
+        ),
       ),
       html('h2', { className: 'section-title' }, '¿Cuánto aprendiste?'),
       html('div', { className: 'prueba-grid' },
