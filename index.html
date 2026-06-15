@@ -1692,7 +1692,7 @@ const ROUND_SIZE = 6;
 
 function buildMatchRound(words) {
   const picked = shuffle(words).slice(0, Math.min(ROUND_SIZE, words.length));
-  const left = picked.map((w, i) => ({ id: i + '-h', pairId: i, kind: 'hanzi', text: w.hanzi }));
+  const left = picked.map((w, i) => ({ id: i + '-h', pairId: i, kind: 'hanzi', text: w.hanzi, es: w.es }));
   const right = picked.map((w, i) => ({ id: i + '-p', pairId: i, kind: 'pinyin', text: w.pinyin, es: w.es }));
   return { left: shuffle(left), right: shuffle(right) };
 }
@@ -1788,6 +1788,7 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       onClick: () => handleTap(tile),
       disabled: isMatched,
     },
+      tile.kind === 'hanzi' && html(FlagImg, { es: tile.es, size: 20 }),
       tile.text,
       tile.kind === 'pinyin' && html('span', { className: 'es-tooltip' }, tile.es)
     );
@@ -1903,6 +1904,23 @@ function FlashcardGame({ words, lessonId, onBack, onHome, onFinish, nextAction, 
 
 // ----------------- Quiz -----------------
 const FLAG_RE = /^\p{Emoji_Presentation}/u;
+const FLAG_CODE_RE = /^([\u{1F1E0}-\u{1F1FF}]{2})/u;
+function getFlagCode(es) {
+  if (!es) return null;
+  const m = es.match(FLAG_CODE_RE);
+  if (!m) return null;
+  return [...m[1]].map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1A6)).join('').toLowerCase();
+}
+function stripFlag(es) {
+  return es ? es.replace(/^[\u{1F1E0}-\u{1F1FF}]{2}\s*/u, '') : es;
+}
+function FlagImg({ es, size }) {
+  const code = getFlagCode(es);
+  if (!code) return null;
+  const h = size || 18;
+  const w = Math.round(h * 1.33);
+  return html('img', { src: 'https://flagcdn.com/' + w + 'x' + h + '/' + code + '.png', style: { borderRadius: 2, verticalAlign: 'middle', marginRight: 6 }, alt: code.toUpperCase() });
+}
 function sameCategory(a, b) {
   // Si ambas tienen bandera (países) o ambas no tienen, son misma categoría
   return FLAG_RE.test(a.es) === FLAG_RE.test(b.es);
@@ -2008,7 +2026,10 @@ function QuizGame({ words, lessonId, onBack, onHome, onFinish, nextAction, saved
             if (opt === q.correct) cls += ' correct';
             else if (opt === selectedOpt) cls += ' wrong';
           }
-          return html('button', { key: opt, className: cls, onClick: () => handlePick(opt) }, opt);
+          return html('button', { key: opt, className: cls, onClick: () => handlePick(opt), style: { display: 'flex', alignItems: 'center' } },
+            html(FlagImg, { es: opt, size: 18 }),
+            stripFlag(opt)
+          );
         })
       )
     )
