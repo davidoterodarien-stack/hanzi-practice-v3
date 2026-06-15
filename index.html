@@ -1093,11 +1093,24 @@ function downloadResumen(vocab, progress, lessons, playerName) {
 }
 
 // ----------------- Prueba: Audio -----------------
+let _zhVoice = null;
+function getZhVoice() {
+  if (_zhVoice) return _zhVoice;
+  const voices = window.speechSynthesis.getVoices();
+  _zhVoice = voices.find(v => v.lang === 'zh-CN') ||
+             voices.find(v => v.lang.startsWith('zh')) ||
+             null;
+  return _zhVoice;
+}
+window.speechSynthesis.onvoiceschanged = () => { _zhVoice = null; };
+
 function speak(text) {
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
   u.lang = 'zh-CN';
   u.rate = 0.85;
+  const voice = getZhVoice();
+  if (voice) u.voice = voice;
   window.speechSynthesis.speak(u);
 }
 
@@ -1531,7 +1544,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
           { id: 'dialogo', icon: '💬', cls: 'dial', title: 'Completa el diálogo', sub: 'Rellena el hueco de la conversación' },
           { id: 'orden', icon: '🔀', cls: 'orden', title: 'Ordena la oración', sub: 'Coloca las palabras en el orden correcto' },
           { id: 'audio', icon: '🔊', cls: 'audio', title: 'Reconocer por audio', sub: 'Escuchá y uní el sonido con el hanzi' },
-        ].map(g => {
+        ].filter(g => !LESSON_THEMES['mod-' + g.id]?.hidden).map(g => {
           const best = pruebaProgress[g.id] || 0;
           const hasStar = best >= 80;
           return html('button', { key: g.id, className: 'prueba-card', onClick: () => onPrueba(g.id) },
@@ -1554,8 +1567,8 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
           html('div', { style: { fontSize: 12, opacity: 0.75, fontWeight: 600 } }, 'Aciertos, errores y palabras para repasar'),
         ),
       ),
-      html('h2', { className: 'section-title' }, 'Reforcemos'),
-      html('button', {
+      !LESSON_THEMES['mod-refuerzo']?.hidden && html('h2', { className: 'section-title' }, 'Reforcemos'),
+      !LESSON_THEMES['mod-refuerzo']?.hidden && html('button', {
         style: {
           display: 'flex', alignItems: 'center', gap: 14,
           width: '100%', marginTop: 0, marginBottom: 12,
@@ -2736,7 +2749,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             html('div', null,
               html('label', null, '📚 Lecciones cargadas'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
-                Object.keys(vocab).sort().map(id => {
+                Object.keys(vocab).sort().filter(id => id !== '9' && id !== '10').map(id => {
                   const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
                   const count = vocab[id].length;
                   const isRenaming = renamingLesson === id;
@@ -2756,7 +2769,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                             style: { flex: 1, padding: '6px 10px', borderRadius: 8, border: '2px solid var(--jade)', fontSize: 14, fontFamily: 'Nunito, sans-serif' }
                           })
                         : html('div', { style: { flex: 1 } },
-                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, (id === '9' || id === '10') ? theme.name : 'Lección ' + id + ' · ' + theme.name),
+                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, 'Lección ' + id + ' · ' + theme.name),
                             html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, count + ' palabras'),
                           ),
                       isRenaming
@@ -2785,14 +2798,88 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // Modo texto manual
+            // ── Módulos especiales (países y números) ──
             html('div', null,
-              html('label', null, '✏️ Cargar vocabulario (texto manual)'),
-              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Solo afecta tu navegador local.'),
-              html('textarea', { value: text, onChange: (e) => setText(e.target.value), placeholder: 'Pegá aquí el texto...' }),
-              html('button', { className: 'secondary-btn', onClick: handleApply }, 'Aplicar localmente'),
+              html('label', null, '🌍 Módulos especiales'),
+              html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
+                ['9', '10'].filter(id => vocab[id]).map(id => {
+                  const theme = LESSON_THEMES[id] || { name: 'Módulo ' + id };
+                  const count = vocab[id].length;
+                  const isRenaming = renamingLesson === id;
+                  const isConfirmingDelete = confirmDelete === id;
+                  return html('div', {
+                    key: id,
+                    style: { background: '#fff', borderRadius: 12, padding: '10px 14px', boxShadow: 'var(--shadow-paper)', display: 'flex', flexDirection: 'column', gap: 6 }
+                  },
+                    html('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+                      html('span', { className: 'hanzi-font', style: { fontSize: 22, color: 'var(--lacquer)', minWidth: 32 } }, theme.icon || id),
+                      isRenaming
+                        ? html('input', {
+                            autoFocus: true,
+                            value: renameValue,
+                            onChange: e => setRenameValue(e.target.value),
+                            onKeyDown: e => { if (e.key === 'Enter') handleRenameSave(id); if (e.key === 'Escape') setRenamingLesson(null); },
+                            style: { flex: 1, padding: '6px 10px', borderRadius: 8, border: '2px solid var(--jade)', fontSize: 14, fontFamily: 'Nunito, sans-serif' }
+                          })
+                        : html('div', { style: { flex: 1 } },
+                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, theme.name),
+                            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, count + ' palabras'),
+                          ),
+                      isRenaming
+                        ? html(React.Fragment, null,
+                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, '✓ Guardar'),
+                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, '✕'),
+                          )
+                        : html(React.Fragment, null,
+                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? '🚫' : '👁️'),
+                            html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '📝'),
+                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '✏️'),
+                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '🗑️'),
+                          ),
+                    ),
+                    isConfirmingDelete && html('div', { style: { background: '#FDE4DD', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
+                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
+                      html('div', { style: { display: 'flex', gap: 6 } },
+                        html('button', { onClick: () => handleDeleteLesson(id), style: { background: 'var(--lacquer)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'Eliminar'),
+                        html('button', { onClick: () => setConfirmDelete(null), style: { background: 'none', border: '2px solid var(--paper-deep)', borderRadius: 8, padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, 'Cancelar'),
+                      ),
+                    ),
+                  );
+                })
+              ),
             ),
-            html('button', { className: 'secondary-btn', onClick: handleReset }, 'Restaurar vocabulario original'),
+
+            html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
+
+            // ── Módulos de práctica ──
+            html('div', null,
+              html('label', null, '🎮 Módulos de práctica'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Activá o desactivá cada módulo para todos los alumnos.'),
+              html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
+                [
+                  { id: 'mod-clas',     icon: '🔢', name: 'Clasificadores' },
+                  { id: 'mod-dialogo',  icon: '💬', name: 'Completa el diálogo' },
+                  { id: 'mod-orden',    icon: '🔀', name: 'Ordena la oración' },
+                  { id: 'mod-audio',    icon: '🔊', name: 'Reconocer por audio' },
+                  { id: 'mod-refuerzo', icon: '💪', name: 'Reforcemos' },
+                ].map(m => {
+                  const theme = LESSON_THEMES[m.id] || {};
+                  const isHidden = !!theme.hidden;
+                  return html('div', {
+                    key: m.id,
+                    style: { background: '#fff', borderRadius: 12, padding: '10px 14px', boxShadow: 'var(--shadow-paper)', display: 'flex', alignItems: 'center', gap: 10, opacity: isHidden ? 0.6 : 1 }
+                  },
+                    html('span', { style: { fontSize: 22, minWidth: 32 } }, m.icon),
+                    html('div', { style: { flex: 1, fontWeight: 700, fontSize: 14 } }, m.name),
+                    html('button', {
+                      onClick: () => handleToggleVisibility(m.id),
+                      title: isHidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos',
+                      style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: isHidden ? 0.4 : 1 }
+                    }, isHidden ? '🚫' : '👁️'),
+                  );
+                })
+              ),
+            ),
           )
 
         // ── Login ──
