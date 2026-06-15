@@ -1286,9 +1286,9 @@ function App() {
         localStorage.setItem(VOCAB_KEY, JSON.stringify(merged));
       }
     });
-    db.from('lesson_themes').select('lesson,name,icon').then(({ data, error }) => {
+    db.from('lesson_themes').select('lesson,name,icon,hidden').then(({ data, error }) => {
       if (!error && data && data.length > 0) {
-        data.forEach(r => { LESSON_THEMES[r.lesson] = { name: r.name, icon: r.icon || r.lesson }; });
+        data.forEach(r => { LESSON_THEMES[r.lesson] = { name: r.name, icon: r.icon || r.lesson, hidden: !!r.hidden }; });
       }
     });
   }, []);
@@ -1462,7 +1462,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
       ),
       html('h2', { className: 'section-title' }, 'Elegí una lección'),
       html('div', { className: 'lesson-grid' },
-        lessons.filter(id => id !== '9' && id !== '10').map(id => {
+        lessons.filter(id => id !== '9' && id !== '10' && !LESSON_THEMES[id]?.hidden).map(id => {
           const words = vocab[id];
           const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: words[0]?.hanzi?.[0] || '汉' };
           const lp = progress.lessons[id] || {};
@@ -1485,7 +1485,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
       ),
 
       // ── Módulos especiales ──
-      vocab['9'] && html(React.Fragment, null,
+      vocab['9'] && !LESSON_THEMES['9']?.hidden && html(React.Fragment, null,
         html('h2', { className: 'section-title' }, 'Aprende los países'),
         html('button', {
           style: {
@@ -1506,7 +1506,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
         ),
       ),
 
-      vocab['10'] && html(React.Fragment, null,
+      vocab['10'] && !LESSON_THEMES['10']?.hidden && html(React.Fragment, null,
         html('h2', { className: 'section-title' }, 'Aprende los números'),
         html('button', {
           style: {
@@ -2065,7 +2065,8 @@ function ResultScreen({ percent, mode, completed, reviewWords, onRetry, onHome, 
       html('div', { className: 'result-title' }, title),
       html('div', { className: 'result-sub' }, sub),
       html('div', { className: 'result-actions' },
-        html('button', { className: 'primary-btn', onClick: onRetry }, 'Volver a intentar'),
+        nextAction && html('button', { className: 'primary-btn', onClick: nextAction.go }, nextAction.label),
+        html('button', { className: nextAction ? 'secondary-btn' : 'primary-btn', onClick: onRetry }, 'Volver a intentar'),
         html('button', { className: 'secondary-btn', onClick: onHome }, 'Volver al inicio'),
       ),
       html(ReviewList, { reviewWords })
@@ -2387,6 +2388,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
   // gestión de lecciones
   const [renamingLesson, setRenamingLesson] = useState(null);
+  const [visibilityTick, setVisibilityTick] = useState(0);
   const [renameValue, setRenameValue] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
   // editor de contenido de lección
@@ -2516,6 +2518,16 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   };
 
   // Eliminar lección (local + Supabase)
+  const handleToggleVisibility = async (id) => {
+    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    const newHidden = !theme.hidden;
+    const updated = { ...theme, hidden: newHidden };
+    LESSON_THEMES[id] = updated;
+    await db.from('lesson_themes').upsert({ lesson: id, name: updated.name, icon: updated.icon || id, hidden: newHidden });
+    setStatus({ type: 'ok', msg: newHidden ? '🚫 Módulo ocultado para los alumnos.' : '👁️ Módulo visible para los alumnos.' });
+    setVisibilityTick(t => t + 1);
+  };
+
   const handleDeleteLesson = async (id) => {
     try {
       await db.from('vocabulary').delete().eq('lesson', id);
@@ -2723,7 +2735,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                             style: { flex: 1, padding: '6px 10px', borderRadius: 8, border: '2px solid var(--jade)', fontSize: 14, fontFamily: 'Nunito, sans-serif' }
                           })
                         : html('div', { style: { flex: 1 } },
-                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, 'Lección ' + id + ' · ' + theme.name),
+                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, (id === '9' || id === '10') ? theme.name : 'Lección ' + id + ' · ' + theme.name),
                             html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, count + ' palabras'),
                           ),
                       isRenaming
@@ -2732,13 +2744,14 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                             html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, '✕'),
                           )
                         : html(React.Fragment, null,
+                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? '🚫' : '👁️'),
                             html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '📝'),
                             html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '✏️'),
                             html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '🗑️'),
                           ),
                     ),
                     isConfirmingDelete && html('div', { style: { background: '#FDE4DD', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
-                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar Lección ' + id + ' y sus ' + count + ' palabras?'),
+                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
                       html('div', { style: { display: 'flex', gap: 6 } },
                         html('button', { onClick: () => handleDeleteLesson(id), style: { background: 'var(--lacquer)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'Eliminar'),
                         html('button', { onClick: () => setConfirmDelete(null), style: { background: 'none', border: '2px solid var(--paper-deep)', borderRadius: 8, padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, 'Cancelar'),
