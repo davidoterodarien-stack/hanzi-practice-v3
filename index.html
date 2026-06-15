@@ -1582,7 +1582,7 @@ function NumbersIntro({ words, onBack, onPlay }) {
 
   const playNum = (w) => {
     setActive(w.hanzi);
-    speak(w.pinyin);
+    speak(w.hanzi);
     setTimeout(() => setActive(null), 1200);
   };
 
