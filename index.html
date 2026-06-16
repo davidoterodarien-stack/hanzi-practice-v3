@@ -997,8 +997,11 @@ function downloadResumen(vocab, progress, lessons, playerName) {
     </tr>`
   ).join('');
 
-  // ── Lecciones: tabla de puntajes ──────────────────────────────────────────
-  const lessonRows = lessons.map(id => {
+  // ── Lecciones regulares (1-8): tabla de puntajes ─────────────────────────
+  const regularLessons = lessons.filter(id => id !== '9' && id !== '10');
+  const specialLessons = lessons.filter(id => id === '9' || id === '10');
+
+  const lessonRows = regularLessons.map(id => {
     const lp = progress.lessons[id] || {};
     const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
     const m = lp.match || 0, c = lp.cards || 0, q = lp.quiz || 0;
@@ -1010,22 +1013,50 @@ function downloadResumen(vocab, progress, lessons, playerName) {
     </tr>`;
   }).join('');
 
+  // ── Módulos especiales (países y números) ─────────────────────────────────
+  const specialRows = specialLessons.map(id => {
+    const lp = progress.lessons[id] || {};
+    const theme = LESSON_THEMES[id] || { name: id === '9' ? 'Países del mundo' : 'Los números' };
+    const m = lp.match || 0, c = lp.cards || 0, q = lp.quiz || 0;
+    return `<tr>
+      <td style="padding:10px 12px;border-bottom:1px solid #F3E6CC"><strong>${theme.name}</strong></td>
+      <td style="color:${scoreColor(m)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(m)} ${m}%</td>
+      <td style="color:${scoreColor(c)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(c)} ${c}%</td>
+      <td style="color:${scoreColor(q)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(q)} ${q}%</td>
+    </tr>`;
+  }).join('');
+
   // ── Para repasar: errores reales por módulo ───────────────────────────────
   let repasarHTML = '';
 
-  // Lecciones
-  lessons.forEach(id => {
+  // Lecciones regulares
+  regularLessons.forEach(id => {
     const lp = progress.lessons[id] || {};
     const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
-
     ['match', 'cards', 'quiz'].forEach(mode => {
       const modeLabel = { match: 'Emparejar', cards: 'Tarjetas', quiz: 'Quiz' }[mode];
       const missed = lp[mode + '_missed'] || [];
       if (missed.length === 0) return;
-      // Deduplicate by hanzi
       const unique = missed.filter((w, i, arr) => arr.findIndex(x => x.hanzi === w.hanzi) === i);
       repasarHTML += `<h3 style="margin:24px 0 6px;color:#2E2A26;font-size:15px">
         Lección ${id} · ${theme.name} — <em>${modeLabel}</em>
+        <span style="font-size:12px;color:#C1432B;font-weight:700">(${unique.length} ${unique.length === 1 ? 'error' : 'errores'})</span>
+      </h3>
+      <table style="width:100%;border-collapse:collapse;margin-bottom:4px">${wordRows(unique)}</table>`;
+    });
+  });
+
+  // Módulos especiales
+  specialLessons.forEach(id => {
+    const lp = progress.lessons[id] || {};
+    const theme = LESSON_THEMES[id] || { name: id === '9' ? 'Países del mundo' : 'Los números' };
+    ['match', 'cards', 'quiz'].forEach(mode => {
+      const modeLabel = { match: 'Emparejar', cards: 'Tarjetas', quiz: 'Quiz' }[mode];
+      const missed = lp[mode + '_missed'] || [];
+      if (missed.length === 0) return;
+      const unique = missed.filter((w, i, arr) => arr.findIndex(x => x.hanzi === w.hanzi) === i);
+      repasarHTML += `<h3 style="margin:24px 0 6px;color:#2E2A26;font-size:15px">
+        ${theme.name} — <em>${modeLabel}</em>
         <span style="font-size:12px;color:#C1432B;font-weight:700">(${unique.length} ${unique.length === 1 ? 'error' : 'errores'})</span>
       </h3>
       <table style="width:100%;border-collapse:collapse;margin-bottom:4px">${wordRows(unique)}</table>`;
@@ -1065,6 +1096,11 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   <table><thead><tr>
     <th>Lección</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
   </tr></thead><tbody>${lessonRows}</tbody></table>
+
+  ${specialRows ? `<h2>🌍 Módulos especiales</h2>
+  <table><thead><tr>
+    <th>Módulo</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
+  </tr></thead><tbody>${specialRows}</tbody></table>` : ''}
 
   <h2>🧠 ¿Cuánto aprendiste?</h2>
   <table><tbody>
@@ -1801,8 +1837,8 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       onClick: () => handleTap(tile),
       disabled: isMatched,
     },
-      tile.kind === 'hanzi' && html(FlagImg, { es: tile.es, size: 20 }),
       tile.text,
+      tile.kind === 'pinyin' && html(FlagImg, { es: tile.es, size: 18 }),
       tile.kind === 'pinyin' && html('span', { className: 'es-tooltip' }, tile.es)
     );
   };
