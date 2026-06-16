@@ -1838,7 +1838,6 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       disabled: isMatched,
     },
       tile.text,
-      tile.kind === 'pinyin' && html(FlagImg, { es: tile.es, size: 18 }),
       tile.kind === 'pinyin' && html('span', { className: 'es-tooltip' }, tile.es)
     );
   };
@@ -2075,10 +2074,7 @@ function QuizGame({ words, lessonId, onBack, onHome, onFinish, nextAction, saved
             if (opt === q.correct) cls += ' correct';
             else if (opt === selectedOpt) cls += ' wrong';
           }
-          return html('button', { key: opt, className: cls, onClick: () => handlePick(opt), style: { display: 'flex', alignItems: 'center' } },
-            html(FlagImg, { es: opt, size: 18 }),
-            stripFlag(opt)
-          );
+          return html('button', { key: opt, className: cls, onClick: () => handlePick(opt) }, stripFlag(opt));
         })
       )
     )
