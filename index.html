@@ -1958,7 +1958,7 @@ function getFlagCode(es) {
   if (!es) return null;
   const m = es.match(FLAG_CODE_RE);
   if (!m) return null;
-  return [...m[1]].map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1A6)).join('').toLowerCase();
+  return [...m[1]].map(c => String.fromCharCode(c.codePointAt(0) - 0x1F1A5)).join('').toLowerCase();
 }
 function stripFlag(es) {
   return es ? es.replace(/^[\u{1F1E0}-\u{1F1FF}]{2}\s*/u, '') : es;
