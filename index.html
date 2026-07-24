@@ -1888,19 +1888,19 @@ function LessonMenu({ vocab, lessonId, progress, onBack, onSelectMode }) {
         lessonId === '9' && html('div', null,
           html('div', { style: { margin: '18px 0 8px', fontWeight: 800, fontSize: 13, color: 'var(--ink-soft)', letterSpacing: 1, textTransform: 'uppercase' } }, '🎯 Actividades de la lección'),
           html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-comida') },
-            html('div', { className: 'mode-emoji clas' }, '🍜'),
+            html('div', { className: 'mode-emoji', style: { background: '#EDE9FE', color: '#5B21B6' } }, '🍜'),
             html('div', null, html('div', { className: 'mode-title' }, '中餐 vs 西餐'), html('div', { className: 'mode-sub' }, '¿Es comida china o occidental?'))
           ),
           html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-dialogo') },
-            html('div', { className: 'mode-emoji dial' }, '🎂'),
+            html('div', { className: 'mode-emoji', style: { background: '#DBEAFE', color: '#1E40AF' } }, '🎂'),
             html('div', null, html('div', { className: 'mode-title' }, 'Diálogo de cumpleaños'), html('div', { className: 'mode-sub' }, 'Completa conversaciones de la lección'))
           ),
           html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-orden') },
-            html('div', { className: 'mode-emoji orden' }, '🔀'),
+            html('div', { className: 'mode-emoji', style: { background: '#D1FAE5', color: '#065F46' } }, '🔀'),
             html('div', null, html('div', { className: 'mode-title' }, 'Ordena las frases'), html('div', { className: 'mode-sub' }, 'Frases de fechas y celebraciones'))
           ),
           html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-edad') },
-            html('div', { className: 'mode-emoji audio' }, '🕐'),
+            html('div', { className: 'mode-emoji', style: { background: '#FEF3C7', color: '#92400E' } }, '🕐'),
             html('div', null, html('div', { className: 'mode-title' }, 'Vocabulario de tiempo'), html('div', { className: 'mode-sub' }, 'Reconocé 岁, 星期, 上午, 下午...'))
           ),
         )
