@@ -844,6 +844,46 @@ const DEFAULT_VOCAB = {
     {"hanzi": "妈妈", "pinyin": "māma", "es": "mamá"}
   ],
   "9": [
+    {"hanzi": "今年", "pinyin": "jīnnián", "es": "este año"},
+    {"hanzi": "年", "pinyin": "nián", "es": "año"},
+    {"hanzi": "岁", "pinyin": "suì", "es": "años (edad)"},
+    {"hanzi": "怎么样", "pinyin": "zěnmeyàng", "es": "¿qué tal?, ¿cómo está?"},
+    {"hanzi": "今天", "pinyin": "jīntiān", "es": "hoy"},
+    {"hanzi": "课", "pinyin": "kè", "es": "clase"},
+    {"hanzi": "星期", "pinyin": "xīngqī", "es": "semana"},
+    {"hanzi": "上午", "pinyin": "shàngwǔ", "es": "por la mañana"},
+    {"hanzi": "下午", "pinyin": "xiàwǔ", "es": "por la tarde"},
+    {"hanzi": "晚上", "pinyin": "wǎnshang", "es": "noche"},
+    {"hanzi": "星期日", "pinyin": "xīngqīrì", "es": "domingo"},
+    {"hanzi": "生日", "pinyin": "shēngrì", "es": "cumpleaños"},
+    {"hanzi": "多大", "pinyin": "duō dà", "es": "¿cuántos años?"},
+    {"hanzi": "多", "pinyin": "duō", "es": "mucho; ¿cuánto?"},
+    {"hanzi": "大", "pinyin": "dà", "es": "grande"},
+    {"hanzi": "出生", "pinyin": "chūshēng", "es": "nacer"},
+    {"hanzi": "属", "pinyin": "shǔ", "es": "nacer en el año de..."},
+    {"hanzi": "聚会", "pinyin": "jùhuì", "es": "fiesta; reunión"},
+    {"hanzi": "祝贺", "pinyin": "zhùhè", "es": "felicitar"},
+    {"hanzi": "参加", "pinyin": "cānjiā", "es": "participar; asistir"},
+    {"hanzi": "了", "pinyin": "le", "es": "partícula de aspecto"},
+    {"hanzi": "吃", "pinyin": "chī", "es": "comer"},
+    {"hanzi": "蛋糕", "pinyin": "dàngāo", "es": "pastel; torta"},
+    {"hanzi": "买", "pinyin": "mǎi", "es": "comprar"},
+    {"hanzi": "瓶", "pinyin": "píng", "es": "botella (clasificador)"},
+    {"hanzi": "红葡萄酒", "pinyin": "hóng pútaojiǔ", "es": "vino tinto"},
+    {"hanzi": "酒", "pinyin": "jiǔ", "es": "vino; licor"},
+    {"hanzi": "北京", "pinyin": "Běijīng", "es": "Pekín"},
+    {"hanzi": "中餐", "pinyin": "zhōngcān", "es": "comida china"},
+    {"hanzi": "西餐", "pinyin": "xīcān", "es": "comida occidental"},
+    {"hanzi": "茶", "pinyin": "chá", "es": "té"},
+    {"hanzi": "可乐", "pinyin": "kělè", "es": "Coca-Cola"},
+    {"hanzi": "汉堡", "pinyin": "hànbǎo", "es": "hamburguesa"},
+    {"hanzi": "热狗", "pinyin": "règǒu", "es": "pancho / hot dog"},
+    {"hanzi": "面包", "pinyin": "miànbāo", "es": "pan"},
+    {"hanzi": "牛奶", "pinyin": "niúnǎi", "es": "leche"},
+    {"hanzi": "米饭", "pinyin": "mǐfàn", "es": "arroz cocido"},
+    {"hanzi": "啤酒", "pinyin": "píjiǔ", "es": "cerveza"}
+  ],
+  "mod-paises": [
     {"hanzi": "中国", "pinyin": "Zhōngguó", "es": "🇨🇳 China"},
     {"hanzi": "阿根廷", "pinyin": "Āgēntíng", "es": "🇦🇷 Argentina"},
     {"hanzi": "墨西哥", "pinyin": "Mòxīgē", "es": "🇲🇽 México"},
@@ -877,7 +917,7 @@ const DEFAULT_VOCAB = {
     {"hanzi": "瑞典", "pinyin": "Ruìdiǎn", "es": "🇸🇪 Suecia"},
     {"hanzi": "波兰", "pinyin": "Bōlán", "es": "🇵🇱 Polonia"}
   ],
-  "10": [
+  "mod-numeros": [
     {"hanzi": "零", "pinyin": "líng", "es": "0 · cero"},
     {"hanzi": "一", "pinyin": "yī", "es": "1 · uno"},
     {"hanzi": "二", "pinyin": "èr", "es": "2 · dos"},
@@ -940,8 +980,9 @@ const LESSON_THEMES = Object.assign({
   "6": { name: "El clima y el tiempo", icon: "天" },
   "7": { name: "Presentaciones", icon: "介" },
   "8": { name: "La familia", icon: "家" },
-  "9": { name: "Países del mundo", icon: "国" },
-  "10": { name: "Los números", icon: "数" },
+  "9": { name: "Fechas y celebraciones", icon: "🎂" },
+  "mod-paises": { name: "Países del mundo", icon: "国" },
+  "mod-numeros": { name: "Los números", icon: "数" },
 }, JSON.parse(localStorage.getItem('hanzi-lesson-themes') || '{}'));
 
 // ----------------- Prueba data -----------------
@@ -998,8 +1039,8 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   ).join('');
 
   // ── Lecciones regulares (1-8): tabla de puntajes ─────────────────────────
-  const regularLessons = lessons.filter(id => id !== '9' && id !== '10');
-  const specialLessons = lessons.filter(id => id === '9' || id === '10');
+  const regularLessons = lessons.filter(id => id !== 'mod-paises' && id !== 'mod-numeros');
+  const specialLessons = lessons.filter(id => id === 'mod-paises' || id === 'mod-numeros');
 
   const lessonRows = regularLessons.map(id => {
     const lp = progress.lessons[id] || {};
@@ -1016,7 +1057,7 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   // ── Módulos especiales (países y números) ─────────────────────────────────
   const specialRows = specialLessons.map(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: id === '9' ? 'Países del mundo' : 'Los números' };
+    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'Países del mundo' : 'Los números' };
     const m = lp.match || 0, c = lp.cards || 0, q = lp.quiz || 0;
     return `<tr>
       <td style="padding:10px 12px;border-bottom:1px solid #F3E6CC"><strong>${theme.name}</strong></td>
@@ -1049,7 +1090,7 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   // Módulos especiales
   specialLessons.forEach(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: id === '9' ? 'Países del mundo' : 'Los números' };
+    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'Países del mundo' : 'Los números' };
     ['match', 'cards', 'quiz'].forEach(mode => {
       const modeLabel = { match: 'Emparejar', cards: 'Tarjetas', quiz: 'Quiz' }[mode];
       const missed = lp[mode + '_missed'] || [];
@@ -1511,7 +1552,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
       ),
       html('h2', { className: 'section-title' }, 'Elegí una lección'),
       html('div', { className: 'lesson-grid' },
-        lessons.filter(id => id !== '9' && id !== '10' && !LESSON_THEMES[id]?.hidden).map(id => {
+        lessons.filter(id => id !== 'mod-paises' && id !== 'mod-numeros' && !LESSON_THEMES[id]?.hidden).map(id => {
           const words = vocab[id];
           const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: words[0]?.hanzi?.[0] || '汉' };
           const lp = progress.lessons[id] || {};
@@ -1534,7 +1575,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
       ),
 
       // ── Módulos especiales ──
-      vocab['9'] && !LESSON_THEMES['9']?.hidden && html(React.Fragment, null,
+      vocab['mod-paises'] && !LESSON_THEMES['mod-paises']?.hidden && html(React.Fragment, null,
         html('h2', { className: 'section-title' }, 'Aprende los países'),
         html('button', {
           style: {
@@ -1543,19 +1584,19 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             padding: '14px 18px', cursor: 'pointer', textAlign: 'left',
             boxShadow: 'var(--shadow-paper)',
           },
-          onClick: () => onSelectLesson('9'),
+          onClick: () => onSelectLesson('mod-paises'),
         },
           html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '国'),
           html('div', null,
             html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Nombres de países en chino'),
             html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } },
-              (vocab['9'] ? vocab['9'].length : 0) + ' países · Latinoamérica, Europa, Asia'
+              (vocab['mod-paises'] ? vocab['mod-paises'].length : 0) + ' países · Latinoamérica, Europa, Asia'
             ),
           ),
         ),
       ),
 
-      vocab['10'] && !LESSON_THEMES['10']?.hidden && html(React.Fragment, null,
+      vocab['mod-numeros'] && !LESSON_THEMES['mod-numeros']?.hidden && html(React.Fragment, null,
         html('h2', { className: 'section-title' }, 'Aprende los números'),
         html('button', {
           style: {
@@ -1564,7 +1605,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             padding: '14px 18px', cursor: 'pointer', textAlign: 'left',
             boxShadow: 'var(--shadow-paper)',
           },
-          onClick: () => onSelectLesson('10'),
+          onClick: () => onSelectLesson('mod-numeros'),
         },
           html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '数'),
           html('div', null,
@@ -1703,10 +1744,10 @@ function LessonMenu({ vocab, lessonId, progress, onBack, onSelectMode }) {
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
         html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, (lessonId === '9' || lessonId === '10') ? theme.name : 'Lección ' + lessonId + ' · ' + theme.name),
+        html('h1', null, (lessonId === 'mod-paises' || lessonId === 'mod-numeros') ? theme.name : 'Lección ' + lessonId + ' · ' + theme.name),
       ),
       html('div', { className: 'mode-list' },
-        lessonId === '10' && html('button', { className: 'mode-card', onClick: () => onSelectMode('intro') },
+        lessonId === 'mod-numeros' && html('button', { className: 'mode-card', onClick: () => onSelectMode('intro') },
           html('div', { className: 'mode-emoji', style: { background: '#FFF3C4', fontSize: 22 } }, '📊'),
           html('div', null,
             html('div', { className: 'mode-title' }, 'Explorar los números'),
@@ -2781,7 +2822,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             html('div', null,
               html('label', null, '📚 Lecciones cargadas'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
-                Object.keys(vocab).sort().filter(id => id !== '9' && id !== '10').map(id => {
+                Object.keys(vocab).sort().filter(id => id !== 'mod-paises' && id !== 'mod-numeros').map(id => {
                   const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
                   const count = vocab[id].length;
                   const isRenaming = renamingLesson === id;
@@ -2834,7 +2875,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             html('div', null,
               html('label', null, '🌍 Módulos especiales'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
-                ['9', '10'].filter(id => vocab[id]).map(id => {
+                ['mod-paises', 'mod-numeros'].filter(id => vocab[id]).map(id => {
                   const theme = LESSON_THEMES[id] || { name: 'Módulo ' + id };
                   const count = vocab[id].length;
                   const isRenaming = renamingLesson === id;
