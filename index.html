@@ -1348,51 +1348,37 @@ function NameModal({ onSave }) {
   );
 }
 
-// ----------------- LoginGate: nombre + email → localStorage, sin auth -----------------
+// ----------------- LoginGate: solo nombre -----------------
 function LoginGate({ onLogin }) {
-  const [name,  setName]  = useState('');
-  const [email, setEmail] = useState('');
-  const [err,   setErr]   = useState('');
-
-  // UUID determinista a partir del email para que el mismo alumno
-  // tenga el mismo ID en cualquier dispositivo donde ingrese su email.
-  const emailToId = (em) => {
-    const s = btoa(unescape(encodeURIComponent(em + ':hanzi2026')));
-    const h = s.replace(/[^a-zA-Z0-9]/g, '').padEnd(32, '0');
-    return h.slice(0,8)+'-'+h.slice(8,12)+'-4'+h.slice(12,15)+'-8'+h.slice(15,18)+'-'+h.slice(18,30);
-  };
+  const [name, setName] = useState('');
+  const [err,  setErr]  = useState('');
 
   const handleSubmit = (ev) => {
     ev.preventDefault();
-    if (!name.trim())         { setErr('Ingresá tu nombre.');       return; }
-    if (!email.includes('@')) { setErr('Ingresá un email válido.'); return; }
-    const em = email.trim().toLowerCase();
-    const id = emailToId(em);
+    if (!name.trim()) { setErr('Ingresá tu nombre.'); return; }
+    const n = name.trim();
+    const s = btoa(unescape(encodeURIComponent(n + ':hanzi2026')));
+    const h = s.replace(/[^a-zA-Z0-9]/g, '').padEnd(32, '0');
+    const id = h.slice(0,8)+'-'+h.slice(8,12)+'-4'+h.slice(12,15)+'-8'+h.slice(15,18)+'-'+h.slice(18,30);
     const today = new Date().toISOString().slice(0, 10);
-    const studentData = { id, name: name.trim(), email: em, streak_days: 1, streak_last_date: today };
-    onLogin(studentData);
+    onLogin({ id, name: n, streak_days: 1, streak_last_date: today });
   };
 
   return html('div', { className: 'name-modal-overlay' },
     html('div', { className: 'name-modal' },
       html('div', { className: 'name-modal-hanzi hanzi-font' }, '你好！'),
       html('h2', { className: 'name-modal-title' }, '¿Cómo te llamás?'),
-      html('p', { className: 'name-modal-sub' }, 'Ingresá tu nombre y email para empezar. Así tu laoshi puede ver tu progreso.'),
+      html('p', { className: 'name-modal-sub' }, 'Ingresá tu nombre para empezar.'),
       html('form', { onSubmit: handleSubmit },
         html('input', {
           className: 'name-modal-input', type: 'text', placeholder: 'Tu nombre...',
           value: name, autoFocus: true, maxLength: 30, required: true,
           onChange: (e) => setName(e.target.value),
         }),
-        html('input', {
-          className: 'name-modal-input', type: 'email', placeholder: 'tu@mail.com',
-          value: email, required: true, style: { marginTop: 10 },
-          onChange: (e) => setEmail(e.target.value),
-        }),
         err && html('div', { style: { color: 'var(--lacquer-dark)', fontSize: 13, fontWeight: 700, marginTop: 6 } }, err),
         html('button', {
           className: 'primary-btn', type: 'submit',
-          disabled: !name.trim() || !email.includes('@'),
+          disabled: !name.trim(),
           style: { width: '100%', marginTop: 10 },
         }, '¡Comenzar! →'),
       ),
