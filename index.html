@@ -1,30 +1,30 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--
-  ╔══════════════════════════════════════════════════════════════╗
-  ║  汉字 Practice · Hanzi Practice App                         ║
-  ║  © 2026 大卫 · dawei.com.ar                                 ║
-  ║  Prohibida su reproducción o distribución sin autorización   ║
-  ╚══════════════════════════════════════════════════════════════╝
+  â•”â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•—
+  â•‘  æ±‰å­— Practice Â· Hanzi Practice App                         â•‘
+  â•‘  Â© 2026 å¤§å« Â· dawei.com.ar                                 â•‘
+  â•‘  Prohibida su reproducciÃ³n o distribuciÃ³n sin autorizaciÃ³n   â•‘
+  â•šâ•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 -->
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
-<meta name="author" content="大卫 · dawei.com.ar" />
-<meta name="copyright" content="© 2026 大卫 · dawei.com.ar" />
-<meta name="generator" content="Hanzi Practice App · 大卫 · dawei.com.ar" />
-<meta name="description" content="Repaso interactivo de chino mandarín · 汉语课 CUI Nivel 2 · Ariel 老师" />
+<meta name="author" content="å¤§å« Â· dawei.com.ar" />
+<meta name="copyright" content="Â© 2026 å¤§å« Â· dawei.com.ar" />
+<meta name="generator" content="Hanzi Practice App Â· å¤§å« Â· dawei.com.ar" />
+<meta name="description" content="Repaso interactivo de chino mandarÃ­n Â· æ±‰è¯­è¯¾ CUI Nivel 2 Â· Ariel è€å¸ˆ" />
 <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="汉字 Practice · Repaso de chino" />
-<meta property="og:description" content="Lecciones, tarjetas, quiz y juegos de gramática para repasar chino mandarín. 汉语课 CUI · Nivel 2 · Ariel 老师" />
+<meta property="og:title" content="æ±‰å­— Practice Â· Repaso de chino" />
+<meta property="og:description" content="Lecciones, tarjetas, quiz y juegos de gramÃ¡tica para repasar chino mandarÃ­n. æ±‰è¯­è¯¾ CUI Â· Nivel 2 Â· Ariel è€å¸ˆ" />
 <meta property="og:image" content="https://davidoterodarien-stack.github.io/hanzi-practice-v2/preview.png" />
 <meta property="og:url" content="https://davidoterodarien-stack.github.io/hanzi-practice-v2" />
 <!-- Twitter/X -->
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="汉字 Practice · Repaso de chino" />
-<meta name="twitter:description" content="Lecciones, tarjetas, quiz y juegos de gramática · CUI Nivel 2" />
-<title>汉字 Practice - Repaso de chino mandarín</title>
+<meta name="twitter:title" content="æ±‰å­— Practice Â· Repaso de chino" />
+<meta name="twitter:description" content="Lecciones, tarjetas, quiz y juegos de gramÃ¡tica Â· CUI Nivel 2" />
+<title>æ±‰å­— Practice - Repaso de chino mandarÃ­n</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -723,211 +723,211 @@ const { createRoot } = ReactDOM;
 
 const DEFAULT_VOCAB = {
   "5": [
-    {"hanzi": "餐厅", "pinyin": "cāntīng", "es": "comedor"},
-    {"hanzi": "在", "pinyin": "zài", "es": "estar, en"},
-    {"hanzi": "哪儿", "pinyin": "nǎr", "es": "dónde"},
-    {"hanzi": "请问", "pinyin": "qǐngwèn", "es": "¿podría preguntar...?"},
-    {"hanzi": "这", "pinyin": "zhè", "es": "este/esta/esto"},
-    {"hanzi": "宿舍", "pinyin": "sùshè", "es": "dormitorio"},
-    {"hanzi": "女", "pinyin": "nǚ", "es": "mujer"},
-    {"hanzi": "学生", "pinyin": "xuésheng", "es": "estudiante"},
-    {"hanzi": "进", "pinyin": "jìn", "es": "entrar"},
-    {"hanzi": "坐", "pinyin": "zuò", "es": "sentarse"},
-    {"hanzi": "谢谢", "pinyin": "xièxie", "es": "gracias"},
-    {"hanzi": "对不起", "pinyin": "duìbuqǐ", "es": "lo siento"},
-    {"hanzi": "我", "pinyin": "wǒ", "es": "yo"},
-    {"hanzi": "知道", "pinyin": "zhīdào", "es": "saber"},
-    {"hanzi": "没关系", "pinyin": "méi guānxi", "es": "no importa"},
-    {"hanzi": "好", "pinyin": "hǎo", "es": "bien, de acuerdo"},
-    {"hanzi": "再见", "pinyin": "zàijiàn", "es": "hasta luego"},
-    {"hanzi": "小姐", "pinyin": "xiǎojiě", "es": "señorita"},
-    {"hanzi": "二", "pinyin": "èr", "es": "dos"},
-    {"hanzi": "层", "pinyin": "céng", "es": "piso, planta"},
-    {"hanzi": "零", "pinyin": "líng", "es": "cero"},
-    {"hanzi": "四", "pinyin": "sì", "es": "cuatro"},
-    {"hanzi": "号", "pinyin": "hào", "es": "número"},
-    {"hanzi": "不用谢", "pinyin": "búyòng xiè", "es": "de nada"},
-    {"hanzi": "这儿", "pinyin": "zhèr", "es": "aquí"},
-    {"hanzi": "晚", "pinyin": "wǎn", "es": "tarde"},
-    {"hanzi": "了", "pinyin": "le", "es": "partícula de aspecto"}
+    {"hanzi": "é¤åŽ…", "pinyin": "cÄntÄ«ng", "es": "comedor"},
+    {"hanzi": "åœ¨", "pinyin": "zÃ i", "es": "estar, en"},
+    {"hanzi": "å“ªå„¿", "pinyin": "nÇŽr", "es": "dÃ³nde"},
+    {"hanzi": "è¯·é—®", "pinyin": "qÇngwÃ¨n", "es": "Â¿podrÃ­a preguntar...?"},
+    {"hanzi": "è¿™", "pinyin": "zhÃ¨", "es": "este/esta/esto"},
+    {"hanzi": "å®¿èˆ", "pinyin": "sÃ¹shÃ¨", "es": "dormitorio"},
+    {"hanzi": "å¥³", "pinyin": "nÇš", "es": "mujer"},
+    {"hanzi": "å­¦ç”Ÿ", "pinyin": "xuÃ©sheng", "es": "estudiante"},
+    {"hanzi": "è¿›", "pinyin": "jÃ¬n", "es": "entrar"},
+    {"hanzi": "å", "pinyin": "zuÃ²", "es": "sentarse"},
+    {"hanzi": "è°¢è°¢", "pinyin": "xiÃ¨xie", "es": "gracias"},
+    {"hanzi": "å¯¹ä¸èµ·", "pinyin": "duÃ¬buqÇ", "es": "lo siento"},
+    {"hanzi": "æˆ‘", "pinyin": "wÇ’", "es": "yo"},
+    {"hanzi": "çŸ¥é“", "pinyin": "zhÄ«dÃ o", "es": "saber"},
+    {"hanzi": "æ²¡å…³ç³»", "pinyin": "mÃ©i guÄnxi", "es": "no importa"},
+    {"hanzi": "å¥½", "pinyin": "hÇŽo", "es": "bien, de acuerdo"},
+    {"hanzi": "å†è§", "pinyin": "zÃ ijiÃ n", "es": "hasta luego"},
+    {"hanzi": "å°å§", "pinyin": "xiÇŽojiÄ›", "es": "seÃ±orita"},
+    {"hanzi": "äºŒ", "pinyin": "Ã¨r", "es": "dos"},
+    {"hanzi": "å±‚", "pinyin": "cÃ©ng", "es": "piso, planta"},
+    {"hanzi": "é›¶", "pinyin": "lÃ­ng", "es": "cero"},
+    {"hanzi": "å››", "pinyin": "sÃ¬", "es": "cuatro"},
+    {"hanzi": "å·", "pinyin": "hÃ o", "es": "nÃºmero"},
+    {"hanzi": "ä¸ç”¨è°¢", "pinyin": "bÃºyÃ²ng xiÃ¨", "es": "de nada"},
+    {"hanzi": "è¿™å„¿", "pinyin": "zhÃ¨r", "es": "aquÃ­"},
+    {"hanzi": "æ™š", "pinyin": "wÇŽn", "es": "tarde"},
+    {"hanzi": "äº†", "pinyin": "le", "es": "partÃ­cula de aspecto"}
   ],
   "6": [
-    {"hanzi": "去", "pinyin": "qù", "es": "ir"},
-    {"hanzi": "游泳", "pinyin": "yóuyǒng", "es": "nadar"},
-    {"hanzi": "昨天", "pinyin": "zuótiān", "es": "ayer"},
-    {"hanzi": "京剧", "pinyin": "jīngjù", "es": "ópera de Pekín"},
-    {"hanzi": "怎么样", "pinyin": "zěnmeyàng", "es": "¿qué tal?"},
-    {"hanzi": "有意思", "pinyin": "yǒu yìsi", "es": "interesante"},
-    {"hanzi": "今天", "pinyin": "jīntiān", "es": "hoy"},
-    {"hanzi": "天", "pinyin": "tiān", "es": "día"},
-    {"hanzi": "天气", "pinyin": "tiānqì", "es": "clima, tiempo"},
-    {"hanzi": "太", "pinyin": "tài", "es": "demasiado / muy"},
-    {"hanzi": "什么", "pinyin": "shénme", "es": "¿qué?"},
-    {"hanzi": "时候", "pinyin": "shíhou", "es": "momento, tiempo"},
-    {"hanzi": "现在", "pinyin": "xiànzài", "es": "ahora"},
-    {"hanzi": "明天", "pinyin": "míngtiān", "es": "mañana"},
-    {"hanzi": "有", "pinyin": "yǒu", "es": "tener, haber"},
-    {"hanzi": "时间", "pinyin": "shíjiān", "es": "tiempo"},
-    {"hanzi": "说", "pinyin": "shuō", "es": "hablar"},
-    {"hanzi": "遍", "pinyin": "biàn", "es": "vez (de una acción)"},
-    {"hanzi": "打球", "pinyin": "dǎ qiú", "es": "jugar a la pelota"},
-    {"hanzi": "抱歉", "pinyin": "bàoqiàn", "es": "lo siento"},
-    {"hanzi": "忙", "pinyin": "máng", "es": "ocupado"},
-    {"hanzi": "恐怕", "pinyin": "kǒngpà", "es": "quizás, temo que"},
-    {"hanzi": "行", "pinyin": "xíng", "es": "estar bien"},
-    {"hanzi": "你们", "pinyin": "nǐmen", "es": "vosotros"}
+    {"hanzi": "åŽ»", "pinyin": "qÃ¹", "es": "ir"},
+    {"hanzi": "æ¸¸æ³³", "pinyin": "yÃ³uyÇ’ng", "es": "nadar"},
+    {"hanzi": "æ˜¨å¤©", "pinyin": "zuÃ³tiÄn", "es": "ayer"},
+    {"hanzi": "äº¬å‰§", "pinyin": "jÄ«ngjÃ¹", "es": "Ã³pera de PekÃ­n"},
+    {"hanzi": "æ€Žä¹ˆæ ·", "pinyin": "zÄ›nmeyÃ ng", "es": "Â¿quÃ© tal?"},
+    {"hanzi": "æœ‰æ„æ€", "pinyin": "yÇ’u yÃ¬si", "es": "interesante"},
+    {"hanzi": "ä»Šå¤©", "pinyin": "jÄ«ntiÄn", "es": "hoy"},
+    {"hanzi": "å¤©", "pinyin": "tiÄn", "es": "dÃ­a"},
+    {"hanzi": "å¤©æ°”", "pinyin": "tiÄnqÃ¬", "es": "clima, tiempo"},
+    {"hanzi": "å¤ª", "pinyin": "tÃ i", "es": "demasiado / muy"},
+    {"hanzi": "ä»€ä¹ˆ", "pinyin": "shÃ©nme", "es": "Â¿quÃ©?"},
+    {"hanzi": "æ—¶å€™", "pinyin": "shÃ­hou", "es": "momento, tiempo"},
+    {"hanzi": "çŽ°åœ¨", "pinyin": "xiÃ nzÃ i", "es": "ahora"},
+    {"hanzi": "æ˜Žå¤©", "pinyin": "mÃ­ngtiÄn", "es": "maÃ±ana"},
+    {"hanzi": "æœ‰", "pinyin": "yÇ’u", "es": "tener, haber"},
+    {"hanzi": "æ—¶é—´", "pinyin": "shÃ­jiÄn", "es": "tiempo"},
+    {"hanzi": "è¯´", "pinyin": "shuÅ", "es": "hablar"},
+    {"hanzi": "é", "pinyin": "biÃ n", "es": "vez (de una acciÃ³n)"},
+    {"hanzi": "æ‰“çƒ", "pinyin": "dÇŽ qiÃº", "es": "jugar a la pelota"},
+    {"hanzi": "æŠ±æ­‰", "pinyin": "bÃ oqiÃ n", "es": "lo siento"},
+    {"hanzi": "å¿™", "pinyin": "mÃ¡ng", "es": "ocupado"},
+    {"hanzi": "ææ€•", "pinyin": "kÇ’ngpÃ ", "es": "quizÃ¡s, temo que"},
+    {"hanzi": "è¡Œ", "pinyin": "xÃ­ng", "es": "estar bien"},
+    {"hanzi": "ä½ ä»¬", "pinyin": "nÇmen", "es": "vosotros"}
   ],
   "7": [
-    {"hanzi": "认识", "pinyin": "rènshi", "es": "conocer (a alguien)"},
-    {"hanzi": "开学", "pinyin": "kāixué", "es": "empezar el curso"},
-    {"hanzi": "开", "pinyin": "kāi", "es": "abrir, empezar"},
-    {"hanzi": "很", "pinyin": "hěn", "es": "muy"},
-    {"hanzi": "高兴", "pinyin": "gāoxìng", "es": "feliz, contento"},
-    {"hanzi": "看", "pinyin": "kàn", "es": "mirar, ver"},
-    {"hanzi": "问", "pinyin": "wèn", "es": "preguntar"},
-    {"hanzi": "一下", "pinyin": "yíxià", "es": "un momento, brevemente"},
-    {"hanzi": "学院", "pinyin": "xuéyuàn", "es": "instituto, universidad"},
-    {"hanzi": "名片", "pinyin": "míngpiàn", "es": "tarjeta de visita"},
-    {"hanzi": "啊", "pinyin": "à", "es": "ah, oh"},
-    {"hanzi": "教授", "pinyin": "jiàoshòu", "es": "profesor universitario"},
-    {"hanzi": "教", "pinyin": "jiāo", "es": "enseñar"},
-    {"hanzi": "谁", "pinyin": "shéi", "es": "quién"},
-    {"hanzi": "来", "pinyin": "lái", "es": "venir"},
-    {"hanzi": "介绍", "pinyin": "jièshào", "es": "presentar"},
-    {"hanzi": "名字", "pinyin": "míngzi", "es": "nombre"},
-    {"hanzi": "中文", "pinyin": "Zhōngwén", "es": "lengua china"},
-    {"hanzi": "爸爸", "pinyin": "bàba", "es": "papá"},
-    {"hanzi": "学习", "pinyin": "xuéxí", "es": "aprender, estudiar"},
-    {"hanzi": "专业", "pinyin": "zhuānyè", "es": "carrera, especialidad"},
-    {"hanzi": "美术", "pinyin": "měishù", "es": "bellas artes"},
-    {"hanzi": "文学", "pinyin": "wénxué", "es": "literatura"},
-    {"hanzi": "系", "pinyin": "xì", "es": "facultad, departamento"},
-    {"hanzi": "加拿大", "pinyin": "Jiānádà", "es": "Canadá"},
-    {"hanzi": "美国", "pinyin": "Měiguó", "es": "Estados Unidos"},
-    {"hanzi": "他", "pinyin": "tā", "es": "él"},
-    {"hanzi": "也", "pinyin": "yě", "es": "también"},
-    {"hanzi": "都", "pinyin": "dōu", "es": "todos, ambos"}
+    {"hanzi": "è®¤è¯†", "pinyin": "rÃ¨nshi", "es": "conocer (a alguien)"},
+    {"hanzi": "å¼€å­¦", "pinyin": "kÄixuÃ©", "es": "empezar el curso"},
+    {"hanzi": "å¼€", "pinyin": "kÄi", "es": "abrir, empezar"},
+    {"hanzi": "å¾ˆ", "pinyin": "hÄ›n", "es": "muy"},
+    {"hanzi": "é«˜å…´", "pinyin": "gÄoxÃ¬ng", "es": "feliz, contento"},
+    {"hanzi": "çœ‹", "pinyin": "kÃ n", "es": "mirar, ver"},
+    {"hanzi": "é—®", "pinyin": "wÃ¨n", "es": "preguntar"},
+    {"hanzi": "ä¸€ä¸‹", "pinyin": "yÃ­xiÃ ", "es": "un momento, brevemente"},
+    {"hanzi": "å­¦é™¢", "pinyin": "xuÃ©yuÃ n", "es": "instituto, universidad"},
+    {"hanzi": "åç‰‡", "pinyin": "mÃ­ngpiÃ n", "es": "tarjeta de visita"},
+    {"hanzi": "å•Š", "pinyin": "Ã ", "es": "ah, oh"},
+    {"hanzi": "æ•™æŽˆ", "pinyin": "jiÃ oshÃ²u", "es": "profesor universitario"},
+    {"hanzi": "æ•™", "pinyin": "jiÄo", "es": "enseÃ±ar"},
+    {"hanzi": "è°", "pinyin": "shÃ©i", "es": "quiÃ©n"},
+    {"hanzi": "æ¥", "pinyin": "lÃ¡i", "es": "venir"},
+    {"hanzi": "ä»‹ç»", "pinyin": "jiÃ¨shÃ o", "es": "presentar"},
+    {"hanzi": "åå­—", "pinyin": "mÃ­ngzi", "es": "nombre"},
+    {"hanzi": "ä¸­æ–‡", "pinyin": "ZhÅngwÃ©n", "es": "lengua china"},
+    {"hanzi": "çˆ¸çˆ¸", "pinyin": "bÃ ba", "es": "papÃ¡"},
+    {"hanzi": "å­¦ä¹ ", "pinyin": "xuÃ©xÃ­", "es": "aprender, estudiar"},
+    {"hanzi": "ä¸“ä¸š", "pinyin": "zhuÄnyÃ¨", "es": "carrera, especialidad"},
+    {"hanzi": "ç¾Žæœ¯", "pinyin": "mÄ›ishÃ¹", "es": "bellas artes"},
+    {"hanzi": "æ–‡å­¦", "pinyin": "wÃ©nxuÃ©", "es": "literatura"},
+    {"hanzi": "ç³»", "pinyin": "xÃ¬", "es": "facultad, departamento"},
+    {"hanzi": "åŠ æ‹¿å¤§", "pinyin": "JiÄnÃ¡dÃ ", "es": "CanadÃ¡"},
+    {"hanzi": "ç¾Žå›½", "pinyin": "MÄ›iguÃ³", "es": "Estados Unidos"},
+    {"hanzi": "ä»–", "pinyin": "tÄ", "es": "Ã©l"},
+    {"hanzi": "ä¹Ÿ", "pinyin": "yÄ›", "es": "tambiÃ©n"},
+    {"hanzi": "éƒ½", "pinyin": "dÅu", "es": "todos, ambos"}
   ],
   "8": [
-    {"hanzi": "家", "pinyin": "jiā", "es": "familia, hogar"},
-    {"hanzi": "几", "pinyin": "jǐ", "es": "cuántos"},
-    {"hanzi": "口", "pinyin": "kǒu", "es": "clasificador de familia"},
-    {"hanzi": "照片", "pinyin": "zhàopiàn", "es": "fotografía"},
-    {"hanzi": "和", "pinyin": "hé", "es": "y"},
-    {"hanzi": "个", "pinyin": "gè", "es": "clasificador general"},
-    {"hanzi": "姐姐", "pinyin": "jiějie", "es": "hermana mayor"},
-    {"hanzi": "两", "pinyin": "liǎng", "es": "dos (con clasificador)"},
-    {"hanzi": "弟弟", "pinyin": "dìdi", "es": "hermano menor"},
-    {"hanzi": "还", "pinyin": "hái", "es": "además, también"},
-    {"hanzi": "一共", "pinyin": "yígòng", "es": "en total"},
-    {"hanzi": "妹妹", "pinyin": "mèimei", "es": "hermana menor"},
-    {"hanzi": "小", "pinyin": "xiǎo", "es": "pequeño"},
-    {"hanzi": "狗", "pinyin": "gǒu", "es": "perro"},
-    {"hanzi": "张", "pinyin": "zhāng", "es": "clasificador para objetos planos"},
-    {"hanzi": "当然", "pinyin": "dāngrán", "es": "por supuesto"},
-    {"hanzi": "真", "pinyin": "zhēn", "es": "realmente, verdadero"},
-    {"hanzi": "可爱", "pinyin": "kě'ài", "es": "adorable"},
-    {"hanzi": "爱", "pinyin": "ài", "es": "amar"},
-    {"hanzi": "没", "pinyin": "méi", "es": "no (negación de 有)"},
-    {"hanzi": "男", "pinyin": "nán", "es": "hombre, masculino"},
-    {"hanzi": "做", "pinyin": "zuò", "es": "hacer"},
-    {"hanzi": "工作", "pinyin": "gōngzuò", "es": "trabajo, trabajar"},
-    {"hanzi": "大", "pinyin": "dà", "es": "grande"},
-    {"hanzi": "多少", "pinyin": "duōshao", "es": "cuántos"},
-    {"hanzi": "多", "pinyin": "duō", "es": "mucho"},
-    {"hanzi": "少", "pinyin": "shǎo", "es": "poco"},
-    {"hanzi": "喜欢", "pinyin": "xǐhuan", "es": "gustar, preferir"},
-    {"hanzi": "外语", "pinyin": "wàiyǔ", "es": "lengua extranjera"},
-    {"hanzi": "外国", "pinyin": "wàiguó", "es": "país extranjero"},
-    {"hanzi": "百", "pinyin": "bǎi", "es": "cien"},
-    {"hanzi": "哥哥", "pinyin": "gēge", "es": "hermano mayor"},
-    {"hanzi": "妈妈", "pinyin": "māma", "es": "mamá"}
+    {"hanzi": "å®¶", "pinyin": "jiÄ", "es": "familia, hogar"},
+    {"hanzi": "å‡ ", "pinyin": "jÇ", "es": "cuÃ¡ntos"},
+    {"hanzi": "å£", "pinyin": "kÇ’u", "es": "clasificador de familia"},
+    {"hanzi": "ç…§ç‰‡", "pinyin": "zhÃ opiÃ n", "es": "fotografÃ­a"},
+    {"hanzi": "å’Œ", "pinyin": "hÃ©", "es": "y"},
+    {"hanzi": "ä¸ª", "pinyin": "gÃ¨", "es": "clasificador general"},
+    {"hanzi": "å§å§", "pinyin": "jiÄ›jie", "es": "hermana mayor"},
+    {"hanzi": "ä¸¤", "pinyin": "liÇŽng", "es": "dos (con clasificador)"},
+    {"hanzi": "å¼Ÿå¼Ÿ", "pinyin": "dÃ¬di", "es": "hermano menor"},
+    {"hanzi": "è¿˜", "pinyin": "hÃ¡i", "es": "ademÃ¡s, tambiÃ©n"},
+    {"hanzi": "ä¸€å…±", "pinyin": "yÃ­gÃ²ng", "es": "en total"},
+    {"hanzi": "å¦¹å¦¹", "pinyin": "mÃ¨imei", "es": "hermana menor"},
+    {"hanzi": "å°", "pinyin": "xiÇŽo", "es": "pequeÃ±o"},
+    {"hanzi": "ç‹—", "pinyin": "gÇ’u", "es": "perro"},
+    {"hanzi": "å¼ ", "pinyin": "zhÄng", "es": "clasificador para objetos planos"},
+    {"hanzi": "å½“ç„¶", "pinyin": "dÄngrÃ¡n", "es": "por supuesto"},
+    {"hanzi": "çœŸ", "pinyin": "zhÄ“n", "es": "realmente, verdadero"},
+    {"hanzi": "å¯çˆ±", "pinyin": "kÄ›'Ã i", "es": "adorable"},
+    {"hanzi": "çˆ±", "pinyin": "Ã i", "es": "amar"},
+    {"hanzi": "æ²¡", "pinyin": "mÃ©i", "es": "no (negaciÃ³n de æœ‰)"},
+    {"hanzi": "ç”·", "pinyin": "nÃ¡n", "es": "hombre, masculino"},
+    {"hanzi": "åš", "pinyin": "zuÃ²", "es": "hacer"},
+    {"hanzi": "å·¥ä½œ", "pinyin": "gÅngzuÃ²", "es": "trabajo, trabajar"},
+    {"hanzi": "å¤§", "pinyin": "dÃ ", "es": "grande"},
+    {"hanzi": "å¤šå°‘", "pinyin": "duÅshao", "es": "cuÃ¡ntos"},
+    {"hanzi": "å¤š", "pinyin": "duÅ", "es": "mucho"},
+    {"hanzi": "å°‘", "pinyin": "shÇŽo", "es": "poco"},
+    {"hanzi": "å–œæ¬¢", "pinyin": "xÇhuan", "es": "gustar, preferir"},
+    {"hanzi": "å¤–è¯­", "pinyin": "wÃ iyÇ”", "es": "lengua extranjera"},
+    {"hanzi": "å¤–å›½", "pinyin": "wÃ iguÃ³", "es": "paÃ­s extranjero"},
+    {"hanzi": "ç™¾", "pinyin": "bÇŽi", "es": "cien"},
+    {"hanzi": "å“¥å“¥", "pinyin": "gÄ“ge", "es": "hermano mayor"},
+    {"hanzi": "å¦ˆå¦ˆ", "pinyin": "mÄma", "es": "mamÃ¡"}
   ],
   "9": [
-    {"hanzi": "生日", "pinyin": "shēngrì", "es": "cumpleaños"},
-    {"hanzi": "聚会", "pinyin": "jùhuì", "es": "fiesta / reunión"},
-    {"hanzi": "今年", "pinyin": "jīnnián", "es": "este año"},
-    {"hanzi": "多大", "pinyin": "duō dà", "es": "¿cuántos años?"},
-    {"hanzi": "岁", "pinyin": "suì", "es": "años de edad"},
-    {"hanzi": "出生", "pinyin": "chūshēng", "es": "nacer"},
-    {"hanzi": "属", "pinyin": "shǔ", "es": "pertenecer al zodíaco"},
-    {"hanzi": "一起", "pinyin": "yīqǐ", "es": "juntos"},
-    {"hanzi": "参加", "pinyin": "cānjiā", "es": "participar / asistir"},
-    {"hanzi": "星期", "pinyin": "xīngqī", "es": "semana / día de la semana"},
-    {"hanzi": "上午", "pinyin": "shàngwǔ", "es": "por la mañana"},
-    {"hanzi": "下午", "pinyin": "xiàwǔ", "es": "por la tarde"},
-    {"hanzi": "晚上", "pinyin": "wǎnshang", "es": "por la noche"},
-    {"hanzi": "祝贺", "pinyin": "zhùhè", "es": "felicitar"},
-    {"hanzi": "快乐", "pinyin": "kuàilè", "es": "feliz"},
-    {"hanzi": "买", "pinyin": "mǎi", "es": "comprar"},
-    {"hanzi": "茶", "pinyin": "chá", "es": "té"},
-    {"hanzi": "蛋糕", "pinyin": "dàngāo", "es": "pastel / torta"},
-    {"hanzi": "中餐", "pinyin": "zhōngcān", "es": "comida china"},
-    {"hanzi": "西餐", "pinyin": "xīcān", "es": "comida occidental"},
-    {"hanzi": "啤酒", "pinyin": "píjiǔ", "es": "cerveza"},
-    {"hanzi": "红葡萄酒", "pinyin": "hóng pútaojiǔ", "es": "vino tinto"},
-    {"hanzi": "可乐", "pinyin": "kělè", "es": "Coca-Cola"},
-    {"hanzi": "牛奶", "pinyin": "niúnǎi", "es": "leche"},
-    {"hanzi": "面包", "pinyin": "miànbāo", "es": "pan"},
-    {"hanzi": "米饭", "pinyin": "mǐfàn", "es": "arroz cocido"},
-    {"hanzi": "热狗", "pinyin": "règǒu", "es": "pancho / hot dog"},
-    {"hanzi": "汉堡", "pinyin": "hànbǎo", "es": "hamburguesa"}
+    {"hanzi": "ç”Ÿæ—¥", "pinyin": "shÄ“ngrÃ¬", "es": "cumpleaÃ±os"},
+    {"hanzi": "èšä¼š", "pinyin": "jÃ¹huÃ¬", "es": "fiesta / reuniÃ³n"},
+    {"hanzi": "ä»Šå¹´", "pinyin": "jÄ«nniÃ¡n", "es": "este aÃ±o"},
+    {"hanzi": "å¤šå¤§", "pinyin": "duÅ dÃ ", "es": "Â¿cuÃ¡ntos aÃ±os?"},
+    {"hanzi": "å²", "pinyin": "suÃ¬", "es": "aÃ±os de edad"},
+    {"hanzi": "å‡ºç”Ÿ", "pinyin": "chÅ«shÄ“ng", "es": "nacer"},
+    {"hanzi": "å±ž", "pinyin": "shÇ”", "es": "pertenecer al zodÃ­aco"},
+    {"hanzi": "ä¸€èµ·", "pinyin": "yÄ«qÇ", "es": "juntos"},
+    {"hanzi": "å‚åŠ ", "pinyin": "cÄnjiÄ", "es": "participar / asistir"},
+    {"hanzi": "æ˜ŸæœŸ", "pinyin": "xÄ«ngqÄ«", "es": "semana / dÃ­a de la semana"},
+    {"hanzi": "ä¸Šåˆ", "pinyin": "shÃ ngwÇ”", "es": "por la maÃ±ana"},
+    {"hanzi": "ä¸‹åˆ", "pinyin": "xiÃ wÇ”", "es": "por la tarde"},
+    {"hanzi": "æ™šä¸Š", "pinyin": "wÇŽnshang", "es": "por la noche"},
+    {"hanzi": "ç¥è´º", "pinyin": "zhÃ¹hÃ¨", "es": "felicitar"},
+    {"hanzi": "å¿«ä¹", "pinyin": "kuÃ ilÃ¨", "es": "feliz"},
+    {"hanzi": "ä¹°", "pinyin": "mÇŽi", "es": "comprar"},
+    {"hanzi": "èŒ¶", "pinyin": "chÃ¡", "es": "tÃ©"},
+    {"hanzi": "è›‹ç³•", "pinyin": "dÃ ngÄo", "es": "pastel / torta"},
+    {"hanzi": "ä¸­é¤", "pinyin": "zhÅngcÄn", "es": "comida china"},
+    {"hanzi": "è¥¿é¤", "pinyin": "xÄ«cÄn", "es": "comida occidental"},
+    {"hanzi": "å•¤é…’", "pinyin": "pÃ­jiÇ”", "es": "cerveza"},
+    {"hanzi": "çº¢è‘¡è„é…’", "pinyin": "hÃ³ng pÃºtaojiÇ”", "es": "vino tinto"},
+    {"hanzi": "å¯ä¹", "pinyin": "kÄ›lÃ¨", "es": "Coca-Cola"},
+    {"hanzi": "ç‰›å¥¶", "pinyin": "niÃºnÇŽi", "es": "leche"},
+    {"hanzi": "é¢åŒ…", "pinyin": "miÃ nbÄo", "es": "pan"},
+    {"hanzi": "ç±³é¥­", "pinyin": "mÇfÃ n", "es": "arroz cocido"},
+    {"hanzi": "çƒ­ç‹—", "pinyin": "rÃ¨gÇ’u", "es": "pancho / hot dog"},
+    {"hanzi": "æ±‰å ¡", "pinyin": "hÃ nbÇŽo", "es": "hamburguesa"}
   ],
   "mod-paises": [
-    {"hanzi": "中国", "pinyin": "Zhōngguó", "es": "🇨🇳 China"},
-    {"hanzi": "阿根廷", "pinyin": "Āgēntíng", "es": "🇦🇷 Argentina"},
-    {"hanzi": "墨西哥", "pinyin": "Mòxīgē", "es": "🇲🇽 México"},
-    {"hanzi": "巴西", "pinyin": "Bāxī", "es": "🇧🇷 Brasil"},
-    {"hanzi": "哥伦比亚", "pinyin": "Gēlúnbǐyà", "es": "🇨🇴 Colombia"},
-    {"hanzi": "智利", "pinyin": "Zhìlì", "es": "🇨🇱 Chile"},
-    {"hanzi": "委内瑞拉", "pinyin": "Wěinèiruìlā", "es": "🇻🇪 Venezuela"},
-    {"hanzi": "玻利维亚", "pinyin": "Bōlìwéiyà", "es": "🇧🇴 Bolivia"},
-    {"hanzi": "秘鲁", "pinyin": "Bìlǔ", "es": "🇵🇪 Perú"},
-    {"hanzi": "乌拉圭", "pinyin": "Wūlāguī", "es": "🇺🇾 Uruguay"},
-    {"hanzi": "巴拉圭", "pinyin": "Bālāguī", "es": "🇵🇾 Paraguay"},
-    {"hanzi": "厄瓜多尔", "pinyin": "Èkuǎduōěr", "es": "🇪🇨 Ecuador"},
-    {"hanzi": "古巴", "pinyin": "Gǔbā", "es": "🇨🇺 Cuba"},
-    {"hanzi": "巴拿马", "pinyin": "Pānámǎ", "es": "🇵🇦 Panamá"},
-    {"hanzi": "哥斯达黎加", "pinyin": "Gēsīdálígā", "es": "🇨🇷 Costa Rica"},
-    {"hanzi": "洪都拉斯", "pinyin": "Hóngdūlāsī", "es": "🇭🇳 Honduras"},
-    {"hanzi": "危地马拉", "pinyin": "Wēidìmǎlā", "es": "🇬🇹 Guatemala"},
-    {"hanzi": "波多黎各", "pinyin": "Bōduōlígē", "es": "🇵🇷 Puerto Rico"},
-    {"hanzi": "美国", "pinyin": "Měiguó", "es": "🇺🇸 Estados Unidos"},
-    {"hanzi": "加拿大", "pinyin": "Jiānádà", "es": "🇨🇦 Canadá"},
-    {"hanzi": "日本", "pinyin": "Rìběn", "es": "🇯🇵 Japón"},
-    {"hanzi": "英国", "pinyin": "Yīngguó", "es": "🇬🇧 Reino Unido"},
-    {"hanzi": "西班牙", "pinyin": "Xībānyá", "es": "🇪🇸 España"},
-    {"hanzi": "法国", "pinyin": "Fǎguó", "es": "🇫🇷 Francia"},
-    {"hanzi": "德国", "pinyin": "Déguó", "es": "🇩🇪 Alemania"},
-    {"hanzi": "意大利", "pinyin": "Yīdàlì", "es": "🇮🇹 Italia"},
-    {"hanzi": "葡萄牙", "pinyin": "Pútáoyá", "es": "🇵🇹 Portugal"},
-    {"hanzi": "俄罗斯", "pinyin": "Éluósī", "es": "🇷🇺 Rusia"},
-    {"hanzi": "荷兰", "pinyin": "Hélán", "es": "🇳🇱 Países Bajos"},
-    {"hanzi": "瑞士", "pinyin": "Ruìshì", "es": "🇨🇭 Suiza"},
-    {"hanzi": "瑞典", "pinyin": "Ruìdiǎn", "es": "🇸🇪 Suecia"},
-    {"hanzi": "波兰", "pinyin": "Bōlán", "es": "🇵🇱 Polonia"}
+    {"hanzi": "ä¸­å›½", "pinyin": "ZhÅngguÃ³", "es": "ðŸ‡¨ðŸ‡³ China"},
+    {"hanzi": "é˜¿æ ¹å»·", "pinyin": "Ä€gÄ“ntÃ­ng", "es": "ðŸ‡¦ðŸ‡· Argentina"},
+    {"hanzi": "å¢¨è¥¿å“¥", "pinyin": "MÃ²xÄ«gÄ“", "es": "ðŸ‡²ðŸ‡½ MÃ©xico"},
+    {"hanzi": "å·´è¥¿", "pinyin": "BÄxÄ«", "es": "ðŸ‡§ðŸ‡· Brasil"},
+    {"hanzi": "å“¥ä¼¦æ¯”äºš", "pinyin": "GÄ“lÃºnbÇyÃ ", "es": "ðŸ‡¨ðŸ‡´ Colombia"},
+    {"hanzi": "æ™ºåˆ©", "pinyin": "ZhÃ¬lÃ¬", "es": "ðŸ‡¨ðŸ‡± Chile"},
+    {"hanzi": "å§”å†…ç‘žæ‹‰", "pinyin": "WÄ›inÃ¨iruÃ¬lÄ", "es": "ðŸ‡»ðŸ‡ª Venezuela"},
+    {"hanzi": "çŽ»åˆ©ç»´äºš", "pinyin": "BÅlÃ¬wÃ©iyÃ ", "es": "ðŸ‡§ðŸ‡´ Bolivia"},
+    {"hanzi": "ç§˜é²", "pinyin": "BÃ¬lÇ”", "es": "ðŸ‡µðŸ‡ª PerÃº"},
+    {"hanzi": "ä¹Œæ‹‰åœ­", "pinyin": "WÅ«lÄguÄ«", "es": "ðŸ‡ºðŸ‡¾ Uruguay"},
+    {"hanzi": "å·´æ‹‰åœ­", "pinyin": "BÄlÄguÄ«", "es": "ðŸ‡µðŸ‡¾ Paraguay"},
+    {"hanzi": "åŽ„ç“œå¤šå°”", "pinyin": "ÃˆkuÇŽduÅÄ›r", "es": "ðŸ‡ªðŸ‡¨ Ecuador"},
+    {"hanzi": "å¤å·´", "pinyin": "GÇ”bÄ", "es": "ðŸ‡¨ðŸ‡º Cuba"},
+    {"hanzi": "å·´æ‹¿é©¬", "pinyin": "PÄnÃ¡mÇŽ", "es": "ðŸ‡µðŸ‡¦ PanamÃ¡"},
+    {"hanzi": "å“¥æ–¯è¾¾é»ŽåŠ ", "pinyin": "GÄ“sÄ«dÃ¡lÃ­gÄ", "es": "ðŸ‡¨ðŸ‡· Costa Rica"},
+    {"hanzi": "æ´ªéƒ½æ‹‰æ–¯", "pinyin": "HÃ³ngdÅ«lÄsÄ«", "es": "ðŸ‡­ðŸ‡³ Honduras"},
+    {"hanzi": "å±åœ°é©¬æ‹‰", "pinyin": "WÄ“idÃ¬mÇŽlÄ", "es": "ðŸ‡¬ðŸ‡¹ Guatemala"},
+    {"hanzi": "æ³¢å¤šé»Žå„", "pinyin": "BÅduÅlÃ­gÄ“", "es": "ðŸ‡µðŸ‡· Puerto Rico"},
+    {"hanzi": "ç¾Žå›½", "pinyin": "MÄ›iguÃ³", "es": "ðŸ‡ºðŸ‡¸ Estados Unidos"},
+    {"hanzi": "åŠ æ‹¿å¤§", "pinyin": "JiÄnÃ¡dÃ ", "es": "ðŸ‡¨ðŸ‡¦ CanadÃ¡"},
+    {"hanzi": "æ—¥æœ¬", "pinyin": "RÃ¬bÄ›n", "es": "ðŸ‡¯ðŸ‡µ JapÃ³n"},
+    {"hanzi": "è‹±å›½", "pinyin": "YÄ«ngguÃ³", "es": "ðŸ‡¬ðŸ‡§ Reino Unido"},
+    {"hanzi": "è¥¿ç­ç‰™", "pinyin": "XÄ«bÄnyÃ¡", "es": "ðŸ‡ªðŸ‡¸ EspaÃ±a"},
+    {"hanzi": "æ³•å›½", "pinyin": "FÇŽguÃ³", "es": "ðŸ‡«ðŸ‡· Francia"},
+    {"hanzi": "å¾·å›½", "pinyin": "DÃ©guÃ³", "es": "ðŸ‡©ðŸ‡ª Alemania"},
+    {"hanzi": "æ„å¤§åˆ©", "pinyin": "YÄ«dÃ lÃ¬", "es": "ðŸ‡®ðŸ‡¹ Italia"},
+    {"hanzi": "è‘¡è„ç‰™", "pinyin": "PÃºtÃ¡oyÃ¡", "es": "ðŸ‡µðŸ‡¹ Portugal"},
+    {"hanzi": "ä¿„ç½—æ–¯", "pinyin": "Ã‰luÃ³sÄ«", "es": "ðŸ‡·ðŸ‡º Rusia"},
+    {"hanzi": "è·å…°", "pinyin": "HÃ©lÃ¡n", "es": "ðŸ‡³ðŸ‡± PaÃ­ses Bajos"},
+    {"hanzi": "ç‘žå£«", "pinyin": "RuÃ¬shÃ¬", "es": "ðŸ‡¨ðŸ‡­ Suiza"},
+    {"hanzi": "ç‘žå…¸", "pinyin": "RuÃ¬diÇŽn", "es": "ðŸ‡¸ðŸ‡ª Suecia"},
+    {"hanzi": "æ³¢å…°", "pinyin": "BÅlÃ¡n", "es": "ðŸ‡µðŸ‡± Polonia"}
   ],
   "mod-numeros": [
-    {"hanzi": "零", "pinyin": "líng", "es": "0 · cero"},
-    {"hanzi": "一", "pinyin": "yī", "es": "1 · uno"},
-    {"hanzi": "二", "pinyin": "èr", "es": "2 · dos"},
-    {"hanzi": "三", "pinyin": "sān", "es": "3 · tres"},
-    {"hanzi": "四", "pinyin": "sì", "es": "4 · cuatro"},
-    {"hanzi": "五", "pinyin": "wǔ", "es": "5 · cinco"},
-    {"hanzi": "六", "pinyin": "liù", "es": "6 · seis"},
-    {"hanzi": "七", "pinyin": "qī", "es": "7 · siete"},
-    {"hanzi": "八", "pinyin": "bā", "es": "8 · ocho"},
-    {"hanzi": "九", "pinyin": "jiǔ", "es": "9 · nueve"},
-    {"hanzi": "十", "pinyin": "shí", "es": "10 · diez"},
-    {"hanzi": "二十", "pinyin": "èrshí", "es": "20 · veinte"},
-    {"hanzi": "三十", "pinyin": "sānshí", "es": "30 · treinta"},
-    {"hanzi": "四十", "pinyin": "sìshí", "es": "40 · cuarenta"},
-    {"hanzi": "五十", "pinyin": "wǔshí", "es": "50 · cincuenta"},
-    {"hanzi": "六十", "pinyin": "liùshí", "es": "60 · sesenta"},
-    {"hanzi": "七十", "pinyin": "qīshí", "es": "70 · setenta"},
-    {"hanzi": "八十", "pinyin": "bāshí", "es": "80 · ochenta"},
-    {"hanzi": "九十", "pinyin": "jiǔshí", "es": "90 · noventa"},
-    {"hanzi": "一百", "pinyin": "yībǎi", "es": "100 · cien"}
+    {"hanzi": "é›¶", "pinyin": "lÃ­ng", "es": "0 Â· cero"},
+    {"hanzi": "ä¸€", "pinyin": "yÄ«", "es": "1 Â· uno"},
+    {"hanzi": "äºŒ", "pinyin": "Ã¨r", "es": "2 Â· dos"},
+    {"hanzi": "ä¸‰", "pinyin": "sÄn", "es": "3 Â· tres"},
+    {"hanzi": "å››", "pinyin": "sÃ¬", "es": "4 Â· cuatro"},
+    {"hanzi": "äº”", "pinyin": "wÇ”", "es": "5 Â· cinco"},
+    {"hanzi": "å…­", "pinyin": "liÃ¹", "es": "6 Â· seis"},
+    {"hanzi": "ä¸ƒ", "pinyin": "qÄ«", "es": "7 Â· siete"},
+    {"hanzi": "å…«", "pinyin": "bÄ", "es": "8 Â· ocho"},
+    {"hanzi": "ä¹", "pinyin": "jiÇ”", "es": "9 Â· nueve"},
+    {"hanzi": "å", "pinyin": "shÃ­", "es": "10 Â· diez"},
+    {"hanzi": "äºŒå", "pinyin": "Ã¨rshÃ­", "es": "20 Â· veinte"},
+    {"hanzi": "ä¸‰å", "pinyin": "sÄnshÃ­", "es": "30 Â· treinta"},
+    {"hanzi": "å››å", "pinyin": "sÃ¬shÃ­", "es": "40 Â· cuarenta"},
+    {"hanzi": "äº”å", "pinyin": "wÇ”shÃ­", "es": "50 Â· cincuenta"},
+    {"hanzi": "å…­å", "pinyin": "liÃ¹shÃ­", "es": "60 Â· sesenta"},
+    {"hanzi": "ä¸ƒå", "pinyin": "qÄ«shÃ­", "es": "70 Â· setenta"},
+    {"hanzi": "å…«å", "pinyin": "bÄshÃ­", "es": "80 Â· ochenta"},
+    {"hanzi": "ä¹å", "pinyin": "jiÇ”shÃ­", "es": "90 Â· noventa"},
+    {"hanzi": "ä¸€ç™¾", "pinyin": "yÄ«bÇŽi", "es": "100 Â· cien"}
   ]
 };
 
@@ -966,95 +966,50 @@ function shuffle(arr) {
 }
 
 const LESSON_THEMES = Object.assign({
-  "5": { name: "En el campus", icon: "宿" },
-  "6": { name: "El clima y el tiempo", icon: "天" },
-  "7": { name: "Presentaciones", icon: "介" },
-  "8": { name: "La familia", icon: "家" },
-  "9": { name: "Fechas y celebraciones", icon: "🎂" },
-  "mod-paises": { name: "Países del mundo", icon: "国" },
-  "mod-numeros": { name: "Los números", icon: "数" },
+  "5": { name: "En el campus", icon: "å®¿" },
+  "6": { name: "El clima y el tiempo", icon: "å¤©" },
+  "7": { name: "Presentaciones", icon: "ä»‹" },
+  "8": { name: "La familia", icon: "å®¶" },
+  "9": { name: "Fechas y celebraciones", icon: "ðŸŽ‚" },
+  "mod-paises": { name: "PaÃ­ses del mundo", icon: "å›½" },
+  "mod-numeros": { name: "Los nÃºmeros", icon: "æ•°" },
 }, JSON.parse(localStorage.getItem('hanzi-lesson-themes') || '{}'));
 
-// ----------------- Lección 9: datos actividades especiales -----------------
-const L9_COMIDA_QUESTIONS = [
-  { sentence: '___：汉堡 🍔', pinyin: 'Hànbǎo', answer: '西餐', options: ['中餐', '西餐'], hint: 'hamburguesa' },
-  { sentence: '___：米饭 🍚', pinyin: 'Mǐfàn', answer: '中餐', options: ['中餐', '西餐'], hint: 'arroz cocido' },
-  { sentence: '___：热狗 🌭', pinyin: 'Règǒu', answer: '西餐', options: ['中餐', '西餐'], hint: 'pancho / hot dog' },
-  { sentence: '___：茶 🍵', pinyin: 'Chá', answer: '中餐', options: ['中餐', '西餐'], hint: 'té' },
-  { sentence: '___：面包 🍞', pinyin: 'Miànbāo', answer: '西餐', options: ['中餐', '西餐'], hint: 'pan' },
-  { sentence: '___：可乐 🥤', pinyin: 'Kělè', answer: '西餐', options: ['中餐', '西餐'], hint: 'Coca-Cola' },
-  { sentence: '___：啤酒 🍺', pinyin: 'Píjiǔ', answer: '西餐', options: ['中餐', '西餐'], hint: 'cerveza' },
-  { sentence: '___：红葡萄酒 🍷', pinyin: 'Hóng pútaojiǔ', answer: '西餐', options: ['中餐', '西餐'], hint: 'vino tinto' },
-  { sentence: '___：蛋糕 🎂', pinyin: 'Dàngāo', answer: '西餐', options: ['中餐', '西餐'], hint: 'pastel / torta' },
-  { sentence: '___：牛奶 🥛', pinyin: 'Niúnǎi', answer: '西餐', options: ['中餐', '西餐'], hint: 'leche' },
-];
-
-const L9_DIALOGO_QUESTIONS = [
-  { context: 'Es el cumpleaños de tu amigo', A: '今天是你的___吗？', B: '是的，今天是我的生日！', blankIn: 'A', answer: '生日', answerPinyin: 'shēngrì', answerEs: 'cumpleaños', options: ['生日', '聚会', '课', '星期'], explanation: '生日 = cumpleaños. 今天是你的生日吗？= ¿Hoy es tu cumpleaños?' },
-  { context: 'Preguntas la edad de alguien', A: '你今年___？', B: '我今年二十岁。', blankIn: 'A', answer: '多大', answerPinyin: 'duō dà', answerEs: '¿cuántos años tienes?', options: ['多大', '多少', '几岁', '怎么样'], explanation: '多大 se usa para preguntar la edad de personas adultas.' },
-  { context: 'Invitas a una fiesta', A: '我们___参加聚会吧！', B: '好的，几点？', blankIn: 'A', answer: '一起', answerPinyin: 'yīqǐ', answerEs: 'juntos', options: ['一起', '都', '也', '很'], explanation: '一起 = juntos. 我们一起去 = vamos juntos.' },
-  { context: 'Ofreces algo de comer', A: '你喝___还是可乐？', B: '我喝茶，谢谢。', blankIn: 'A', answer: '茶', answerPinyin: 'chá', answerEs: 'té', options: ['茶', '啤酒', '牛奶', '酒'], explanation: '还是 = o (en preguntas de elección). ¿Té o Coca-Cola?' },
-  { context: 'Felicitas a alguien', A: '___你生日快乐！', B: '谢谢你！', blankIn: 'A', answer: '祝贺', answerPinyin: 'zhùhè', answerEs: 'felicitar', options: ['祝贺', '参加', '聚会', '属'], explanation: '祝贺 = felicitar. 祝贺你生日快乐 = ¡Felicidades en tu cumpleaños!' },
-  { context: 'Hablas del horario de la clase', A: '你的___是上午还是下午？', B: '是上午九点。', blankIn: 'A', answer: '课', answerPinyin: 'kè', answerEs: 'clase', options: ['课', '星期', '生日', '聚会'], explanation: '课 = clase. 你的课是几点？= ¿A qué hora es tu clase?' },
-  { context: 'Preguntas cuándo nació alguien', A: '你是哪年___的？', B: '我是1998年出生的。', blankIn: 'A', answer: '出生', answerPinyin: 'chūshēng', answerEs: 'nacer', options: ['出生', '属', '生日', '聚会'], explanation: '出生 = nacer. 你是哪年出生的？= ¿En qué año naciste?' },
-  { context: 'Comprás algo para la fiesta', A: '我去___一瓶红葡萄酒。', B: '好主意！', blankIn: 'A', answer: '买', answerPinyin: 'mǎi', answerEs: 'comprar', options: ['买', '吃', '喝', '参加'], explanation: '买 = comprar. 我去买 = voy a comprar.' },
-];
-
-const L9_ORDEN_QUESTIONS = [
-  { words: ['今天', '是', '我的', '生日'], correct: '今天是我的生日', es: 'Hoy es mi cumpleaños', pinyin: 'Jīntiān shì wǒde shēngrì' },
-  { words: ['你', '今年', '多大', '了'], correct: '你今年多大了', es: '¿Cuántos años tienes este año?', pinyin: 'Nǐ jīnnián duō dà le' },
-  { words: ['我', '上午', '有', '课'], correct: '我上午有课', es: 'Por la mañana tengo clase', pinyin: 'Wǒ shàngwǔ yǒu kè' },
-  { words: ['我们', '去', '参加', '聚会', '吧'], correct: '我们去参加聚会吧', es: 'Vayamos a la fiesta', pinyin: 'Wǒmen qù cānjiā jùhuì ba' },
-  { words: ['我', '买', '了', '一瓶', '红葡萄酒'], correct: '我买了一瓶红葡萄酒', es: 'Compré una botella de vino tinto', pinyin: 'Wǒ mǎi le yī píng hóng pútaojiǔ' },
-  { words: ['晚上', '我们', '吃', '中餐', '好吗'], correct: '晚上我们吃中餐好吗', es: '¿Comemos comida china esta noche?', pinyin: 'Wǎnshang wǒmen chī zhōngcān hǎo ma' },
-  { words: ['祝贺', '你', '生日', '快乐'], correct: '祝贺你生日快乐', es: '¡Feliz cumpleaños!', pinyin: 'Zhùhè nǐ shēngrì kuàilè' },
-];
-
-const L9_EDAD_QUESTIONS = [
-  { sentence: '___ = "este año"', pinyin: 'jīnnián', answer: '今年', options: ['今年', '今天', '明天', '昨天'], hint: '今(jīn) = ahora · 年(nián) = año' },
-  { sentence: '___ = "años de edad"', pinyin: 'suì', answer: '岁', options: ['岁', '年', '课', '天'], hint: 'Clasificador para la edad de las personas' },
-  { sentence: '___ = "nacer en el año del..."', pinyin: 'shǔ', answer: '属', options: ['属', '出生', '聚会', '生日'], hint: 'Zodiaco chino · 你属什么？' },
-  { sentence: '___ = "¿cuántos años?" (informal)', pinyin: 'duō dà', answer: '多大', options: ['多大', '多少', '怎么样', '几岁'], hint: 'Para preguntar la edad a adultos' },
-  { sentence: '___ = "semana"', pinyin: 'xīngqī', answer: '星期', options: ['星期', '上午', '下午', '年'], hint: '星期一 = lunes, 星期日 = domingo' },
-  { sentence: '___ = "por la mañana"', pinyin: 'shàngwǔ', answer: '上午', options: ['上午', '下午', '晚上', '今天'], hint: '上 = arriba/encima → mañana' },
-  { sentence: '___ = "por la tarde"', pinyin: 'xiàwǔ', answer: '下午', options: ['下午', '上午', '晚上', '星期'], hint: '下 = abajo/debajo → tarde' },
-  { sentence: '___ = "noche"', pinyin: 'wǎnshang', answer: '晚上', options: ['晚上', '下午', '上午', '今天'], hint: '晚(wǎn) = tardío, noche' },
-];
-
+// ----------------- LecciÃ³n 9: datos actividades especiales -----------------
 // ----------------- Prueba data -----------------
 const CLASIFICADOR_QUESTIONS = [
-  { sentence: '我有两___照片。', pinyin: 'Wǒ yǒu liǎng ___ zhàopiàn.', answer: '张', options: ['张', '个', '口', '层'], hint: '照片 = fotografía' },
-  { sentence: '你们家有几___人？', pinyin: 'Nǐmen jiā yǒu jǐ ___ rén?', answer: '口', options: ['口', '个', '张', '位'], hint: 'Para contar miembros de la familia' },
-  { sentence: '我有一___名片。', pinyin: 'Wǒ yǒu yī ___ míngpiàn.', answer: '张', options: ['张', '个', '口', '层'], hint: '名片 = tarjeta de visita' },
-  { sentence: '我有两___姐姐。', pinyin: 'Wǒ yǒu liǎng ___ jiějie.', answer: '个', options: ['个', '口', '张', '位'], hint: 'Clasificador general para personas' },
-  { sentence: '我们学院有十二___系。', pinyin: 'Wǒmen xuéyuàn yǒu shí\'èr ___ xì.', answer: '个', options: ['个', '口', '张', '层'], hint: '系 = facultad / departamento' },
-  { sentence: '餐厅在二___。', pinyin: 'Cāntīng zài èr ___.', answer: '层', options: ['层', '个', '号', '口'], hint: '层 = piso / planta del edificio' },
-  { sentence: '我住零四___。', pinyin: 'Wǒ zhù líng sì ___.', answer: '号', options: ['号', '层', '口', '张'], hint: '号 = número de habitación' },
-  { sentence: '我有一___弟弟。', pinyin: 'Wǒ yǒu yī ___ dìdi.', answer: '个', options: ['个', '口', '张', '层'], hint: 'Clasificador general para personas' },
+  { sentence: 'æˆ‘æœ‰ä¸¤___ç…§ç‰‡ã€‚', pinyin: 'WÇ’ yÇ’u liÇŽng ___ zhÃ opiÃ n.', answer: 'å¼ ', options: ['å¼ ', 'ä¸ª', 'å£', 'å±‚'], hint: 'ç…§ç‰‡ = fotografÃ­a' },
+  { sentence: 'ä½ ä»¬å®¶æœ‰å‡ ___äººï¼Ÿ', pinyin: 'NÇmen jiÄ yÇ’u jÇ ___ rÃ©n?', answer: 'å£', options: ['å£', 'ä¸ª', 'å¼ ', 'ä½'], hint: 'Para contar miembros de la familia' },
+  { sentence: 'æˆ‘æœ‰ä¸€___åç‰‡ã€‚', pinyin: 'WÇ’ yÇ’u yÄ« ___ mÃ­ngpiÃ n.', answer: 'å¼ ', options: ['å¼ ', 'ä¸ª', 'å£', 'å±‚'], hint: 'åç‰‡ = tarjeta de visita' },
+  { sentence: 'æˆ‘æœ‰ä¸¤___å§å§ã€‚', pinyin: 'WÇ’ yÇ’u liÇŽng ___ jiÄ›jie.', answer: 'ä¸ª', options: ['ä¸ª', 'å£', 'å¼ ', 'ä½'], hint: 'Clasificador general para personas' },
+  { sentence: 'æˆ‘ä»¬å­¦é™¢æœ‰åäºŒ___ç³»ã€‚', pinyin: 'WÇ’men xuÃ©yuÃ n yÇ’u shÃ­\'Ã¨r ___ xÃ¬.', answer: 'ä¸ª', options: ['ä¸ª', 'å£', 'å¼ ', 'å±‚'], hint: 'ç³» = facultad / departamento' },
+  { sentence: 'é¤åŽ…åœ¨äºŒ___ã€‚', pinyin: 'CÄntÄ«ng zÃ i Ã¨r ___.', answer: 'å±‚', options: ['å±‚', 'ä¸ª', 'å·', 'å£'], hint: 'å±‚ = piso / planta del edificio' },
+  { sentence: 'æˆ‘ä½é›¶å››___ã€‚', pinyin: 'WÇ’ zhÃ¹ lÃ­ng sÃ¬ ___.', answer: 'å·', options: ['å·', 'å±‚', 'å£', 'å¼ '], hint: 'å· = nÃºmero de habitaciÃ³n' },
+  { sentence: 'æˆ‘æœ‰ä¸€___å¼Ÿå¼Ÿã€‚', pinyin: 'WÇ’ yÇ’u yÄ« ___ dÃ¬di.', answer: 'ä¸ª', options: ['ä¸ª', 'å£', 'å¼ ', 'å±‚'], hint: 'Clasificador general para personas' },
 ];
 
 const DIALOGO_QUESTIONS = [
-  { context: 'Buscas el comedor en el campus', A: '请问，餐厅___哪儿？', B: '在二层。', blankIn: 'A', answer: '在', answerPinyin: 'zài', answerEs: 'estar / encontrarse en', options: ['在', '是', '去', '有'], explanation: '在 + 哪儿 pregunta la ubicación de un lugar.' },
-  { context: 'Preguntas si alguien está en casa', A: '请问，李明___吗？', B: '对不起，他不在。', blankIn: 'A', answer: '在', answerPinyin: 'zài', answerEs: 'estar presente', options: ['在', '来', '去', '好'], explanation: '在吗 = ¿está presente? / ¿está en casa?' },
-  { context: 'Alguien choca contigo', A: '对不起！', B: '___。', blankIn: 'B', answer: '没关系', answerPinyin: 'méi guānxi', answerEs: 'no importa', options: ['没关系', '不用谢', '再见', '请问'], explanation: '没关系 = no importa. Respuesta a 对不起.' },
-  { context: 'Propones una actividad', A: '我们去游泳，___？', B: '太好了！', blankIn: 'A', answer: '好吗', answerPinyin: 'hǎo ma', answerEs: '¿de acuerdo? / ¿bien?', options: ['好吗', '怎么', '什么', '对吗'], explanation: '...好吗 o ...可以吗 se usan para hacer sugerencias.' },
-  { context: 'No puedes quedar', A: '明天我们打球，好吗？', B: '很抱歉，___不行。', blankIn: 'B', answer: '恐怕', answerPinyin: 'kǒngpà', answerEs: 'temo que... / me temo', options: ['恐怕', '太', '很', '都'], explanation: '恐怕 = temo que... Se usa para rechazar educadamente.' },
-  { context: 'Te dan las gracias', A: '谢谢你！', B: '___！', blankIn: 'B', answer: '不用谢', answerPinyin: 'búyòng xiè', answerEs: 'de nada', options: ['不用谢', '没关系', '对不起', '再见'], explanation: '不用谢 = de nada. Respuesta a 谢谢.' },
-  { context: 'Pregunta sobre tu carrera', A: '你学习什么___？', B: '我学习中文。', blankIn: 'A', answer: '专业', answerPinyin: 'zhuānyè', answerEs: 'carrera / especialidad', options: ['专业', '名字', '工作', '时间'], explanation: '专业 = carrera / especialidad académica.' },
-  { context: 'Cuántas personas en tu familia', A: '你们家有___口人？', B: '我们家有四口人。', blankIn: 'A', answer: '几', answerPinyin: 'jǐ', answerEs: '¿cuántos? (número pequeño)', options: ['几', '多少', '什么', '哪'], explanation: '几 se usa para preguntar números pequeños (con clasificador).' },
-  { context: 'Cuántos departamentos hay', A: '你们学院有___个系？', B: '有十二个系。', blankIn: 'A', answer: '多少', answerPinyin: 'duōshao', answerEs: '¿cuántos? (cualquier número)', options: ['多少', '几', '什么', '哪'], explanation: '多少 se usa para números potencialmente grandes.' },
-  { context: 'Presentas a alguien', A: '他是我们___王老师。', B: '您好！', blankIn: 'A', answer: '的', answerPinyin: 'de', answerEs: 'partícula posesiva', options: ['的', '了', '吗', '呢'], explanation: '的 conecta el poseedor con lo poseído. 他是我们的王老师 = Él es nuestro profesor Wang.' },
+  { context: 'Buscas el comedor en el campus', A: 'è¯·é—®ï¼Œé¤åŽ…___å“ªå„¿ï¼Ÿ', B: 'åœ¨äºŒå±‚ã€‚', blankIn: 'A', answer: 'åœ¨', answerPinyin: 'zÃ i', answerEs: 'estar / encontrarse en', options: ['åœ¨', 'æ˜¯', 'åŽ»', 'æœ‰'], explanation: 'åœ¨ + å“ªå„¿ pregunta la ubicaciÃ³n de un lugar.' },
+  { context: 'Preguntas si alguien estÃ¡ en casa', A: 'è¯·é—®ï¼ŒæŽæ˜Ž___å—ï¼Ÿ', B: 'å¯¹ä¸èµ·ï¼Œä»–ä¸åœ¨ã€‚', blankIn: 'A', answer: 'åœ¨', answerPinyin: 'zÃ i', answerEs: 'estar presente', options: ['åœ¨', 'æ¥', 'åŽ»', 'å¥½'], explanation: 'åœ¨å— = Â¿estÃ¡ presente? / Â¿estÃ¡ en casa?' },
+  { context: 'Alguien choca contigo', A: 'å¯¹ä¸èµ·ï¼', B: '___ã€‚', blankIn: 'B', answer: 'æ²¡å…³ç³»', answerPinyin: 'mÃ©i guÄnxi', answerEs: 'no importa', options: ['æ²¡å…³ç³»', 'ä¸ç”¨è°¢', 'å†è§', 'è¯·é—®'], explanation: 'æ²¡å…³ç³» = no importa. Respuesta a å¯¹ä¸èµ·.' },
+  { context: 'Propones una actividad', A: 'æˆ‘ä»¬åŽ»æ¸¸æ³³ï¼Œ___ï¼Ÿ', B: 'å¤ªå¥½äº†ï¼', blankIn: 'A', answer: 'å¥½å—', answerPinyin: 'hÇŽo ma', answerEs: 'Â¿de acuerdo? / Â¿bien?', options: ['å¥½å—', 'æ€Žä¹ˆ', 'ä»€ä¹ˆ', 'å¯¹å—'], explanation: '...å¥½å— o ...å¯ä»¥å— se usan para hacer sugerencias.' },
+  { context: 'No puedes quedar', A: 'æ˜Žå¤©æˆ‘ä»¬æ‰“çƒï¼Œå¥½å—ï¼Ÿ', B: 'å¾ˆæŠ±æ­‰ï¼Œ___ä¸è¡Œã€‚', blankIn: 'B', answer: 'ææ€•', answerPinyin: 'kÇ’ngpÃ ', answerEs: 'temo que... / me temo', options: ['ææ€•', 'å¤ª', 'å¾ˆ', 'éƒ½'], explanation: 'ææ€• = temo que... Se usa para rechazar educadamente.' },
+  { context: 'Te dan las gracias', A: 'è°¢è°¢ä½ ï¼', B: '___ï¼', blankIn: 'B', answer: 'ä¸ç”¨è°¢', answerPinyin: 'bÃºyÃ²ng xiÃ¨', answerEs: 'de nada', options: ['ä¸ç”¨è°¢', 'æ²¡å…³ç³»', 'å¯¹ä¸èµ·', 'å†è§'], explanation: 'ä¸ç”¨è°¢ = de nada. Respuesta a è°¢è°¢.' },
+  { context: 'Pregunta sobre tu carrera', A: 'ä½ å­¦ä¹ ä»€ä¹ˆ___ï¼Ÿ', B: 'æˆ‘å­¦ä¹ ä¸­æ–‡ã€‚', blankIn: 'A', answer: 'ä¸“ä¸š', answerPinyin: 'zhuÄnyÃ¨', answerEs: 'carrera / especialidad', options: ['ä¸“ä¸š', 'åå­—', 'å·¥ä½œ', 'æ—¶é—´'], explanation: 'ä¸“ä¸š = carrera / especialidad acadÃ©mica.' },
+  { context: 'CuÃ¡ntas personas en tu familia', A: 'ä½ ä»¬å®¶æœ‰___å£äººï¼Ÿ', B: 'æˆ‘ä»¬å®¶æœ‰å››å£äººã€‚', blankIn: 'A', answer: 'å‡ ', answerPinyin: 'jÇ', answerEs: 'Â¿cuÃ¡ntos? (nÃºmero pequeÃ±o)', options: ['å‡ ', 'å¤šå°‘', 'ä»€ä¹ˆ', 'å“ª'], explanation: 'å‡  se usa para preguntar nÃºmeros pequeÃ±os (con clasificador).' },
+  { context: 'CuÃ¡ntos departamentos hay', A: 'ä½ ä»¬å­¦é™¢æœ‰___ä¸ªç³»ï¼Ÿ', B: 'æœ‰åäºŒä¸ªç³»ã€‚', blankIn: 'A', answer: 'å¤šå°‘', answerPinyin: 'duÅshao', answerEs: 'Â¿cuÃ¡ntos? (cualquier nÃºmero)', options: ['å¤šå°‘', 'å‡ ', 'ä»€ä¹ˆ', 'å“ª'], explanation: 'å¤šå°‘ se usa para nÃºmeros potencialmente grandes.' },
+  { context: 'Presentas a alguien', A: 'ä»–æ˜¯æˆ‘ä»¬___çŽ‹è€å¸ˆã€‚', B: 'æ‚¨å¥½ï¼', blankIn: 'A', answer: 'çš„', answerPinyin: 'de', answerEs: 'partÃ­cula posesiva', options: ['çš„', 'äº†', 'å—', 'å‘¢'], explanation: 'çš„ conecta el poseedor con lo poseÃ­do. ä»–æ˜¯æˆ‘ä»¬çš„çŽ‹è€å¸ˆ = Ã‰l es nuestro profesor Wang.' },
 ];
 
 const ORDEN_QUESTIONS = [
-  { words: ['我们家', '有', '四口', '人'], correct: '我们家有四口人', es: 'En mi familia hay cuatro personas', pinyin: 'Wǒmen jiā yǒu sì kǒu rén' },
-  { words: ['餐厅', '在', '二层'], correct: '餐厅在二层', es: 'El comedor está en el segundo piso', pinyin: 'Cāntīng zài èr céng' },
-  { words: ['我', '也', '学习', '中文'], correct: '我也学习中文', es: 'Yo también estudio chino', pinyin: 'Wǒ yě xuéxí Zhōngwén' },
-  { words: ['今天', '天气', '太', '好', '了'], correct: '今天天气太好了', es: 'Hoy hace muy buen tiempo', pinyin: 'Jīntiān tiānqì tài hǎo le' },
-  { words: ['这', '是', '我的', '名片'], correct: '这是我的名片', es: 'Esta es mi tarjeta de visita', pinyin: 'Zhè shì wǒde míngpiàn' },
-  { words: ['我', '喜欢', '学习', '外语'], correct: '我喜欢学习外语', es: 'Me gusta estudiar idiomas extranjeros', pinyin: 'Wǒ xǐhuan xuéxí wàiyǔ' },
-  { words: ['你们', '都', '是', '学生', '吗'], correct: '你们都是学生吗', es: '¿Son todos ustedes estudiantes?', pinyin: 'Nǐmen dōu shì xuésheng ma' },
-  { words: ['我有', '两个', '姐姐', '和', '一个', '弟弟'], correct: '我有两个姐姐和一个弟弟', es: 'Tengo dos hermanas mayores y un hermano menor', pinyin: 'Wǒ yǒu liǎng gè jiějie hé yī gè dìdi' },
+  { words: ['æˆ‘ä»¬å®¶', 'æœ‰', 'å››å£', 'äºº'], correct: 'æˆ‘ä»¬å®¶æœ‰å››å£äºº', es: 'En mi familia hay cuatro personas', pinyin: 'WÇ’men jiÄ yÇ’u sÃ¬ kÇ’u rÃ©n' },
+  { words: ['é¤åŽ…', 'åœ¨', 'äºŒå±‚'], correct: 'é¤åŽ…åœ¨äºŒå±‚', es: 'El comedor estÃ¡ en el segundo piso', pinyin: 'CÄntÄ«ng zÃ i Ã¨r cÃ©ng' },
+  { words: ['æˆ‘', 'ä¹Ÿ', 'å­¦ä¹ ', 'ä¸­æ–‡'], correct: 'æˆ‘ä¹Ÿå­¦ä¹ ä¸­æ–‡', es: 'Yo tambiÃ©n estudio chino', pinyin: 'WÇ’ yÄ› xuÃ©xÃ­ ZhÅngwÃ©n' },
+  { words: ['ä»Šå¤©', 'å¤©æ°”', 'å¤ª', 'å¥½', 'äº†'], correct: 'ä»Šå¤©å¤©æ°”å¤ªå¥½äº†', es: 'Hoy hace muy buen tiempo', pinyin: 'JÄ«ntiÄn tiÄnqÃ¬ tÃ i hÇŽo le' },
+  { words: ['è¿™', 'æ˜¯', 'æˆ‘çš„', 'åç‰‡'], correct: 'è¿™æ˜¯æˆ‘çš„åç‰‡', es: 'Esta es mi tarjeta de visita', pinyin: 'ZhÃ¨ shÃ¬ wÇ’de mÃ­ngpiÃ n' },
+  { words: ['æˆ‘', 'å–œæ¬¢', 'å­¦ä¹ ', 'å¤–è¯­'], correct: 'æˆ‘å–œæ¬¢å­¦ä¹ å¤–è¯­', es: 'Me gusta estudiar idiomas extranjeros', pinyin: 'WÇ’ xÇhuan xuÃ©xÃ­ wÃ iyÇ”' },
+  { words: ['ä½ ä»¬', 'éƒ½', 'æ˜¯', 'å­¦ç”Ÿ', 'å—'], correct: 'ä½ ä»¬éƒ½æ˜¯å­¦ç”Ÿå—', es: 'Â¿Son todos ustedes estudiantes?', pinyin: 'NÇmen dÅu shÃ¬ xuÃ©sheng ma' },
+  { words: ['æˆ‘æœ‰', 'ä¸¤ä¸ª', 'å§å§', 'å’Œ', 'ä¸€ä¸ª', 'å¼Ÿå¼Ÿ'], correct: 'æˆ‘æœ‰ä¸¤ä¸ªå§å§å’Œä¸€ä¸ªå¼Ÿå¼Ÿ', es: 'Tengo dos hermanas mayores y un hermano menor', pinyin: 'WÇ’ yÇ’u liÇŽng gÃ¨ jiÄ›jie hÃ© yÄ« gÃ¨ dÃ¬di' },
 ];
 
 // ----------------- Descarga resumen -----------------
@@ -1063,9 +1018,9 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   const pp = progress.prueba || {};
 
   const scoreColor = (p) => p >= 80 ? '#3A7D6E' : p >= 50 ? '#E0A93B' : '#C1432B';
-  const star = (p) => p >= 80 ? '⭐' : p > 0 ? '🔸' : '—';
+  const star = (p) => p >= 80 ? 'â­' : p > 0 ? 'ðŸ”¸' : 'â€”';
 
-  // Helper: render a table of missed words (hanzi / pinyin / español)
+  // Helper: render a table of missed words (hanzi / pinyin / espaÃ±ol)
   const wordRows = (arr) => arr.map(w =>
     `<tr>
       <td style="font-family:'Noto Serif SC',serif;font-size:20px;padding:10px 12px;border-bottom:1px solid #F3E6CC">${w.hanzi}</td>
@@ -1074,26 +1029,26 @@ function downloadResumen(vocab, progress, lessons, playerName) {
     </tr>`
   ).join('');
 
-  // ── Lecciones regulares (1-8): tabla de puntajes ─────────────────────────
+  // â”€â”€ Lecciones regulares (1-8): tabla de puntajes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const regularLessons = lessons.filter(id => id !== 'mod-paises' && id !== 'mod-numeros');
   const specialLessons = lessons.filter(id => id === 'mod-paises' || id === 'mod-numeros');
 
   const lessonRows = regularLessons.map(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id };
     const m = lp.match || 0, c = lp.cards || 0, q = lp.quiz || 0;
     return `<tr>
-      <td style="padding:10px 12px;border-bottom:1px solid #F3E6CC"><strong>Lección ${id}</strong><br><span style="font-size:12px;color:#6E645A">${theme.name}</span></td>
+      <td style="padding:10px 12px;border-bottom:1px solid #F3E6CC"><strong>LecciÃ³n ${id}</strong><br><span style="font-size:12px;color:#6E645A">${theme.name}</span></td>
       <td style="color:${scoreColor(m)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(m)} ${m}%</td>
       <td style="color:${scoreColor(c)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(c)} ${c}%</td>
       <td style="color:${scoreColor(q)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(q)} ${q}%</td>
     </tr>`;
   }).join('');
 
-  // ── Módulos especiales (países y números) ─────────────────────────────────
+  // â”€â”€ MÃ³dulos especiales (paÃ­ses y nÃºmeros) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const specialRows = specialLessons.map(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'Países del mundo' : 'Los números' };
+    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'PaÃ­ses del mundo' : 'Los nÃºmeros' };
     const m = lp.match || 0, c = lp.cards || 0, q = lp.quiz || 0;
     return `<tr>
       <td style="padding:10px 12px;border-bottom:1px solid #F3E6CC"><strong>${theme.name}</strong></td>
@@ -1103,37 +1058,37 @@ function downloadResumen(vocab, progress, lessons, playerName) {
     </tr>`;
   }).join('');
 
-  // ── Para repasar: errores reales por módulo ───────────────────────────────
+  // â”€â”€ Para repasar: errores reales por mÃ³dulo â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   let repasarHTML = '';
 
   // Lecciones regulares
   regularLessons.forEach(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id };
     ['match', 'cards', 'quiz'].forEach(mode => {
       const modeLabel = { match: 'Emparejar', cards: 'Tarjetas', quiz: 'Quiz' }[mode];
       const missed = lp[mode + '_missed'] || [];
       if (missed.length === 0) return;
       const unique = missed.filter((w, i, arr) => arr.findIndex(x => x.hanzi === w.hanzi) === i);
       repasarHTML += `<h3 style="margin:24px 0 6px;color:#2E2A26;font-size:15px">
-        Lección ${id} · ${theme.name} — <em>${modeLabel}</em>
+        LecciÃ³n ${id} Â· ${theme.name} â€” <em>${modeLabel}</em>
         <span style="font-size:12px;color:#C1432B;font-weight:700">(${unique.length} ${unique.length === 1 ? 'error' : 'errores'})</span>
       </h3>
       <table style="width:100%;border-collapse:collapse;margin-bottom:4px">${wordRows(unique)}</table>`;
     });
   });
 
-  // Módulos especiales
+  // MÃ³dulos especiales
   specialLessons.forEach(id => {
     const lp = progress.lessons[id] || {};
-    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'Países del mundo' : 'Los números' };
+    const theme = LESSON_THEMES[id] || { name: id === 'mod-paises' ? 'PaÃ­ses del mundo' : 'Los nÃºmeros' };
     ['match', 'cards', 'quiz'].forEach(mode => {
       const modeLabel = { match: 'Emparejar', cards: 'Tarjetas', quiz: 'Quiz' }[mode];
       const missed = lp[mode + '_missed'] || [];
       if (missed.length === 0) return;
       const unique = missed.filter((w, i, arr) => arr.findIndex(x => x.hanzi === w.hanzi) === i);
       repasarHTML += `<h3 style="margin:24px 0 6px;color:#2E2A26;font-size:15px">
-        ${theme.name} — <em>${modeLabel}</em>
+        ${theme.name} â€” <em>${modeLabel}</em>
         <span style="font-size:12px;color:#C1432B;font-weight:700">(${unique.length} ${unique.length === 1 ? 'error' : 'errores'})</span>
       </h3>
       <table style="width:100%;border-collapse:collapse;margin-bottom:4px">${wordRows(unique)}</table>`;
@@ -1141,7 +1096,7 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   });
 
   // Prueba games
-  const pruebaLabels = { clas: 'Clasificadores', dialogo: 'Completa el diálogo', orden: 'Ordena la oración' };
+  const pruebaLabels = { clas: 'Clasificadores', dialogo: 'Completa el diÃ¡logo', orden: 'Ordena la oraciÃ³n' };
   ['clas', 'dialogo', 'orden'].forEach(game => {
     const missed = pp[game + '_missed'] || [];
     if (missed.length === 0) return;
@@ -1154,9 +1109,9 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   });
 
   const html = `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">
-  <!-- © 2026 大卫 · dawei.com.ar -->
+  <!-- Â© 2026 å¤§å« Â· dawei.com.ar -->
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
-  <title>Hanzi Practice · Resumen${playerName ? ' · ' + playerName : ''}</title>
+  <title>Hanzi Practice Â· Resumen${playerName ? ' Â· ' + playerName : ''}</title>
   <style>
     body{font-family:'Nunito',sans-serif;background:#FBF4E6;color:#2E2A26;max-width:700px;margin:40px auto;padding:0 24px}
     h1{color:#C1432B;margin-bottom:4px}
@@ -1165,32 +1120,32 @@ function downloadResumen(vocab, progress, lessons, playerName) {
     th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#6E645A;padding:8px 12px;border-bottom:2px solid #F3E6CC;text-align:left}
     @media print{body{background:#fff}}
   </style></head><body>
-  <h1>汉字 Practice · Resumen de repaso</h1>
-  ${playerName ? `<p style="margin-top:0;font-size:18px">👋 <strong>${playerName}</strong></p>` : ''}
-  <p style="color:#6E645A;margin-top:0">汉语课 CUI · Nivel 2 · Ariel 老师 &nbsp;|&nbsp; ${date}</p>
+  <h1>æ±‰å­— Practice Â· Resumen de repaso</h1>
+  ${playerName ? `<p style="margin-top:0;font-size:18px">ðŸ‘‹ <strong>${playerName}</strong></p>` : ''}
+  <p style="color:#6E645A;margin-top:0">æ±‰è¯­è¯¾ CUI Â· Nivel 2 Â· Ariel è€å¸ˆ &nbsp;|&nbsp; ${date}</p>
 
-  <h2>📚 Lecciones</h2>
+  <h2>ðŸ“š Lecciones</h2>
   <table><thead><tr>
-    <th>Lección</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
+    <th>LecciÃ³n</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
   </tr></thead><tbody>${lessonRows}</tbody></table>
 
-  ${specialRows ? `<h2>🌍 Módulos especiales</h2>
+  ${specialRows ? `<h2>ðŸŒ MÃ³dulos especiales</h2>
   <table><thead><tr>
-    <th>Módulo</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
+    <th>MÃ³dulo</th><th>Emparejar</th><th>Tarjetas</th><th>Quiz</th>
   </tr></thead><tbody>${specialRows}</tbody></table>` : ''}
 
-  <h2>🧠 ¿Cuánto aprendiste?</h2>
+  <h2>ðŸ§  Â¿CuÃ¡nto aprendiste?</h2>
   <table><tbody>
     <tr><td style="padding:10px 12px;border-bottom:1px solid #F3E6CC">Clasificadores</td><td style="color:${scoreColor(pp.clas||0)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(pp.clas||0)} ${pp.clas||0}%</td></tr>
-    <tr><td style="padding:10px 12px;border-bottom:1px solid #F3E6CC">Completa el diálogo</td><td style="color:${scoreColor(pp.dialogo||0)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(pp.dialogo||0)} ${pp.dialogo||0}%</td></tr>
-    <tr><td style="padding:10px 12px;border-bottom:1px solid #F3E6CC">Ordena la oración</td><td style="color:${scoreColor(pp.orden||0)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(pp.orden||0)} ${pp.orden||0}%</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #F3E6CC">Completa el diÃ¡logo</td><td style="color:${scoreColor(pp.dialogo||0)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(pp.dialogo||0)} ${pp.dialogo||0}%</td></tr>
+    <tr><td style="padding:10px 12px;border-bottom:1px solid #F3E6CC">Ordena la oraciÃ³n</td><td style="color:${scoreColor(pp.orden||0)};font-weight:800;padding:10px 12px;border-bottom:1px solid #F3E6CC">${star(pp.orden||0)} ${pp.orden||0}%</td></tr>
   </tbody></table>
 
   ${repasarHTML
-    ? '<h2>📝 Errores para repasar</h2>' + repasarHTML
-    : '<h2>✅ ¡Sin errores pendientes!</h2><p>No cometiste errores en ningún módulo. ¡Excelente trabajo!</p>'
+    ? '<h2>ðŸ“ Errores para repasar</h2>' + repasarHTML
+    : '<h2>âœ… Â¡Sin errores pendientes!</h2><p>No cometiste errores en ningÃºn mÃ³dulo. Â¡Excelente trabajo!</p>'
   }
-  <p style="margin-top:48px;font-size:11px;color:#aaa;text-align:center">© 2026 大卫 · dawei.com.ar</p>
+  <p style="margin-top:48px;font-size:11px;color:#aaa;text-align:center">Â© 2026 å¤§å« Â· dawei.com.ar</p>
   </body></html>`;
 
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -1308,18 +1263,18 @@ function AudioGame({ allWords, onBack, onFinish, playerName }) {
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px', paddingBottom: 40 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, 'Reconocer por audio'),
         html('div', { className: 'flash-counter' }, matched.size + '/' + picked.length),
       ),
       html('div', { className: 'flash-score-row' },
-        html('div', { className: 'flash-score-chip no' }, html('i', null, '✕'), 'Errores: ' + errors),
-        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), 'Aciertos: ' + matched.size),
+        html('div', { className: 'flash-score-chip no' }, html('i', null, 'âœ•'), 'Errores: ' + errors),
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, 'âœ“'), 'Aciertos: ' + matched.size),
       ),
       html('p', { style: { textAlign: 'center', fontSize: 13, color: 'var(--ink-soft)', fontWeight: 700, margin: '4px 0 12px' } },
         selectedSound
-          ? '👆 Ahora tocá el hanzi que corresponde'
-          : '👆 Tocá un 🔊 para escuchar la palabra'
+          ? 'ðŸ‘† Ahora tocÃ¡ el hanzi que corresponde'
+          : 'ðŸ‘† TocÃ¡ un ðŸ”Š para escuchar la palabra'
       ),
       html('div', { className: 'audio-game-cols' },
         // Columna izquierda: botones de audio
@@ -1335,7 +1290,7 @@ function AudioGame({ allWords, onBack, onFinish, playerName }) {
             else if (isPlaying) cls += ' playing';
             else if (isSelected) cls += ' selected';
             return html('button', { key: item.sid, className: cls, onClick: () => !isMatched && playSound(item) },
-              html('span', null, isMatched ? '✓' : '🔊'),
+              html('span', null, isMatched ? 'âœ“' : 'ðŸ”Š'),
               html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--ink-soft)' } }, isMatched ? item.hanzi : '#' + (soundCol.indexOf(item) + 1)),
             );
           })
@@ -1370,9 +1325,9 @@ function NameModal({ onSave }) {
   };
   return html('div', { className: 'name-modal-overlay' },
     html('div', { className: 'name-modal' },
-      html('div', { className: 'name-modal-hanzi hanzi-font' }, '你好！'),
-      html('h2', { className: 'name-modal-title' }, '¿Cómo te llamás?'),
-      html('p', { className: 'name-modal-sub' }, 'Ingresá tu nombre para personalizar tu experiencia de repaso'),
+      html('div', { className: 'name-modal-hanzi hanzi-font' }, 'ä½ å¥½ï¼'),
+      html('h2', { className: 'name-modal-title' }, 'Â¿CÃ³mo te llamÃ¡s?'),
+      html('p', { className: 'name-modal-sub' }, 'IngresÃ¡ tu nombre para personalizar tu experiencia de repaso'),
       html('form', { onSubmit: handleSubmit },
         html('input', {
           className: 'name-modal-input',
@@ -1388,7 +1343,7 @@ function NameModal({ onSave }) {
           type: 'submit',
           disabled: !name.trim(),
           style: { width: '100%', marginTop: 8 },
-        }, '¡Comenzar! →'),
+        }, 'Â¡Comenzar! â†’'),
       ),
     ),
   );
@@ -1490,7 +1445,7 @@ function App() {
       nextAction = { label: 'Siguiente ejercicio', go: () => setScreen({ name: 'play', lessonId: screen.lessonId, mode: nextMode }) };
     } else if (lessonIdx < lessons.length - 1) {
       const nextLessonId = lessons[lessonIdx + 1];
-      nextAction = { label: 'Siguiente lección', go: () => setScreen({ name: 'play', lessonId: nextLessonId, mode: 'match' }) };
+      nextAction = { label: 'Siguiente lecciÃ³n', go: () => setScreen({ name: 'play', lessonId: nextLessonId, mode: 'match' }) };
     }
     const key = resultKey(screen.lessonId, screen.mode);
     content = html(PlayScreen, {
@@ -1561,17 +1516,17 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
   return html(React.Fragment, null,
     html('div', { className: 'topbar' },
       html('div', { className: 'brand' },
-        html('div', { className: 'brand-mark hanzi-font' }, '汉'),
+        html('div', { className: 'brand-mark hanzi-font' }, 'æ±‰'),
         html('div', { className: 'brand-text' },
           html('strong', null, 'Hanzi Practice'),
-          html('span', null, '汉语课 CUI · Nivel 2 · Ariel 老师'),
+          html('span', null, 'æ±‰è¯­è¯¾ CUI Â· Nivel 2 Â· Ariel è€å¸ˆ'),
         ),
       ),
-      html('button', { className: 'icon-btn', onClick: onAdmin, title: 'Administrar vocabulario' }, '⚙')
+      html('button', { className: 'icon-btn', onClick: onAdmin, title: 'Administrar vocabulario' }, 'âš™')
     ),
     playerName && html('div', { className: 'greeting-bar' },
-      html('span', null, '👋 ¡Hola, ', html('strong', null, playerName), '!'),
-      html('button', { className: 'change-name-btn', onClick: onChangeName, title: 'Cambiar nombre' }, '✏️'),
+      html('span', null, 'ðŸ‘‹ Â¡Hola, ', html('strong', null, playerName), '!'),
+      html('button', { className: 'change-name-btn', onClick: onChangeName, title: 'Cambiar nombre' }, 'âœï¸'),
     ),
     html('main', null,
       html('div', { className: 'score-strip' },
@@ -1589,11 +1544,11 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
         ),
       ),
       html(PanelLectura, { playerName }),
-      html('h2', { className: 'section-title' }, 'Elegí una lección'),
+      html('h2', { className: 'section-title' }, 'ElegÃ­ una lecciÃ³n'),
       html('div', { className: 'lesson-grid' },
         lessons.filter(id => id !== 'mod-paises' && id !== 'mod-numeros' && !LESSON_THEMES[id]?.hidden).map(id => {
           const words = vocab[id];
-          const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: words[0]?.hanzi?.[0] || '汉' };
+          const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id, icon: words[0]?.hanzi?.[0] || 'æ±‰' };
           const lp = progress.lessons[id] || {};
           const best = Math.max(lp.match || 0, lp.cards || 0, lp.quiz || 0);
           const stars = [lp.match || 0, lp.cards || 0, lp.quiz || 0].filter(v => v >= 80).length;
@@ -1602,10 +1557,10 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             className: 'lesson-card',
             onClick: () => onSelectLesson(id),
           },
-            stars > 0 && html('div', { className: 'seal hanzi-font' }, stars === 3 ? '✓' : stars),
+            stars > 0 && html('div', { className: 'seal hanzi-font' }, stars === 3 ? 'âœ“' : stars),
             html('div', { className: 'hanzi-big hanzi-font' }, theme.icon),
-            html('div', { className: 'lesson-name' }, 'Lección ' + id),
-            html('div', { className: 'lesson-meta' }, theme.name + ' · ' + words.length + ' palabras'),
+            html('div', { className: 'lesson-name' }, 'LecciÃ³n ' + id),
+            html('div', { className: 'lesson-meta' }, theme.name + ' Â· ' + words.length + ' palabras'),
             html('div', { className: 'progress-track' },
               html('div', { className: 'progress-fill', style: { width: best + '%' } })
             ),
@@ -1613,9 +1568,9 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
         })
       ),
 
-      // ── Módulos especiales ──
+      // â”€â”€ MÃ³dulos especiales â”€â”€
       vocab['mod-paises'] && !LESSON_THEMES['mod-paises']?.hidden && html(React.Fragment, null,
-        html('h2', { className: 'section-title' }, 'Aprende los países'),
+        html('h2', { className: 'section-title' }, 'Aprende los paÃ­ses'),
         html('button', {
           style: {
             display: 'flex', alignItems: 'center', gap: 14, width: '100%', marginBottom: 14,
@@ -1625,18 +1580,18 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
           },
           onClick: () => onSelectLesson('mod-paises'),
         },
-          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '国'),
+          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, 'å›½'),
           html('div', null,
-            html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Nombres de países en chino'),
+            html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Nombres de paÃ­ses en chino'),
             html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } },
-              (vocab['mod-paises'] ? vocab['mod-paises'].length : 0) + ' países · Latinoamérica, Europa, Asia'
+              (vocab['mod-paises'] ? vocab['mod-paises'].length : 0) + ' paÃ­ses Â· LatinoamÃ©rica, Europa, Asia'
             ),
           ),
         ),
       ),
 
       vocab['mod-numeros'] && !LESSON_THEMES['mod-numeros']?.hidden && html(React.Fragment, null,
-        html('h2', { className: 'section-title' }, 'Aprende los números'),
+        html('h2', { className: 'section-title' }, 'Aprende los nÃºmeros'),
         html('button', {
           style: {
             display: 'flex', alignItems: 'center', gap: 14, width: '100%', marginBottom: 14,
@@ -1646,20 +1601,20 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
           },
           onClick: () => onSelectLesson('mod-numeros'),
         },
-          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, '数'),
+          html('div', { className: 'hanzi-font', style: { fontSize: 36, color: 'var(--lacquer)', minWidth: 44 } }, 'æ•°'),
           html('div', null,
             html('div', { style: { fontWeight: 800, fontSize: 15, color: 'var(--ink)' } }, 'Del 0 al 100 en chino'),
-            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, '0 al 10 · decenas del 20 al 100'),
+            html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, '0 al 10 Â· decenas del 20 al 100'),
           ),
         ),
       ),
-      html('h2', { className: 'section-title' }, '¿Cuánto aprendiste?'),
+      html('h2', { className: 'section-title' }, 'Â¿CuÃ¡nto aprendiste?'),
       html('div', { className: 'prueba-grid' },
         [
-          { id: 'clas', icon: '🔢', cls: 'clas', title: 'Clasificadores', sub: 'Elige 个, 口, 张, 层 o 号 correctamente' },
-          { id: 'dialogo', icon: '💬', cls: 'dial', title: 'Completa el diálogo', sub: 'Rellena el hueco de la conversación' },
-          { id: 'orden', icon: '🔀', cls: 'orden', title: 'Ordena la oración', sub: 'Coloca las palabras en el orden correcto' },
-          { id: 'audio', icon: '🔊', cls: 'audio', title: 'Reconocer por audio', sub: 'Escuchá y uní el sonido con el hanzi' },
+          { id: 'clas', icon: 'ðŸ”¢', cls: 'clas', title: 'Clasificadores', sub: 'Elige ä¸ª, å£, å¼ , å±‚ o å· correctamente' },
+          { id: 'dialogo', icon: 'ðŸ’¬', cls: 'dial', title: 'Completa el diÃ¡logo', sub: 'Rellena el hueco de la conversaciÃ³n' },
+          { id: 'orden', icon: 'ðŸ”€', cls: 'orden', title: 'Ordena la oraciÃ³n', sub: 'Coloca las palabras en el orden correcto' },
+          { id: 'audio', icon: 'ðŸ”Š', cls: 'audio', title: 'Reconocer por audio', sub: 'EscuchÃ¡ y unÃ­ el sonido con el hanzi' },
         ].filter(g => !LESSON_THEMES['mod-' + g.id]?.hidden).map(g => {
           const best = pruebaProgress[g.id] || 0;
           const hasStar = best >= 80;
@@ -1667,9 +1622,9 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
             html('div', { className: 'prueba-icon ' + g.cls }, g.icon),
             html('div', { style: { flex: 1 } },
               html('div', { className: 'mode-title' }, g.title),
-              html('div', { className: 'mode-sub' }, best > 0 ? '⭐ Mejor: ' + best + '%' : g.sub),
+              html('div', { className: 'mode-sub' }, best > 0 ? 'â­ Mejor: ' + best + '%' : g.sub),
             ),
-            hasStar && html('div', { style: { fontSize: 20 } }, '⭐'),
+            hasStar && html('div', { style: { fontSize: 20 } }, 'â­'),
           );
         })
       ),
@@ -1677,7 +1632,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
         className: 'download-resumen-btn',
         onClick: onDownload,
       },
-        html('span', { style: { fontSize: 22 } }, '📥'),
+        html('span', { style: { fontSize: 22 } }, 'ðŸ“¥'),
         html('span', null,
           html('div', { style: { fontWeight: 800, fontSize: 15 } }, 'Descargar mi resumen de repaso'),
           html('div', { style: { fontSize: 12, opacity: 0.75, fontWeight: 600 } }, 'Aciertos, errores y palabras para repasar'),
@@ -1695,9 +1650,9 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
         },
         onClick: onRefuerzo,
       },
-        html('span', { style: { fontSize: 22 } }, '💪'),
+        html('span', { style: { fontSize: 22 } }, 'ðŸ’ª'),
         html('span', null,
-          html('div', { style: { fontWeight: 800, fontSize: 15 } }, 'Práctica personalizada'),
+          html('div', { style: { fontWeight: 800, fontSize: 15 } }, 'PrÃ¡ctica personalizada'),
           html('div', { style: { fontSize: 12, opacity: 0.8, fontWeight: 600, marginTop: 2 } }, 'Ejercicios con tus palabras para reforzar'),
         ),
       ),
@@ -1705,7 +1660,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
   );
 }
 
-// ----------------- Números: tabla interactiva -----------------
+// ----------------- NÃºmeros: tabla interactiva -----------------
 function NumbersIntro({ words, onBack, onPlay }) {
   const [active, setActive] = useState(null);
 
@@ -1715,8 +1670,8 @@ function NumbersIntro({ words, onBack, onPlay }) {
     setTimeout(() => setActive(null), 1200);
   };
 
-  const singles = words.filter(w => ['零','一','二','三','四','五','六','七','八','九','十'].includes(w.hanzi));
-  const tens    = words.filter(w => w.hanzi.length > 1 && w.es.includes('·'));
+  const singles = words.filter(w => ['é›¶','ä¸€','äºŒ','ä¸‰','å››','äº”','å…­','ä¸ƒ','å…«','ä¹','å'].includes(w.hanzi));
+  const tens    = words.filter(w => w.hanzi.length > 1 && w.es.includes('Â·'));
 
   const NumCard = ({ w }) => html('button', {
     key: w.hanzi,
@@ -1731,30 +1686,30 @@ function NumbersIntro({ words, onBack, onPlay }) {
   },
     html('div', { className: 'hanzi-font', style: { fontSize: 32, color: active === w.hanzi ? '#fff' : 'var(--lacquer)', lineHeight: 1 } }, w.hanzi),
     html('div', { style: { fontSize: 11, fontWeight: 800, color: active === w.hanzi ? 'rgba(255,255,255,0.85)' : 'var(--lacquer-dark)', letterSpacing: 0.5 } }, w.pinyin),
-    html('div', { style: { fontSize: 10, color: active === w.hanzi ? 'rgba(255,255,255,0.75)' : 'var(--ink-soft)', fontWeight: 600 } }, w.es.split('·')[0].trim()),
+    html('div', { style: { fontSize: 10, color: active === w.hanzi ? 'rgba(255,255,255,0.75)' : 'var(--ink-soft)', fontWeight: 600 } }, w.es.split('Â·')[0].trim()),
   );
 
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, 'Los números'),
-        html('div', { style: { fontSize: 11, color: 'var(--ink-soft)', fontWeight: 700 } }, 'Tocá para escuchar'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
+        html('h1', null, 'Los nÃºmeros'),
+        html('div', { style: { fontSize: 11, color: 'var(--ink-soft)', fontWeight: 700 } }, 'TocÃ¡ para escuchar'),
       ),
       html('div', { style: { padding: '0 16px' } },
 
-        html('p', { className: 'admin-note', style: { marginBottom: 12, textAlign: 'center' } }, '🔊 Tocá cada número para escuchar cómo suena'),
+        html('p', { className: 'admin-note', style: { marginBottom: 12, textAlign: 'center' } }, 'ðŸ”Š TocÃ¡ cada nÃºmero para escuchar cÃ³mo suena'),
 
         html('div', { style: { display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, marginBottom: 20 } },
           singles.map(w => html(NumCard, { key: w.hanzi, w }))
         ),
 
         html('div', { style: { background: 'var(--jade-light)', borderRadius: 14, padding: '14px 16px', marginBottom: 20 } },
-          html('div', { style: { fontWeight: 800, fontSize: 13, color: 'var(--jade-dark)', marginBottom: 8 } }, '💡 ¿Cómo se forman las decenas?'),
+          html('div', { style: { fontWeight: 800, fontSize: 13, color: 'var(--jade-dark)', marginBottom: 8 } }, 'ðŸ’¡ Â¿CÃ³mo se forman las decenas?'),
           html('div', { style: { fontSize: 13, color: 'var(--jade-dark)', lineHeight: 1.7 } },
-            '二 + 十 = 二十 (20) · tres dieces = tres dieces', html('br', null),
-            'El patrón es: ', html('strong', null, '[número] + 十'), ' para las decenas.',  html('br', null),
-            'Ejemplo: 七十 = qīshí = 70 (siete + diez)',
+            'äºŒ + å = äºŒå (20) Â· tres dieces = tres dieces', html('br', null),
+            'El patrÃ³n es: ', html('strong', null, '[nÃºmero] + å'), ' para las decenas.',  html('br', null),
+            'Ejemplo: ä¸ƒå = qÄ«shÃ­ = 70 (siete + diez)',
           ),
         ),
 
@@ -1762,7 +1717,7 @@ function NumbersIntro({ words, onBack, onPlay }) {
           tens.map(w => html(NumCard, { key: w.hanzi, w }))
         ),
 
-        html('button', { className: 'primary-btn', onClick: onPlay }, '¡Listo! Ir a practicar →'),
+        html('button', { className: 'primary-btn', onClick: onPlay }, 'Â¡Listo! Ir a practicar â†’'),
       ),
     )
   );
@@ -1770,29 +1725,29 @@ function NumbersIntro({ words, onBack, onPlay }) {
 
 // ----------------- Panel de lectura diaria -----------------
 const FRASES_DEL_DIA = [
-  { zh: '今天天气很好！', py: 'Jīntiān tiānqì hěn hǎo!', es: '¡Hoy hace muy buen tiempo!' },
-  { zh: '我想喝一杯茶。', py: 'Wǒ xiǎng hē yī bēi chá.', es: 'Me gustaría tomar una taza de té.' },
-  { zh: '这个周末有聚会！', py: 'Zhège zhōumò yǒu jùhuì!', es: '¡Este fin de semana hay una fiesta!' },
-  { zh: '我们去吃中餐吧。', py: 'Wǒmen qù chī zhōngcān ba.', es: 'Vamos a comer comida china.' },
-  { zh: '明天是我的生日。', py: 'Míngtiān shì wǒde shēngrì.', es: 'Mañana es mi cumpleaños.' },
-  { zh: '下午我有汉语课。', py: 'Xiàwǔ wǒ yǒu Hànyǔ kè.', es: 'Por la tarde tengo clase de chino.' },
-  { zh: '我买了一瓶红葡萄酒。', py: 'Wǒ mǎi le yī píng hóng pútaojiǔ.', es: 'Compré una botella de vino tinto.' },
-  { zh: '你今年多大了？', py: 'Nǐ jīnnián duō dà le?', es: '¿Cuántos años tienes este año?' },
-  { zh: '晚上我们去参加聚会。', py: 'Wǎnshang wǒmen qù cānjiā jùhuì.', es: 'Esta noche vamos a la fiesta.' },
-  { zh: '祝贺你生日快乐！', py: 'Zhùhè nǐ shēngrì kuàilè!', es: '¡Feliz cumpleaños!' },
-  { zh: '我上午没有课。', py: 'Wǒ shàngwǔ méiyǒu kè.', es: 'Por la mañana no tengo clase.' },
-  { zh: '今天星期几？', py: 'Jīntiān xīngqī jǐ?', es: '¿Qué día de la semana es hoy?' },
-  { zh: '我属龙。你呢？', py: 'Wǒ shǔ lóng. Nǐ ne?', es: 'Soy del año del dragón. ¿Y tú?' },
-  { zh: '我们去吃蛋糕吧！', py: 'Wǒmen qù chī dàngāo ba!', es: '¡Vamos a comer torta!' },
-  { zh: '你喝可乐还是茶？', py: 'Nǐ hē kělè háishì chá?', es: '¿Tomás Coca-Cola o té?' },
-  { zh: '今天是个好日子！', py: 'Jīntiān shì gè hǎo rìzi!', es: '¡Hoy es un buen día!' },
-  { zh: '我出生在北京。', py: 'Wǒ chūshēng zài Běijīng.', es: 'Nací en Pekín.' },
-  { zh: '我想吃热狗和面包。', py: 'Wǒ xiǎng chī règǒu hé miànbāo.', es: 'Quiero comer pancho y pan.' },
-  { zh: '这个星期我很忙。', py: 'Zhège xīngqī wǒ hěn máng.', es: 'Esta semana estoy muy ocupado/a.' },
-  { zh: '晚上好！今天怎么样？', py: 'Wǎnshang hǎo! Jīntiān zěnmeyàng?', es: '¡Buenas noches! ¿Cómo estuvo el día?' },
+  { zh: 'ä»Šå¤©å¤©æ°”å¾ˆå¥½ï¼', py: 'JÄ«ntiÄn tiÄnqÃ¬ hÄ›n hÇŽo!', es: 'Â¡Hoy hace muy buen tiempo!' },
+  { zh: 'æˆ‘æƒ³å–ä¸€æ¯èŒ¶ã€‚', py: 'WÇ’ xiÇŽng hÄ“ yÄ« bÄ“i chÃ¡.', es: 'Me gustarÃ­a tomar una taza de tÃ©.' },
+  { zh: 'è¿™ä¸ªå‘¨æœ«æœ‰èšä¼šï¼', py: 'ZhÃ¨ge zhÅumÃ² yÇ’u jÃ¹huÃ¬!', es: 'Â¡Este fin de semana hay una fiesta!' },
+  { zh: 'æˆ‘ä»¬åŽ»åƒä¸­é¤å§ã€‚', py: 'WÇ’men qÃ¹ chÄ« zhÅngcÄn ba.', es: 'Vamos a comer comida china.' },
+  { zh: 'æ˜Žå¤©æ˜¯æˆ‘çš„ç”Ÿæ—¥ã€‚', py: 'MÃ­ngtiÄn shÃ¬ wÇ’de shÄ“ngrÃ¬.', es: 'MaÃ±ana es mi cumpleaÃ±os.' },
+  { zh: 'ä¸‹åˆæˆ‘æœ‰æ±‰è¯­è¯¾ã€‚', py: 'XiÃ wÇ” wÇ’ yÇ’u HÃ nyÇ” kÃ¨.', es: 'Por la tarde tengo clase de chino.' },
+  { zh: 'æˆ‘ä¹°äº†ä¸€ç“¶çº¢è‘¡è„é…’ã€‚', py: 'WÇ’ mÇŽi le yÄ« pÃ­ng hÃ³ng pÃºtaojiÇ”.', es: 'ComprÃ© una botella de vino tinto.' },
+  { zh: 'ä½ ä»Šå¹´å¤šå¤§äº†ï¼Ÿ', py: 'NÇ jÄ«nniÃ¡n duÅ dÃ  le?', es: 'Â¿CuÃ¡ntos aÃ±os tienes este aÃ±o?' },
+  { zh: 'æ™šä¸Šæˆ‘ä»¬åŽ»å‚åŠ èšä¼šã€‚', py: 'WÇŽnshang wÇ’men qÃ¹ cÄnjiÄ jÃ¹huÃ¬.', es: 'Esta noche vamos a la fiesta.' },
+  { zh: 'ç¥è´ºä½ ç”Ÿæ—¥å¿«ä¹ï¼', py: 'ZhÃ¹hÃ¨ nÇ shÄ“ngrÃ¬ kuÃ ilÃ¨!', es: 'Â¡Feliz cumpleaÃ±os!' },
+  { zh: 'æˆ‘ä¸Šåˆæ²¡æœ‰è¯¾ã€‚', py: 'WÇ’ shÃ ngwÇ” mÃ©iyÇ’u kÃ¨.', es: 'Por la maÃ±ana no tengo clase.' },
+  { zh: 'ä»Šå¤©æ˜ŸæœŸå‡ ï¼Ÿ', py: 'JÄ«ntiÄn xÄ«ngqÄ« jÇ?', es: 'Â¿QuÃ© dÃ­a de la semana es hoy?' },
+  { zh: 'æˆ‘å±žé¾™ã€‚ä½ å‘¢ï¼Ÿ', py: 'WÇ’ shÇ” lÃ³ng. NÇ ne?', es: 'Soy del aÃ±o del dragÃ³n. Â¿Y tÃº?' },
+  { zh: 'æˆ‘ä»¬åŽ»åƒè›‹ç³•å§ï¼', py: 'WÇ’men qÃ¹ chÄ« dÃ ngÄo ba!', es: 'Â¡Vamos a comer torta!' },
+  { zh: 'ä½ å–å¯ä¹è¿˜æ˜¯èŒ¶ï¼Ÿ', py: 'NÇ hÄ“ kÄ›lÃ¨ hÃ¡ishÃ¬ chÃ¡?', es: 'Â¿TomÃ¡s Coca-Cola o tÃ©?' },
+  { zh: 'ä»Šå¤©æ˜¯ä¸ªå¥½æ—¥å­ï¼', py: 'JÄ«ntiÄn shÃ¬ gÃ¨ hÇŽo rÃ¬zi!', es: 'Â¡Hoy es un buen dÃ­a!' },
+  { zh: 'æˆ‘å‡ºç”Ÿåœ¨åŒ—äº¬ã€‚', py: 'WÇ’ chÅ«shÄ“ng zÃ i BÄ›ijÄ«ng.', es: 'NacÃ­ en PekÃ­n.' },
+  { zh: 'æˆ‘æƒ³åƒçƒ­ç‹—å’Œé¢åŒ…ã€‚', py: 'WÇ’ xiÇŽng chÄ« rÃ¨gÇ’u hÃ© miÃ nbÄo.', es: 'Quiero comer pancho y pan.' },
+  { zh: 'è¿™ä¸ªæ˜ŸæœŸæˆ‘å¾ˆå¿™ã€‚', py: 'ZhÃ¨ge xÄ«ngqÄ« wÇ’ hÄ›n mÃ¡ng.', es: 'Esta semana estoy muy ocupado/a.' },
+  { zh: 'æ™šä¸Šå¥½ï¼ä»Šå¤©æ€Žä¹ˆæ ·ï¼Ÿ', py: 'WÇŽnshang hÇŽo! JÄ«ntiÄn zÄ›nmeyÃ ng?', es: 'Â¡Buenas noches! Â¿CÃ³mo estuvo el dÃ­a?' },
 ];
 
-const DIAS_ZH = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+const DIAS_ZH = ['æ˜ŸæœŸæ—¥','æ˜ŸæœŸä¸€','æ˜ŸæœŸäºŒ','æ˜ŸæœŸä¸‰','æ˜ŸæœŸå››','æ˜ŸæœŸäº”','æ˜ŸæœŸå…­'];
 const MESES_ES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 function PanelLectura({ playerName }) {
@@ -1802,7 +1757,7 @@ function PanelLectura({ playerName }) {
   const now = new Date();
   const hora = now.getHours();
   const minutos = String(now.getMinutes()).padStart(2, '0');
-  const periodo = hora < 12 ? '上午' : hora < 20 ? '下午' : '晚上';
+  const periodo = hora < 12 ? 'ä¸Šåˆ' : hora < 20 ? 'ä¸‹åˆ' : 'æ™šä¸Š';
   const horaStr = (hora % 12 || 12) + ':' + minutos;
   const diaSemana = DIAS_ZH[now.getDay()];
   const diaNum = now.getDate();
@@ -1812,10 +1767,10 @@ function PanelLectura({ playerName }) {
   const idx = (now.getFullYear() * 1000 + now.getMonth() * 31 + now.getDate()) % FRASES_DEL_DIA.length;
   const frase = FRASES_DEL_DIA[idx];
 
-  const saludo = hora < 12 ? '早上好' : hora < 20 ? '下午好' : '晚上好';
-  const saludoEs = hora < 12 ? 'Buenos días' : hora < 20 ? 'Buenas tardes' : 'Buenas noches';
+  const saludo = hora < 12 ? 'æ—©ä¸Šå¥½' : hora < 20 ? 'ä¸‹åˆå¥½' : 'æ™šä¸Šå¥½';
+  const saludoEs = hora < 12 ? 'Buenos dÃ­as' : hora < 20 ? 'Buenas tardes' : 'Buenas noches';
 
-  const nombre = playerName || '同学';
+  const nombre = playerName || 'åŒå­¦';
 
   return html('div', {
     style: {
@@ -1824,30 +1779,30 @@ function PanelLectura({ playerName }) {
       color: '#fff', position: 'relative', overflow: 'hidden',
     }
   },
-    html('div', { style: { fontSize: 11, fontWeight: 700, opacity: 0.75, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 } }, '📖 Lectura del día'),
+    html('div', { style: { fontSize: 11, fontWeight: 700, opacity: 0.75, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 } }, 'ðŸ“– Lectura del dÃ­a'),
     html('div', { className: 'hanzi-font', style: { fontSize: 22, fontWeight: 700, lineHeight: 1.4, marginBottom: 4 } },
-      saludo + '，', html('span', { style: { color: '#FFD97D' } }, nombre), '！'
+      saludo + 'ï¼Œ', html('span', { style: { color: '#FFD97D' } }, nombre), 'ï¼'
     ),
     html('div', { className: 'hanzi-font', style: { fontSize: 17, lineHeight: 1.6, marginBottom: 2 } },
-      '今天是' + anio + '年' + (now.getMonth()+1) + '月' + diaNum + '日，' + diaSemana + '。'
+      'ä»Šå¤©æ˜¯' + anio + 'å¹´' + (now.getMonth()+1) + 'æœˆ' + diaNum + 'æ—¥ï¼Œ' + diaSemana + 'ã€‚'
     ),
     html('div', { className: 'hanzi-font', style: { fontSize: 17, lineHeight: 1.6, marginBottom: 12 } },
-      '现在是' + periodo + horaStr + '。'
+      'çŽ°åœ¨æ˜¯' + periodo + horaStr + 'ã€‚'
     ),
     html('div', { style: { borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 10, marginBottom: 10 } },
-      html('div', { className: 'hanzi-font', style: { fontSize: 19, fontWeight: 700, marginBottom: 4 } }, '💬 ' + frase.zh),
+      html('div', { className: 'hanzi-font', style: { fontSize: 19, fontWeight: 700, marginBottom: 4 } }, 'ðŸ’¬ ' + frase.zh),
       mostrarPinyin && html('div', { style: { fontSize: 13, opacity: 0.85, fontStyle: 'italic', marginBottom: 4 } }, frase.py),
-      mostrarTrad && html('div', { style: { fontSize: 14, opacity: 0.9, marginBottom: 4 } }, '→ ' + frase.es),
+      mostrarTrad && html('div', { style: { fontSize: 14, opacity: 0.9, marginBottom: 4 } }, 'â†’ ' + frase.es),
     ),
     html('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap' } },
       html('button', {
         onClick: () => setMostrarPinyin(p => !p),
         style: { fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20, border: '1.5px solid rgba(255,255,255,0.5)', background: mostrarPinyin ? 'rgba(255,255,255,0.25)' : 'transparent', color: '#fff', cursor: 'pointer' },
-      }, mostrarPinyin ? '🙈 Ocultar pīnyīn' : '👁 Ver pīnyīn'),
+      }, mostrarPinyin ? 'ðŸ™ˆ Ocultar pÄ«nyÄ«n' : 'ðŸ‘ Ver pÄ«nyÄ«n'),
       html('button', {
         onClick: () => setMostrarTrad(t => !t),
         style: { fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20, border: '1.5px solid rgba(255,255,255,0.5)', background: mostrarTrad ? 'rgba(255,255,255,0.25)' : 'transparent', color: '#fff', cursor: 'pointer' },
-      }, mostrarTrad ? '🙈 Ocultar traducción' : '🌐 Ver traducción'),
+      }, mostrarTrad ? 'ðŸ™ˆ Ocultar traducciÃ³n' : 'ðŸŒ Ver traducciÃ³n'),
       html('div', { style: { marginLeft: 'auto', fontSize: 11, opacity: 0.6, alignSelf: 'center' } }, diaNum + ' de ' + mes + ', ' + anio),
     )
   );
@@ -1855,55 +1810,36 @@ function PanelLectura({ playerName }) {
 
 // ----------------- Lesson menu -----------------
 function LessonMenu({ vocab, lessonId, progress, onBack, onSelectMode }) {
-  const theme = LESSON_THEMES[lessonId] || { name: 'Lección ' + lessonId };
+  const theme = LESSON_THEMES[lessonId] || { name: 'LecciÃ³n ' + lessonId };
   const lp = progress.lessons[lessonId] || {};
 
   const modes = [
-    { id: 'match', emoji: '🔗', title: 'Emparejar', sub: 'Une carácter, pinyin y significado', cls: 'match', best: lp.match },
-    { id: 'cards', emoji: '🀄', title: 'Tarjetas', sub: 'Repasá carácter por carácter', cls: 'cards', best: lp.cards },
-    { id: 'quiz', emoji: '✅', title: 'Opción múltiple', sub: 'Elegí el significado correcto', cls: 'quiz', best: lp.quiz },
+    { id: 'match', emoji: 'ðŸ”—', title: 'Emparejar', sub: 'Une carÃ¡cter, pinyin y significado', cls: 'match', best: lp.match },
+    { id: 'cards', emoji: 'ðŸ€„', title: 'Tarjetas', sub: 'RepasÃ¡ carÃ¡cter por carÃ¡cter', cls: 'cards', best: lp.cards },
+    { id: 'quiz', emoji: 'âœ…', title: 'OpciÃ³n mÃºltiple', sub: 'ElegÃ­ el significado correcto', cls: 'quiz', best: lp.quiz },
   ];
 
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, (lessonId === 'mod-paises' || lessonId === 'mod-numeros') ? theme.name : 'Lección ' + lessonId + ' · ' + theme.name),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
+        html('h1', null, (lessonId === 'mod-paises' || lessonId === 'mod-numeros') ? theme.name : 'LecciÃ³n ' + lessonId + ' Â· ' + theme.name),
       ),
       html('div', { className: 'mode-list' },
         lessonId === 'mod-numeros' && html('button', { className: 'mode-card', onClick: () => onSelectMode('intro') },
-          html('div', { className: 'mode-emoji', style: { background: '#FFF3C4', fontSize: 22 } }, '📊'),
+          html('div', { className: 'mode-emoji', style: { background: '#FFF3C4', fontSize: 22 } }, 'ðŸ“Š'),
           html('div', null,
-            html('div', { className: 'mode-title' }, 'Explorar los números'),
-            html('div', { className: 'mode-sub' }, 'Tabla interactiva con audio · toca para escuchar'),
+            html('div', { className: 'mode-title' }, 'Explorar los nÃºmeros'),
+            html('div', { className: 'mode-sub' }, 'Tabla interactiva con audio Â· toca para escuchar'),
           )
         ),
         modes.map(m => html('button', { key: m.id, className: 'mode-card', onClick: () => onSelectMode(m.id) },
           html('div', { className: 'mode-emoji ' + m.cls }, m.emoji),
           html('div', null,
             html('div', { className: 'mode-title' }, m.title),
-            html('div', { className: 'mode-sub' }, m.sub + (m.best ? ' · mejor: ' + m.best + '%' : '')),
+            html('div', { className: 'mode-sub' }, m.sub + (m.best ? ' Â· mejor: ' + m.best + '%' : '')),
           )
         )),
-        lessonId === '9' && html('div', null,
-          html('div', { style: { margin: '18px 0 8px', fontWeight: 800, fontSize: 13, color: 'var(--ink-soft)', letterSpacing: 1, textTransform: 'uppercase' } }, '🎯 Actividades de la lección'),
-          html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-comida') },
-            html('div', { className: 'mode-emoji', style: { background: '#EDE9FE', color: '#5B21B6' } }, '🍜'),
-            html('div', null, html('div', { className: 'mode-title' }, '中餐 vs 西餐'), html('div', { className: 'mode-sub' }, '¿Es comida china o occidental?'))
-          ),
-          html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-dialogo') },
-            html('div', { className: 'mode-emoji', style: { background: '#DBEAFE', color: '#1E40AF' } }, '🎂'),
-            html('div', null, html('div', { className: 'mode-title' }, 'Diálogo de cumpleaños'), html('div', { className: 'mode-sub' }, 'Completa conversaciones de la lección'))
-          ),
-          html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-orden') },
-            html('div', { className: 'mode-emoji', style: { background: '#D1FAE5', color: '#065F46' } }, '🔀'),
-            html('div', null, html('div', { className: 'mode-title' }, 'Ordena las frases'), html('div', { className: 'mode-sub' }, 'Frases de fechas y celebraciones'))
-          ),
-          html('button', { className: 'mode-card', onClick: () => onSelectMode('l9-edad') },
-            html('div', { className: 'mode-emoji', style: { background: '#FEF3C7', color: '#92400E' } }, '🕐'),
-            html('div', null, html('div', { className: 'mode-title' }, 'Vocabulario de tiempo'), html('div', { className: 'mode-sub' }, 'Reconocé 岁, 星期, 上午, 下午...'))
-          ),
-        )
       )
     )
   );
@@ -1917,10 +1853,6 @@ function PlayScreen({ vocab, lessonId, mode, onBack, onHome, onFinish, nextActio
   if (mode === 'match') return html(MatchGame, { words, lessonId, onBack, onHome, onFinish, nextAction, ...extra });
   if (mode === 'cards') return html(FlashcardGame, { words, lessonId, onBack, onHome, onFinish, nextAction, ...extra });
   if (mode === 'quiz') return html(QuizGame, { words, lessonId, onBack, onHome, onFinish, nextAction, ...extra });
-  if (mode === 'l9-comida') return html(ClasificadorGame, { onBack, onFinish, playerName, questionsOverride: L9_COMIDA_QUESTIONS, title: '🍜 中餐 vs 西餐' });
-  if (mode === 'l9-dialogo') return html(DialogoGame, { onBack, onFinish, playerName, questionsOverride: L9_DIALOGO_QUESTIONS, title: '🎂 Diálogo de cumpleaños' });
-  if (mode === 'l9-orden') return html(OrdenGame, { onBack, onFinish, playerName, questionsOverride: L9_ORDEN_QUESTIONS, title: '🔀 Ordena las frases' });
-  if (mode === 'l9-edad') return html(ClasificadorGame, { onBack, onFinish, playerName, questionsOverride: L9_EDAD_QUESTIONS, title: '🕐 Vocabulario de tiempo' });
   return null;
 }
 
@@ -1956,7 +1888,7 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       return;
     }
     if (selected.kind === tile.kind) {
-      // Misma columna: simplemente cambia la selección
+      // Misma columna: simplemente cambia la selecciÃ³n
       setSelected(tile);
       return;
     }
@@ -2033,9 +1965,9 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, 'Emparejar'),
-        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, '⌂'),
+        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, 'âŒ‚'),
       ),
       html('div', { className: 'match-progress-row' },
         html('div', { className: 'match-progress-track' },
@@ -2043,7 +1975,7 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
         ),
         html('div', { className: 'match-counter' }, matchedPairs.size + '/' + totalPairs)
       ),
-      html('p', { className: 'admin-note', style: { textAlign: 'center', marginBottom: 14 } }, 'Pasá el mouse sobre el pinyin para ver el significado'),
+      html('p', { className: 'admin-note', style: { textAlign: 'center', marginBottom: 14 } }, 'PasÃ¡ el mouse sobre el pinyin para ver el significado'),
       html('div', { className: 'match-columns' },
         html('div', { className: 'match-column' }, columns.left.map(renderTile)),
         html('div', { className: 'match-column' }, columns.right.map(renderTile)),
@@ -2106,17 +2038,17 @@ function FlashcardGame({ words, lessonId, onBack, onHome, onFinish, nextAction, 
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, 'Tarjetas'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + deck.length),
-        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, '⌂'),
+        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, 'âŒ‚'),
       ),
       html('div', { className: 'flash-score-row' },
         html('div', { className: 'flash-score-chip no' },
-          html('i', null, '✕'), 'No la sabía: ' + reviewWords.length
+          html('i', null, 'âœ•'), 'No la sabÃ­a: ' + reviewWords.length
         ),
         html('div', { className: 'flash-score-chip yes' },
-          html('i', null, '✓'), 'La sabía: ' + known
+          html('i', null, 'âœ“'), 'La sabÃ­a: ' + known
         ),
       ),
       html('div', { className: 'flashcard-wrap' },
@@ -2127,11 +2059,11 @@ function FlashcardGame({ words, lessonId, onBack, onHome, onFinish, nextAction, 
                 html('div', { className: 'back-pinyin' }, card.pinyin),
                 html('div', { className: 'back-es' }, card.es),
               ),
-          html('div', { className: 'tap-hint' }, flipped ? 'Toca para ver el carácter' : 'Toca para ver la respuesta')
+          html('div', { className: 'tap-hint' }, flipped ? 'Toca para ver el carÃ¡cter' : 'Toca para ver la respuesta')
         ),
         flipped && html('div', { className: 'flash-controls' },
-          html('button', { className: 'flash-btn no', onClick: () => advance(false) }, 'No lo sabía'),
-          html('button', { className: 'flash-btn yes', onClick: () => advance(true) }, 'Lo sabía'),
+          html('button', { className: 'flash-btn no', onClick: () => advance(false) }, 'No lo sabÃ­a'),
+          html('button', { className: 'flash-btn yes', onClick: () => advance(true) }, 'Lo sabÃ­a'),
         )
       )
     )
@@ -2158,13 +2090,13 @@ function FlagImg({ es, size }) {
   return html('img', { src: 'https://flagcdn.com/' + w + 'x' + h + '/' + code + '.png', style: { borderRadius: 2, verticalAlign: 'middle', marginRight: 6 }, alt: code.toUpperCase() });
 }
 function sameCategory(a, b) {
-  // Si ambas tienen bandera (países) o ambas no tienen, son misma categoría
+  // Si ambas tienen bandera (paÃ­ses) o ambas no tienen, son misma categorÃ­a
   return FLAG_RE.test(a.es) === FLAG_RE.test(b.es);
 }
 function buildQuizQuestions(words) {
   const picked = shuffle(words).slice(0, Math.min(8, words.length));
   return picked.map(w => {
-    // Preferir distractores de la misma categoría (países con países, palabras con palabras)
+    // Preferir distractores de la misma categorÃ­a (paÃ­ses con paÃ­ses, palabras con palabras)
     const samePool = shuffle(words.filter(x => x.es !== w.es && sameCategory(w, x)));
     const diffPool = shuffle(words.filter(x => x.es !== w.es && !sameCategory(w, x)));
     const pool = [...samePool, ...diffPool];
@@ -2237,17 +2169,17 @@ function QuizGame({ words, lessonId, onBack, onHome, onFinish, nextAction, saved
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, 'Opción múltiple'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
+        html('h1', null, 'OpciÃ³n mÃºltiple'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
-        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, '⌂'),
+        html('button', { className: 'back-btn', onClick: onHome, title: 'Ir al inicio' }, 'âŒ‚'),
       ),
       html('div', { className: 'flash-score-row' },
         html('div', { className: 'flash-score-chip no' },
-          html('i', null, '✕'), 'Incorrectas: ' + wrongCount
+          html('i', null, 'âœ•'), 'Incorrectas: ' + wrongCount
         ),
         html('div', { className: 'flash-score-chip yes' },
-          html('i', null, '✓'), 'Correctas: ' + correctCount
+          html('i', null, 'âœ“'), 'Correctas: ' + correctCount
         ),
       ),
       html('div', { className: 'quiz-prompt' },
@@ -2289,10 +2221,10 @@ function ResultScreen({ percent, mode, completed, reviewWords, onRetry, onHome, 
     return html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'result-screen' },
         html('div', { className: 'result-seal hanzi-font celebrate' },
-          html('div', { className: 'pct' }, '完'),
+          html('div', { className: 'pct' }, 'å®Œ'),
           html('div', { className: 'label' }, '100%')
         ),
-        html('div', { className: 'result-title' }, '¡Felicitaciones!'),
+        html('div', { className: 'result-title' }, 'Â¡Felicitaciones!'),
         html('div', { className: 'result-sub' }, 'Completaste este ejercicio sin errores'),
         html('div', { className: 'result-actions' },
           nextAction && html('button', { className: 'primary-btn', onClick: nextAction.go }, nextAction.label),
@@ -2305,9 +2237,9 @@ function ResultScreen({ percent, mode, completed, reviewWords, onRetry, onHome, 
   }
 
   let title, sub;
-  if (percent >= 90) { title = '¡Excelente!'; sub = 'Dominaste esta lección'; }
-  else if (percent >= 70) { title = '¡Muy bien!'; sub = 'Casi perfecto, seguí practicando'; }
-  else if (percent >= 50) { title = 'Buen intento'; sub = 'Repasá un poco más y volvé a intentar'; }
+  if (percent >= 90) { title = 'Â¡Excelente!'; sub = 'Dominaste esta lecciÃ³n'; }
+  else if (percent >= 70) { title = 'Â¡Muy bien!'; sub = 'Casi perfecto, seguÃ­ practicando'; }
+  else if (percent >= 50) { title = 'Buen intento'; sub = 'RepasÃ¡ un poco mÃ¡s y volvÃ© a intentar'; }
   else { title = 'Sigamos practicando'; sub = 'Cada repaso ayuda a memorizar'; }
 
   return html('main', { style: { paddingTop: '18px' } },
@@ -2359,7 +2291,7 @@ function StudyCardsPhase({ words, onDone, onBack }) {
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, 'Tarjetas de estudio'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + deck.length),
       ),
@@ -2376,7 +2308,7 @@ function StudyCardsPhase({ words, onDone, onBack }) {
           !flipped
             ? html(React.Fragment, null,
                 html('div', { className: 'hanzi-font', style: { fontSize: 72, color: 'var(--lacquer)', lineHeight: 1.1 } }, w.hanzi),
-                html('div', { style: { fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 8 } }, '👆 Tocá para ver'),
+                html('div', { style: { fontSize: 13, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 8 } }, 'ðŸ‘† TocÃ¡ para ver'),
               )
             : html(React.Fragment, null,
                 html('div', { className: 'hanzi-font', style: { fontSize: 52, color: 'var(--lacquer)', lineHeight: 1.1, marginBottom: 4 } }, w.hanzi),
@@ -2389,17 +2321,17 @@ function StudyCardsPhase({ words, onDone, onBack }) {
             className: 'secondary-btn', style: { margin: 0, flex: 1 },
             disabled: index === 0,
             onClick: () => { setFlipped(false); setIndex(i => i - 1); },
-          }, '← Anterior'),
+          }, 'â† Anterior'),
           isLast
-            ? html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onDone }, '¡Listo! →')
-            : html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: () => { setFlipped(false); setIndex(i => i + 1); } }, 'Siguiente →'),
+            ? html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onDone }, 'Â¡Listo! â†’')
+            : html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: () => { setFlipped(false); setIndex(i => i + 1); } }, 'Siguiente â†’'),
         ),
       ),
     )
   );
 }
 
-// ----------------- Refuerzo: Quiz genérico -----------------
+// ----------------- Refuerzo: Quiz genÃ©rico -----------------
 function buildRefuerzoMC(words, allWords, mode) {
   return shuffle([...words]).map(w => {
     let show, hint, correct, distractor;
@@ -2456,12 +2388,12 @@ function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: 18 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, title),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
       ),
       html('div', { className: 'flash-score-row' },
-        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), correct + ' correctas'),
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, 'âœ“'), correct + ' correctas'),
       ),
       html('div', { style: { padding: '16px 16px 0' } },
         html('div', { style: { background: '#fff', borderRadius: 20, boxShadow: 'var(--shadow-paper)', padding: '28px 24px', textAlign: 'center', marginBottom: 20 } },
@@ -2482,11 +2414,11 @@ function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }
                 background: isCorrect ? 'var(--jade-light)' : '#FDE4DD',
                 color: isCorrect ? 'var(--jade-dark)' : 'var(--lacquer-dark)',
               }},
-                html('div', { style: { fontSize: 36 } }, isCorrect ? '✓' : '✗'),
-                html('div', { style: { fontSize: 18, marginTop: 4 } }, isCorrect ? '¡Correcto!' : 'Correcto: ' + q.correct),
+                html('div', { style: { fontSize: 36 } }, isCorrect ? 'âœ“' : 'âœ—'),
+                html('div', { style: { fontSize: 18, marginTop: 4 } }, isCorrect ? 'Â¡Correcto!' : 'Correcto: ' + q.correct),
               ),
               html('button', { className: 'primary-btn', onClick: handleNext },
-                index < questions.length - 1 ? 'Siguiente →' : 'Ver resultado'
+                index < questions.length - 1 ? 'Siguiente â†’' : 'Ver resultado'
               ),
             )
           : html('div', { style: { display: 'flex', flexDirection: 'column', gap: 10 } },
@@ -2507,11 +2439,11 @@ function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }
 
 // ----------------- Refuerzo: Session hub -----------------
 const REFUERZO_EXERCISES = [
-  { id: 'cards',  icon: '📖', label: 'Tarjetas de estudio',    sub: 'Repasá hanzi, pinyin y significado' },
-  { id: 'es',     icon: '🇪🇸', label: '¿Qué significa?',        sub: 'Ves el hanzi, elegís el significado' },
-  { id: 'pinyin', icon: '🔤', label: '¿Cuál es el pinyin?',      sub: 'Ves el hanzi, elegís el pinyin' },
-  { id: 'hanzi',  icon: '汉', label: '¿Cómo se escribe?',       sub: 'Ves el significado, elegís el hanzi' },
-  { id: 'match',  icon: '🔗', label: 'Emparejamiento',          sub: 'Une hanzi con su pinyin y significado' },
+  { id: 'cards',  icon: 'ðŸ“–', label: 'Tarjetas de estudio',    sub: 'RepasÃ¡ hanzi, pinyin y significado' },
+  { id: 'es',     icon: 'ðŸ‡ªðŸ‡¸', label: 'Â¿QuÃ© significa?',        sub: 'Ves el hanzi, elegÃ­s el significado' },
+  { id: 'pinyin', icon: 'ðŸ”¤', label: 'Â¿CuÃ¡l es el pinyin?',      sub: 'Ves el hanzi, elegÃ­s el pinyin' },
+  { id: 'hanzi',  icon: 'æ±‰', label: 'Â¿CÃ³mo se escribe?',       sub: 'Ves el significado, elegÃ­s el hanzi' },
+  { id: 'match',  icon: 'ðŸ”—', label: 'Emparejamiento',          sub: 'Une hanzi con su pinyin y significado' },
 ];
 
 function RefuerzoSession({ words, allWords, onBack, playerName }) {
@@ -2523,9 +2455,9 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
   const noop = () => {};
 
   if (current === 'cards') return html(StudyCardsPhase, { words, onDone: () => markDone('cards'), onBack: goBack });
-  if (current === 'es')    return html(RefuerzoMC, { words, allWords, mode: 'es',    title: '¿Qué significa?',   onDone: () => markDone('es'),    onBack: goBack, playerName });
-  if (current === 'pinyin') return html(RefuerzoMC, { words, allWords, mode: 'pinyin', title: '¿Cuál es el pinyin?',     onDone: () => markDone('pinyin'), onBack: goBack, playerName });
-  if (current === 'hanzi')  return html(RefuerzoMC, { words, allWords, mode: 'hanzi',  title: '¿Cómo se escribe?', onDone: () => markDone('hanzi'),  onBack: goBack, playerName });
+  if (current === 'es')    return html(RefuerzoMC, { words, allWords, mode: 'es',    title: 'Â¿QuÃ© significa?',   onDone: () => markDone('es'),    onBack: goBack, playerName });
+  if (current === 'pinyin') return html(RefuerzoMC, { words, allWords, mode: 'pinyin', title: 'Â¿CuÃ¡l es el pinyin?',     onDone: () => markDone('pinyin'), onBack: goBack, playerName });
+  if (current === 'hanzi')  return html(RefuerzoMC, { words, allWords, mode: 'hanzi',  title: 'Â¿CÃ³mo se escribe?', onDone: () => markDone('hanzi'),  onBack: goBack, playerName });
   if (current === 'match')  return html(MatchGame, {
     words, lessonId: null,
     onBack: goBack, onHome: goBack,
@@ -2538,13 +2470,13 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('div', null,
           html('h1', null, 'Reforcemos'),
-          html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, 'Práctica personalizada · ' + words.length + ' palabras'),
+          html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600, marginTop: 2 } }, 'PrÃ¡ctica personalizada Â· ' + words.length + ' palabras'),
         ),
         html('div', { style: { fontSize: 13, fontWeight: 800, color: done.size === REFUERZO_EXERCISES.length ? 'var(--jade)' : 'var(--ink-soft)' } },
-          done.size + '/' + REFUERZO_EXERCISES.length + ' ✓'
+          done.size + '/' + REFUERZO_EXERCISES.length + ' âœ“'
         ),
       ),
       html('div', { style: { padding: '0 16px' } },
@@ -2561,8 +2493,8 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
           background: 'var(--jade-light)', borderRadius: 16, padding: '16px 20px',
           textAlign: 'center', marginBottom: 20, fontWeight: 800, color: 'var(--jade-dark)',
         }},
-          html('div', { style: { fontSize: 32 } }, '🎉'),
-          html('div', { style: { fontSize: 17, marginTop: 6 } }, '¡Completaste todos los ejercicios!'),
+          html('div', { style: { fontSize: 32 } }, 'ðŸŽ‰'),
+          html('div', { style: { fontSize: 17, marginTop: 6 } }, 'Â¡Completaste todos los ejercicios!'),
         ),
         REFUERZO_EXERCISES.map(e => html('button', {
           key: e.id,
@@ -2575,7 +2507,7 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
             html('div', { className: 'mode-title' }, e.label),
             html('div', { className: 'mode-sub' }, e.sub),
           ),
-          done.has(e.id) && html('div', { style: { fontSize: 20, color: 'var(--jade)' } }, '✓'),
+          done.has(e.id) && html('div', { style: { fontSize: 20, color: 'var(--jade)' } }, 'âœ“'),
         )),
       ),
     )
@@ -2584,13 +2516,13 @@ function RefuerzoSession({ words, allWords, onBack, playerName }) {
 
 // ----------------- Admin panel -----------------
 function parseVocabText(text) {
-  // Expects lines like: 5 | 餐厅 | cāntīng | comedor
-  // or tab-separated, grouped by "Lección N" headers
+  // Expects lines like: 5 | é¤åŽ… | cÄntÄ«ng | comedor
+  // or tab-separated, grouped by "LecciÃ³n N" headers
   const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
   const result = {};
   let currentLesson = null;
   for (const line of lines) {
-    const lessonMatch = line.match(/lecci[oó]n\s+(\d+)/i);
+    const lessonMatch = line.match(/lecci[oÃ³]n\s+(\d+)/i);
     if (lessonMatch) {
       currentLesson = lessonMatch[1];
       if (!result[currentLesson]) result[currentLesson] = [];
@@ -2608,7 +2540,7 @@ function parseVocabText(text) {
       }
       if (!lesson) lesson = '1';
       if (!result[lesson]) result[lesson] = [];
-      if (hanzi && pinyin && es && hanzi !== 'Carácter') {
+      if (hanzi && pinyin && es && hanzi !== 'CarÃ¡cter') {
         result[lesson].push({ hanzi, pinyin, es });
       }
     }
@@ -2640,16 +2572,16 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   const [status, setStatus] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // gestión de lecciones
+  // gestiÃ³n de lecciones
   const [renamingLesson, setRenamingLesson] = useState(null);
   const [visibilityTick, setVisibilityTick] = useState(0);
   const [renameValue, setRenameValue] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(null);
-  // editor de contenido de lección
+  // editor de contenido de lecciÃ³n
   const [editingLesson, setEditingLesson] = useState(null);
   const [editWords, setEditWords] = useState([]);
 
-  // log de inicios de sesión (admins)
+  // log de inicios de sesiÃ³n (admins)
   const [loginLog, setLoginLog] = useState([]);
   const [showLoginLog, setShowLoginLog] = useState(false);
   const loadLoginLog = () => {
@@ -2668,7 +2600,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
   };
 
   const handleRenameLesson = (id) => {
-    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id };
     setRenamingLesson(id);
     setRenameValue(theme.name);
   };
@@ -2683,7 +2615,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       const saved = JSON.parse(localStorage.getItem('hanzi-lesson-themes') || '{}');
       saved[id] = theme;
       localStorage.setItem('hanzi-lesson-themes', JSON.stringify(saved));
-      setStatus({ type: 'ok', msg: '✅ Nombre de Lección ' + id + ' actualizado para todos.' });
+      setStatus({ type: 'ok', msg: 'âœ… Nombre de LecciÃ³n ' + id + ' actualizado para todos.' });
     }
     setRenamingLesson(null);
   };
@@ -2711,10 +2643,10 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     setStatus(null);
   };
 
-  // nueva lección
+  // nueva lecciÃ³n
 
-  // Parsea CSV con formato: Lección, 汉字, Pīnyīn, Significado en español
-  // Agrupa automáticamente por número de lección
+  // Parsea CSV con formato: LecciÃ³n, æ±‰å­—, PÄ«nyÄ«n, Significado en espaÃ±ol
+  // Agrupa automÃ¡ticamente por nÃºmero de lecciÃ³n
   const parseCsvMultiLesson = (text) => {
     const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
     const sep = lines[0].includes(';') ? ';' : ',';
@@ -2735,16 +2667,16 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       if (parts.length < 4) return;
       const [lecCol, hanzi, pinyin, es] = parts;
       if (!hanzi || !pinyin || !es) return;
-      // Extraer número de lección: "Lección 3 — ..." → "3"
-      const numMatch = lecCol.match(/lecci[oó]n\s+(\d+)/i);
+      // Extraer nÃºmero de lecciÃ³n: "LecciÃ³n 3 â€” ..." â†’ "3"
+      const numMatch = lecCol.match(/lecci[oÃ³]n\s+(\d+)/i);
       if (!numMatch) return;
       const lid = numMatch[1];
       if (!lessons[lid]) {
-        // Nombre: lo que viene después de "—" en la primera aparición
-        const nameMatch = lecCol.match(/[—-]\s*(.+)/);
-        const rawName = nameMatch ? nameMatch[1].trim() : ('Lección ' + lid);
-        // Ícono: primer carácter chino del nombre
-        const iconMatch = rawName.match(/[一-鿿]/);
+        // Nombre: lo que viene despuÃ©s de "â€”" en la primera apariciÃ³n
+        const nameMatch = lecCol.match(/[â€”-]\s*(.+)/);
+        const rawName = nameMatch ? nameMatch[1].trim() : ('LecciÃ³n ' + lid);
+        // Ãcono: primer carÃ¡cter chino del nombre
+        const iconMatch = rawName.match(/[ä¸€-é¿¿]/);
         lessons[lid] = { name: rawName, icon: iconMatch ? iconMatch[0] : lid, words: [] };
       }
       lessons[lid].words.push({ lesson: lid, hanzi, pinyin, es });
@@ -2752,9 +2684,9 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     return lessons;
   };
 
-  // Subir CSV multi-lección al Supabase
+  // Subir CSV multi-lecciÃ³n al Supabase
   const handleCsvUpload = async () => {
-    if (!csvFile) { setStatus({ type: 'err', msg: 'Seleccioná un archivo CSV primero.' }); return; }
+    if (!csvFile) { setStatus({ type: 'err', msg: 'SeleccionÃ¡ un archivo CSV primero.' }); return; }
     setUploading(true);
     setStatus(null);
     const reader = new FileReader();
@@ -2762,14 +2694,14 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       try {
         const lessons = parseCsvMultiLesson(e.target.result);
         const lessonIds = Object.keys(lessons);
-        if (lessonIds.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron lecciones. Verificá el formato del CSV.' }); setUploading(false); return; }
+        if (lessonIds.length === 0) { setStatus({ type: 'err', msg: 'No se encontraron lecciones. VerificÃ¡ el formato del CSV.' }); setUploading(false); return; }
 
         let totalWords = 0;
         const newVocab = { ...vocab };
 
         for (const lid of lessonIds) {
           const { name, icon, words } = lessons[lid];
-          // Borrar palabras existentes de esa lección en Supabase antes de insertar
+          // Borrar palabras existentes de esa lecciÃ³n en Supabase antes de insertar
           await db.from('vocabulary').delete().eq('lesson', lid);
           const { error: insErr } = await db.from('vocabulary').insert(words);
           if (insErr) throw insErr;
@@ -2780,7 +2712,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
         }
 
         onVocabUpdate(newVocab);
-        setStatus({ type: 'ok', msg: '✅ ' + lessonIds.length + ' lección(es) cargadas con ' + totalWords + ' palabras en total para todos los usuarios.' });
+        setStatus({ type: 'ok', msg: 'âœ… ' + lessonIds.length + ' lecciÃ³n(es) cargadas con ' + totalWords + ' palabras en total para todos los usuarios.' });
         setCsvFile(null);
       } catch (err) {
         setStatus({ type: 'err', msg: 'Error: ' + err.message });
@@ -2790,14 +2722,14 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     reader.readAsText(csvFile, 'UTF-8');
   };
 
-  // Eliminar lección (local + Supabase)
+  // Eliminar lecciÃ³n (local + Supabase)
   const handleToggleVisibility = async (id) => {
-    const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+    const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id };
     const newHidden = !theme.hidden;
     const updated = { ...theme, hidden: newHidden };
     LESSON_THEMES[id] = updated;
     await db.from('lesson_themes').upsert({ lesson: id, name: updated.name, icon: updated.icon || id, hidden: newHidden });
-    setStatus({ type: 'ok', msg: newHidden ? '🚫 Módulo ocultado para los alumnos.' : '👁️ Módulo visible para los alumnos.' });
+    setStatus({ type: 'ok', msg: newHidden ? 'ðŸš« MÃ³dulo ocultado para los alumnos.' : 'ðŸ‘ï¸ MÃ³dulo visible para los alumnos.' });
     setVisibilityTick(t => t + 1);
   };
 
@@ -2810,11 +2742,11 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
     delete newVocab[id];
     onVocabUpdate(newVocab);
     setConfirmDelete(null);
-    setStatus({ type: 'ok', msg: '✅ Lección ' + id + ' eliminada para todos.' });
+    setStatus({ type: 'ok', msg: 'âœ… LecciÃ³n ' + id + ' eliminada para todos.' });
   };
 
   const handleApply = () => {
-    if (!text.trim()) { setStatus({ type: 'err', msg: 'Pegá el contenido del vocabulario antes de aplicar.' }); return; }
+    if (!text.trim()) { setStatus({ type: 'err', msg: 'PegÃ¡ el contenido del vocabulario antes de aplicar.' }); return; }
     try {
       const parsed = parseVocabText(text);
       const wordCount = Object.values(parsed).reduce((acc, arr) => acc + arr.length, 0);
@@ -2841,18 +2773,18 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       for (const [lid, words] of Object.entries(DEFAULT_VOCAB)) {
         await db.from('vocabulary').delete().eq('lesson', lid);
         await db.from('vocabulary').insert(words.map(w => ({ lesson: lid, hanzi: w.hanzi, pinyin: w.pinyin, es: w.es })));
-        const theme = LESSON_THEMES[lid] || { name: 'Lección ' + lid, icon: lid };
+        const theme = LESSON_THEMES[lid] || { name: 'LecciÃ³n ' + lid, icon: lid };
         await db.from('lesson_themes').upsert({ lesson: lid, name: theme.name, icon: theme.icon });
         total += words.length;
       }
-      setStatus({ type: 'ok', msg: '✅ ' + Object.keys(DEFAULT_VOCAB).length + ' lecciones sincronizadas (' + total + ' palabras) a Supabase.' });
+      setStatus({ type: 'ok', msg: 'âœ… ' + Object.keys(DEFAULT_VOCAB).length + ' lecciones sincronizadas (' + total + ' palabras) a Supabase.' });
     } catch (err) {
       setStatus({ type: 'err', msg: 'Error: ' + err.message });
     }
     setUploading(false);
   };
 
-  // Abrir editor de palabras de una lección
+  // Abrir editor de palabras de una lecciÃ³n
   const handleEditLesson = (id) => {
     setEditingLesson(id);
     setEditWords((vocab[id] || []).map((w, i) => ({ ...w, _key: Date.now() + i })));
@@ -2865,13 +2797,13 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
       const rows = editWords
         .filter(w => w.hanzi && w.pinyin && w.es)
         .map(w => ({ lesson: editingLesson, hanzi: w.hanzi.trim(), pinyin: w.pinyin.trim(), es: w.es.trim() }));
-      if (rows.length === 0) { setStatus({ type: 'err', msg: 'No hay palabras válidas para guardar.' }); setUploading(false); return; }
+      if (rows.length === 0) { setStatus({ type: 'err', msg: 'No hay palabras vÃ¡lidas para guardar.' }); setUploading(false); return; }
       await db.from('vocabulary').delete().eq('lesson', editingLesson);
       const { error } = await db.from('vocabulary').insert(rows);
       if (error) throw error;
       const newVocab = { ...vocab, [editingLesson]: rows.map(r => ({ hanzi: r.hanzi, pinyin: r.pinyin, es: r.es })) };
       onVocabUpdate(newVocab);
-      setStatus({ type: 'ok', msg: '✅ Lección ' + editingLesson + ' guardada con ' + rows.length + ' palabras para todos.' });
+      setStatus({ type: 'ok', msg: 'âœ… LecciÃ³n ' + editingLesson + ' guardada con ' + rows.length + ' palabras para todos.' });
       setEditingLesson(null);
     } catch (err) {
       setStatus({ type: 'err', msg: 'Error: ' + err.message });
@@ -2885,25 +2817,25 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
   const totalWords = Object.values(vocab).reduce((acc, arr) => acc + arr.length, 0);
 
-  if (loadingSession) return html('main', { style: { paddingTop: 40, textAlign: 'center' } }, '⏳ Cargando...');
+  if (loadingSession) return html('main', { style: { paddingTop: 40, textAlign: 'center' } }, 'â³ Cargando...');
 
-  // ── Editor de palabras ──
+  // â”€â”€ Editor de palabras â”€â”€
   if (editingLesson) {
-    const theme = LESSON_THEMES[editingLesson] || { name: 'Lección ' + editingLesson };
+    const theme = LESSON_THEMES[editingLesson] || { name: 'LecciÃ³n ' + editingLesson };
     const inputStyle = { padding: '7px 9px', borderRadius: 8, border: '1.5px solid var(--paper-deep)', fontSize: 13, fontFamily: 'Nunito, sans-serif', width: '100%' };
     return html('main', { style: { paddingTop: 18, paddingBottom: 40 } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: () => setEditingLesson(null) }, '←'),
+        html('button', { className: 'back-btn', onClick: () => setEditingLesson(null) }, 'â†'),
         html('div', null,
-          html('h1', null, 'Editar lección ' + editingLesson),
-          html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, theme.name + ' · ' + editWords.length + ' palabras'),
+          html('h1', null, 'Editar lecciÃ³n ' + editingLesson),
+          html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, theme.name + ' Â· ' + editWords.length + ' palabras'),
         ),
       ),
       html('div', { className: 'admin-panel' },
         html('div', { style: { display: 'grid', gridTemplateColumns: '2fr 2fr 3fr auto', gap: 6, marginBottom: 6 } },
-          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, '汉字'),
-          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, 'Pīnyīn'),
-          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, 'Español'),
+          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, 'æ±‰å­—'),
+          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, 'PÄ«nyÄ«n'),
+          html('div', { style: { fontSize: 11, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 0.5 } }, 'EspaÃ±ol'),
           html('div', null),
         ),
         html('div', { style: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 16 } },
@@ -2911,11 +2843,11 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             html('input', { value: w.hanzi, onChange: e => updateEditWord(w._key, 'hanzi', e.target.value), style: { ...inputStyle, fontFamily: 'Noto Serif SC, serif', fontSize: 16 } }),
             html('input', { value: w.pinyin, onChange: e => updateEditWord(w._key, 'pinyin', e.target.value), style: inputStyle }),
             html('input', { value: w.es, onChange: e => updateEditWord(w._key, 'es', e.target.value), style: inputStyle }),
-            html('button', { onClick: () => removeEditWord(w._key), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--lacquer)', padding: '0 4px' } }, '🗑️'),
+            html('button', { onClick: () => removeEditWord(w._key), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--lacquer)', padding: '0 4px' } }, 'ðŸ—‘ï¸'),
           )),
         ),
         html('button', { className: 'secondary-btn', style: { marginBottom: 16 }, onClick: addEditWord }, '+ Agregar palabra'),
-        html('button', { className: 'primary-btn', onClick: handleSaveEditLesson, disabled: uploading }, uploading ? '⏳ Guardando...' : '💾 Guardar para todos'),
+        html('button', { className: 'primary-btn', onClick: handleSaveEditLesson, disabled: uploading }, uploading ? 'â³ Guardando...' : 'ðŸ’¾ Guardar para todos'),
         status && html('div', { className: 'admin-status ' + (status.type === 'ok' ? 'ok' : 'err'), style: { marginTop: 10 } }, status.msg),
       ),
     );
@@ -2923,12 +2855,12 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
   return html('main', { style: { paddingTop: '18px' } },
     html('div', { className: 'header-row' },
-      html('button', { className: 'back-btn', onClick: onBack }, '←'),
+      html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
       html('h1', null, 'Administrar'),
     ),
     html('div', { className: 'admin-panel' },
 
-      // ── Info vocab actual ──
+      // â”€â”€ Info vocab actual â”€â”€
       html('div', null,
         html('label', null, 'Vocabulario actual'),
         html('p', { className: 'admin-note', style: { marginTop: 6 } },
@@ -2936,60 +2868,60 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
         )
       ),
 
-      // ── Panel admin (solo si hay sesión) ──
+      // â”€â”€ Panel admin (solo si hay sesiÃ³n) â”€â”€
       session
         ? html(React.Fragment, null,
             html('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'var(--jade-light)', borderRadius: 12, padding: '10px 14px' } },
-              html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--jade-dark)' } }, '🔓 Admin: ' + session.user.email),
-              html('button', { className: 'secondary-btn', style: { margin: 0, padding: '6px 14px', fontSize: 13 }, onClick: handleLogout }, 'Cerrar sesión'),
+              html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--jade-dark)' } }, 'ðŸ”“ Admin: ' + session.user.email),
+              html('button', { className: 'secondary-btn', style: { margin: 0, padding: '6px 14px', fontSize: 13 }, onClick: handleLogout }, 'Cerrar sesiÃ³n'),
             ),
 
-            // ── Nueva lección desde CSV ──
+            // â”€â”€ Nueva lecciÃ³n desde CSV â”€â”€
             html('div', null,
-              html('label', null, '➕ Cargar lecciones desde CSV'),
+              html('label', null, 'âž• Cargar lecciones desde CSV'),
               html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
                 'El archivo puede contener ', html('strong', null, 'una o varias lecciones'),
-                '. Las lecciones y nombres se detectan automáticamente. Si ya existe una lección con el mismo número, se reemplaza.'
+                '. Las lecciones y nombres se detectan automÃ¡ticamente. Si ya existe una lecciÃ³n con el mismo nÃºmero, se reemplaza.'
               ),
               html('p', { className: 'admin-note', style: { fontFamily: 'monospace', background: 'var(--paper)', padding: '8px 10px', borderRadius: 8, fontSize: 12, whiteSpace: 'pre' } },
-                'Lección,Nº,Pīnyīn,汉字,Tipo,Significado en español\nLección 1 — 你好 (Nǐ hǎo),1,nǐ,你,Pr.,tú\nLección 1 — 你好 (Nǐ hǎo),2,hǎo,好,A,bien / bueno'
+                'LecciÃ³n,NÂº,PÄ«nyÄ«n,æ±‰å­—,Tipo,Significado en espaÃ±ol\nLecciÃ³n 1 â€” ä½ å¥½ (NÇ hÇŽo),1,nÇ,ä½ ,Pr.,tÃº\nLecciÃ³n 1 â€” ä½ å¥½ (NÇ hÇŽo),2,hÇŽo,å¥½,A,bien / bueno'
               ),
               html('input', {
                 type: 'file', accept: '.csv',
                 style: { margin: '8px 0 10px', width: '100%' },
                 onChange: (e) => setCsvFile(e.target.files[0] || null),
               }),
-              csvFile && html('p', { className: 'admin-note', style: { margin: '0 0 8px', color: 'var(--ink-mid)' } }, '📄 ' + csvFile.name),
+              csvFile && html('p', { className: 'admin-note', style: { margin: '0 0 8px', color: 'var(--ink-mid)' } }, 'ðŸ“„ ' + csvFile.name),
               html('button', {
                 className: 'primary-btn',
                 onClick: handleCsvUpload,
                 disabled: uploading || !csvFile,
-              }, uploading ? '⏳ Subiendo lecciones...' : '➕ Subir a Supabase para todos'),
+              }, uploading ? 'â³ Subiendo lecciones...' : 'âž• Subir a Supabase para todos'),
             ),
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Sincronizar lecciones integradas ──
+            // â”€â”€ Sincronizar lecciones integradas â”€â”€
             html('div', null,
-              html('label', null, '☁️ Sincronizar lecciones integradas'),
+              html('label', null, 'â˜ï¸ Sincronizar lecciones integradas'),
               html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } },
-                'Sube las lecciones 5 a 10 (campus, clima, presentaciones, familia, países y números) a Supabase para que sean administrables desde aquí.'
+                'Sube las lecciones 5 a 10 (campus, clima, presentaciones, familia, paÃ­ses y nÃºmeros) a Supabase para que sean administrables desde aquÃ­.'
               ),
               html('button', {
                 className: 'secondary-btn',
                 onClick: handleSeedDefaults,
                 disabled: uploading,
-              }, uploading ? '⏳ Sincronizando...' : '☁️ Sincronizar a Supabase'),
+              }, uploading ? 'â³ Sincronizando...' : 'â˜ï¸ Sincronizar a Supabase'),
             ),
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Gestión de lecciones ──
+            // â”€â”€ GestiÃ³n de lecciones â”€â”€
             html('div', null,
-              html('label', null, '📚 Lecciones cargadas'),
+              html('label', null, 'ðŸ“š Lecciones cargadas'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
                 Object.keys(vocab).sort().filter(id => id !== 'mod-paises' && id !== 'mod-numeros').map(id => {
-                  const theme = LESSON_THEMES[id] || { name: 'Lección ' + id };
+                  const theme = LESSON_THEMES[id] || { name: 'LecciÃ³n ' + id };
                   const count = vocab[id].length;
                   const isRenaming = renamingLesson === id;
                   const isConfirmingDelete = confirmDelete === id;
@@ -3008,23 +2940,23 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                             style: { flex: 1, padding: '6px 10px', borderRadius: 8, border: '2px solid var(--jade)', fontSize: 14, fontFamily: 'Nunito, sans-serif' }
                           })
                         : html('div', { style: { flex: 1 } },
-                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, 'Lección ' + id + ' · ' + theme.name),
+                            html('div', { style: { fontWeight: 800, fontSize: 14 } }, 'LecciÃ³n ' + id + ' Â· ' + theme.name),
                             html('div', { style: { fontSize: 12, color: 'var(--ink-soft)', fontWeight: 600 } }, count + ' palabras'),
                           ),
                       isRenaming
                         ? html(React.Fragment, null,
-                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, '✓ Guardar'),
-                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, '✕'),
+                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'âœ“ Guardar'),
+                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, 'âœ•'),
                           )
                         : html(React.Fragment, null,
-                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? '🚫' : '👁️'),
-                            html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '📝'),
-                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '✏️'),
-                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '🗑️'),
+                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? 'ðŸš«' : 'ðŸ‘ï¸'),
+                            html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'ðŸ“'),
+                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'âœï¸'),
+                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'ðŸ—‘ï¸'),
                           ),
                     ),
                     isConfirmingDelete && html('div', { style: { background: '#FDE4DD', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
-                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
+                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, 'Â¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
                       html('div', { style: { display: 'flex', gap: 6 } },
                         html('button', { onClick: () => handleDeleteLesson(id), style: { background: 'var(--lacquer)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'Eliminar'),
                         html('button', { onClick: () => setConfirmDelete(null), style: { background: 'none', border: '2px solid var(--paper-deep)', borderRadius: 8, padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, 'Cancelar'),
@@ -3037,12 +2969,12 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Módulos especiales (países y números) ──
+            // â”€â”€ MÃ³dulos especiales (paÃ­ses y nÃºmeros) â”€â”€
             html('div', null,
-              html('label', null, '🌍 Módulos especiales'),
+              html('label', null, 'ðŸŒ MÃ³dulos especiales'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginTop: 10 } },
                 ['9', '10'].filter(id => vocab[id]).map(id => {
-                  const theme = LESSON_THEMES[id] || { name: 'Módulo ' + id };
+                  const theme = LESSON_THEMES[id] || { name: 'MÃ³dulo ' + id };
                   const count = vocab[id].length;
                   const isRenaming = renamingLesson === id;
                   const isConfirmingDelete = confirmDelete === id;
@@ -3066,18 +2998,18 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                           ),
                       isRenaming
                         ? html(React.Fragment, null,
-                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, '✓ Guardar'),
-                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, '✕'),
+                            html('button', { onClick: () => handleRenameSave(id), style: { background: 'var(--jade)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'âœ“ Guardar'),
+                            html('button', { onClick: () => setRenamingLesson(null), style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 18, color: 'var(--ink-soft)' } }, 'âœ•'),
                           )
                         : html(React.Fragment, null,
-                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? '🚫' : '👁️'),
-                            html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '📝'),
-                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '✏️'),
-                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, '🗑️'),
+                            html('button', { onClick: () => handleToggleVisibility(id), title: theme.hidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: theme.hidden ? 0.4 : 1 } }, theme.hidden ? 'ðŸš«' : 'ðŸ‘ï¸'),
+                            html('button', { onClick: () => handleEditLesson(id), title: 'Editar palabras', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'ðŸ“'),
+                            html('button', { onClick: () => handleRenameLesson(id), title: 'Renombrar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'âœï¸'),
+                            html('button', { onClick: () => setConfirmDelete(id), title: 'Eliminar', style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16 } }, 'ðŸ—‘ï¸'),
                           ),
                     ),
                     isConfirmingDelete && html('div', { style: { background: '#FDE4DD', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 } },
-                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, '¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
+                      html('span', { style: { fontSize: 13, fontWeight: 700, color: 'var(--lacquer-dark)' } }, 'Â¿Eliminar "' + theme.name + '" y sus ' + count + ' palabras?'),
                       html('div', { style: { display: 'flex', gap: 6 } },
                         html('button', { onClick: () => handleDeleteLesson(id), style: { background: 'var(--lacquer)', color: '#fff', border: 'none', borderRadius: 8, padding: '6px 12px', fontWeight: 800, cursor: 'pointer', fontSize: 13 } }, 'Eliminar'),
                         html('button', { onClick: () => setConfirmDelete(null), style: { background: 'none', border: '2px solid var(--paper-deep)', borderRadius: 8, padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: 13 } }, 'Cancelar'),
@@ -3090,17 +3022,17 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Módulos de práctica ──
+            // â”€â”€ MÃ³dulos de prÃ¡ctica â”€â”€
             html('div', null,
-              html('label', null, '🎮 Módulos de práctica'),
-              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Activá o desactivá cada módulo para todos los alumnos.'),
+              html('label', null, 'ðŸŽ® MÃ³dulos de prÃ¡ctica'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'ActivÃ¡ o desactivÃ¡ cada mÃ³dulo para todos los alumnos.'),
               html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8 } },
                 [
-                  { id: 'mod-clas',     icon: '🔢', name: 'Clasificadores' },
-                  { id: 'mod-dialogo',  icon: '💬', name: 'Completa el diálogo' },
-                  { id: 'mod-orden',    icon: '🔀', name: 'Ordena la oración' },
-                  { id: 'mod-audio',    icon: '🔊', name: 'Reconocer por audio' },
-                  { id: 'mod-refuerzo', icon: '💪', name: 'Reforcemos' },
+                  { id: 'mod-clas',     icon: 'ðŸ”¢', name: 'Clasificadores' },
+                  { id: 'mod-dialogo',  icon: 'ðŸ’¬', name: 'Completa el diÃ¡logo' },
+                  { id: 'mod-orden',    icon: 'ðŸ”€', name: 'Ordena la oraciÃ³n' },
+                  { id: 'mod-audio',    icon: 'ðŸ”Š', name: 'Reconocer por audio' },
+                  { id: 'mod-refuerzo', icon: 'ðŸ’ª', name: 'Reforcemos' },
                 ].map(m => {
                   const theme = LESSON_THEMES[m.id] || {};
                   const isHidden = !!theme.hidden;
@@ -3114,7 +3046,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                       onClick: () => handleToggleVisibility(m.id),
                       title: isHidden ? 'Mostrar a alumnos' : 'Ocultar a alumnos',
                       style: { background: 'none', border: 'none', cursor: 'pointer', fontSize: 16, opacity: isHidden ? 0.4 : 1 }
-                    }, isHidden ? '🚫' : '👁️'),
+                    }, isHidden ? 'ðŸš«' : 'ðŸ‘ï¸'),
                   );
                 })
               ),
@@ -3122,15 +3054,15 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Log de inicios de sesión ──
+            // â”€â”€ Log de inicios de sesiÃ³n â”€â”€
             html('div', null,
-              html('label', null, '🕒 Registro de inicios de sesión'),
-              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Últimos 50 accesos al panel de administrador.'),
+              html('label', null, 'ðŸ•’ Registro de inicios de sesiÃ³n'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Ãšltimos 50 accesos al panel de administrador.'),
               !showLoginLog
                 ? html('button', { className: 'secondary-btn', onClick: loadLoginLog }, 'Ver registro')
                 : html('div', { style: { display: 'flex', flexDirection: 'column', gap: 6 } },
                     loginLog.length === 0
-                      ? html('p', { className: 'admin-note' }, 'Sin registros todavía.')
+                      ? html('p', { className: 'admin-note' }, 'Sin registros todavÃ­a.')
                       : loginLog.map((r, i) => html('div', {
                           key: i,
                           style: { background: '#fff', borderRadius: 10, padding: '8px 12px', boxShadow: 'var(--shadow-paper)', display: 'flex', justifyContent: 'space-between', fontSize: 13 }
@@ -3143,15 +3075,15 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 
             html('hr', { style: { border: 'none', borderTop: '1px solid var(--paper-deep)', margin: '8px 0' } }),
 
-            // ── Log de alumnos conectados ──
+            // â”€â”€ Log de alumnos conectados â”€â”€
             html('div', null,
-              html('label', null, '👥 Alumnos conectados'),
-              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Registro de los nombres que los alumnos eligieron al entrar (últimos 100).'),
+              html('label', null, 'ðŸ‘¥ Alumnos conectados'),
+              html('p', { className: 'admin-note', style: { margin: '6px 0 10px' } }, 'Registro de los nombres que los alumnos eligieron al entrar (Ãºltimos 100).'),
               !showStudentLog
                 ? html('button', { className: 'secondary-btn', onClick: loadStudentLog }, 'Ver registro')
                 : html('div', { style: { display: 'flex', flexDirection: 'column', gap: 6, maxHeight: 320, overflowY: 'auto' } },
                     studentLog.length === 0
-                      ? html('p', { className: 'admin-note' }, 'Sin registros todavía.')
+                      ? html('p', { className: 'admin-note' }, 'Sin registros todavÃ­a.')
                       : studentLog.map((r, i) => html('div', {
                           key: i,
                           style: { background: '#fff', borderRadius: 10, padding: '8px 12px', boxShadow: 'var(--shadow-paper)', display: 'flex', justifyContent: 'space-between', fontSize: 13 }
@@ -3163,27 +3095,27 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
             ),
           )
 
-        // ── Login ──
+        // â”€â”€ Login â”€â”€
         : html('div', null,
-            html('label', null, '🔐 Acceso admin'),
+            html('label', null, 'ðŸ” Acceso admin'),
             html('p', { className: 'admin-note', style: { marginBottom: 14 } }, 'Solo el administrador puede cargar vocabulario para todos los usuarios.'),
             html('form', { onSubmit: handleLogin, style: { display: 'flex', flexDirection: 'column', gap: 10 } },
               html('input', { type: 'email', placeholder: 'Email', value: email, onChange: e => setEmail(e.target.value), style: { padding: '12px 14px', borderRadius: 12, border: '2px solid var(--paper-deep)', fontSize: 15, fontFamily: 'Nunito, sans-serif' } }),
-              html('input', { type: 'password', placeholder: 'Contraseña', value: password, onChange: e => setPassword(e.target.value), style: { padding: '12px 14px', borderRadius: 12, border: '2px solid var(--paper-deep)', fontSize: 15, fontFamily: 'Nunito, sans-serif' } }),
+              html('input', { type: 'password', placeholder: 'ContraseÃ±a', value: password, onChange: e => setPassword(e.target.value), style: { padding: '12px 14px', borderRadius: 12, border: '2px solid var(--paper-deep)', fontSize: 15, fontFamily: 'Nunito, sans-serif' } }),
               loginStatus && html('div', { className: 'admin-status err' }, loginStatus.msg),
-              html('button', { type: 'submit', className: 'primary-btn', style: { marginTop: 4 } }, 'Iniciar sesión'),
+              html('button', { type: 'submit', className: 'primary-btn', style: { marginTop: 4 } }, 'Iniciar sesiÃ³n'),
             ),
           ),
 
-      // ── Reiniciar progreso (visible para todos) ──
+      // â”€â”€ Reiniciar progreso (visible para todos) â”€â”€
       html('div', { style: { borderTop: '1px solid var(--paper-deep)', paddingTop: 16, marginTop: 8 } },
-        html('label', null, '🔄 Mi progreso'),
+        html('label', null, 'ðŸ”„ Mi progreso'),
         html('p', { className: 'admin-note', style: { margin: '6px 0 12px' } },
           'Borra todo tu progreso local: puntajes, estrellas, nombre y errores guardados. No afecta a otros usuarios.'
         ),
         confirmDelete === 'reset'
           ? html('div', { style: { background: '#FDE4DD', borderRadius: 12, padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 10 } },
-              html('span', { style: { fontWeight: 800, fontSize: 14, color: 'var(--lacquer-dark)' } }, '¿Seguro que querés borrar todo tu progreso? Esta acción no se puede deshacer.'),
+              html('span', { style: { fontWeight: 800, fontSize: 14, color: 'var(--lacquer-dark)' } }, 'Â¿Seguro que querÃ©s borrar todo tu progreso? Esta acciÃ³n no se puede deshacer.'),
               html('div', { style: { display: 'flex', gap: 8 } },
                 html('button', {
                   className: 'primary-btn', style: { margin: 0, background: 'var(--lacquer)' },
@@ -3193,7 +3125,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
                     setConfirmDelete(null);
                     setTimeout(() => window.location.reload(), 300);
                   }
-                }, '🗑️ Sí, borrar todo'),
+                }, 'ðŸ—‘ï¸ SÃ­, borrar todo'),
                 html('button', { className: 'secondary-btn', style: { margin: 0 }, onClick: () => setConfirmDelete(null) }, 'Cancelar'),
               ),
             )
@@ -3201,7 +3133,7 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
               className: 'secondary-btn',
               style: { borderColor: 'var(--lacquer)', color: 'var(--lacquer)' },
               onClick: () => setConfirmDelete('reset'),
-            }, '🔄 Reiniciar mi progreso'),
+            }, 'ðŸ”„ Reiniciar mi progreso'),
       ),
 
       status && html('div', { className: 'admin-status ' + (status.type === 'ok' ? 'ok' : 'err') }, status.msg),
@@ -3212,14 +3144,14 @@ function AdminPanel({ vocab, onBack, onVocabUpdate }) {
 // ----------------- Prueba: resultado -----------------
 function PruebaResult({ percent, total, correct, missed, onRetry, onBack, playerName }) {
   let title;
-  if (percent === 100) title = (playerName ? '¡Perfecto, ' + playerName + '!' : '¡Perfecto!');
-  else if (percent >= 80) title = (playerName ? '¡Muy bien, ' + playerName + '!' : '¡Muy bien!');
+  if (percent === 100) title = (playerName ? 'Â¡Perfecto, ' + playerName + '!' : 'Â¡Perfecto!');
+  else if (percent >= 80) title = (playerName ? 'Â¡Muy bien, ' + playerName + '!' : 'Â¡Muy bien!');
   else if (percent >= 60) title = 'Buen intento' + (playerName ? ', ' + playerName : '');
-  else title = 'Seguí practicando' + (playerName ? ', ' + playerName : '');
+  else title = 'SeguÃ­ practicando' + (playerName ? ', ' + playerName : '');
   return html('main', { style: { paddingTop: '18px', paddingBottom: 40 } },
     html('div', { className: 'result-screen' },
       html('div', { className: 'result-seal hanzi-font' + (percent === 100 ? ' celebrate' : '') },
-        html('div', { className: 'pct' }, percent === 100 ? '完' : percent + '%'),
+        html('div', { className: 'pct' }, percent === 100 ? 'å®Œ' : percent + '%'),
         html('div', { className: 'label' }, percent === 100 ? '100%' : 'SCORE')
       ),
       html('div', { className: 'result-title' }, title),
@@ -3293,13 +3225,13 @@ function ClasificadorGame({ onBack, onFinish, playerName, questionsOverride, tit
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
         html('h1', null, gameTitle || 'Clasificadores'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
       ),
       html('div', { className: 'flash-score-row' },
-        html('div', { className: 'flash-score-chip no' }, html('i', null, '✕'), 'Errores: ' + errors),
-        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), 'Correctas: ' + correct),
+        html('div', { className: 'flash-score-chip no' }, html('i', null, 'âœ•'), 'Errores: ' + errors),
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, 'âœ“'), 'Correctas: ' + correct),
       ),
       html('div', { className: 'clas-sentence' },
         parts[0],
@@ -3313,14 +3245,14 @@ function ClasificadorGame({ onBack, onFinish, playerName, questionsOverride, tit
             html('div', { style: { borderRadius: 16, padding: '18px 20px', textAlign: 'center', fontWeight: 800, marginBottom: 12,
                 background: isCorrect ? 'var(--jade-light)' : '#FDE4DD',
                 color: isCorrect ? 'var(--jade-dark)' : 'var(--lacquer-dark)' } },
-              html('div', { style: { fontSize: 40 } }, isCorrect ? '✓' : '✗'),
-              html('div', { style: { fontSize: 22, marginTop: 4 } }, isCorrect ? '¡Correcto!' : 'Incorrecto'),
+              html('div', { style: { fontSize: 40 } }, isCorrect ? 'âœ“' : 'âœ—'),
+              html('div', { style: { fontSize: 22, marginTop: 4 } }, isCorrect ? 'Â¡Correcto!' : 'Incorrecto'),
               html('div', { className: 'hanzi-font', style: { fontSize: 26, marginTop: 10 } }, fullSentence),
               html('div', { style: { fontSize: 14, marginTop: 4, opacity: 0.85 } }, fullPinyin),
               html('div', { style: { fontSize: 13, marginTop: 2, opacity: 0.75 } }, q.hint),
             ),
             html('button', { className: 'primary-btn', onClick: handleNext },
-              index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente →'
+              index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente â†’'
             )
           )
         : html('div', { className: 'quiz-options' },
@@ -3330,7 +3262,7 @@ function ClasificadorGame({ onBack, onFinish, playerName, questionsOverride, tit
   );
 }
 
-// ----------------- Prueba: Diálogo -----------------
+// ----------------- Prueba: DiÃ¡logo -----------------
 function DialogoGame({ onBack, onFinish, playerName, questionsOverride, title: gameTitle }) {
   const questions = useMemo(() => shuffle(questionsOverride || DIALOGO_QUESTIONS), [questionsOverride]);
   const [index, setIndex] = useState(0);
@@ -3398,13 +3330,13 @@ function DialogoGame({ onBack, onFinish, playerName, questionsOverride, title: g
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, gameTitle || 'Completa el diálogo'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
+        html('h1', null, gameTitle || 'Completa el diÃ¡logo'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
       ),
       html('div', { className: 'flash-score-row' },
-        html('div', { className: 'flash-score-chip no' }, html('i', null, '✕'), 'Errores: ' + errors),
-        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), 'Correctas: ' + correct),
+        html('div', { className: 'flash-score-chip no' }, html('i', null, 'âœ•'), 'Errores: ' + errors),
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, 'âœ“'), 'Correctas: ' + correct),
       ),
       html('div', { className: 'dialogo-context' }, q.context),
       html('div', { className: 'dialogo-card' },
@@ -3414,18 +3346,18 @@ function DialogoGame({ onBack, onFinish, playerName, questionsOverride, title: g
       selected
         ? html(React.Fragment, null,
             !isCorrect && html(FeedbackBox, {
-              bg: '#FDE4DD', color: 'var(--lacquer-dark)', icon: '✗', label: 'Elegiste: ' + selected,
+              bg: '#FDE4DD', color: 'var(--lacquer-dark)', icon: 'âœ—', label: 'Elegiste: ' + selected,
               hanzi: selected, pinyin: '', es: 'Incorrecto',
             }),
             html(FeedbackBox, {
               bg: 'var(--jade-light)', color: 'var(--jade-dark)',
-              icon: isCorrect ? '✓' : '→',
-              label: isCorrect ? '¡Correcto!' : 'Correcto:',
+              icon: isCorrect ? 'âœ“' : 'â†’',
+              label: isCorrect ? 'Â¡Correcto!' : 'Correcto:',
               hanzi: q.answer, pinyin: q.answerPinyin, es: q.answerEs,
             }),
-            html('div', { className: 'dialogo-explanation' }, '💡 ' + q.explanation),
+            html('div', { className: 'dialogo-explanation' }, 'ðŸ’¡ ' + q.explanation),
             html('button', { className: 'primary-btn', onClick: handleNext },
-              index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente →'
+              index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente â†’'
             )
           )
         : html('div', { className: 'quiz-options' },
@@ -3436,7 +3368,7 @@ function DialogoGame({ onBack, onFinish, playerName, questionsOverride, title: g
 }
 
 // ----------------- Prueba: Ordenar -----------------
-const CIRCLE_NUMS = ['①','②','③','④','⑤','⑥','⑦','⑧'];
+const CIRCLE_NUMS = ['â‘ ','â‘¡','â‘¢','â‘£','â‘¤','â‘¥','â‘¦','â‘§'];
 
 function OrdenGame({ onBack, onFinish, playerName, questionsOverride, title: gameTitle }) {
   const questions = useMemo(() => shuffle(questionsOverride || ORDEN_QUESTIONS), [questionsOverride]);
@@ -3503,13 +3435,13 @@ function OrdenGame({ onBack, onFinish, playerName, questionsOverride, title: gam
   return html(React.Fragment, null,
     html('main', { style: { paddingTop: '18px' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: onBack }, '←'),
-        html('h1', null, gameTitle || 'Ordena la oración'),
+        html('button', { className: 'back-btn', onClick: onBack }, 'â†'),
+        html('h1', null, gameTitle || 'Ordena la oraciÃ³n'),
         html('div', { className: 'flash-counter' }, (index + 1) + '/' + questions.length),
       ),
       html('div', { className: 'flash-score-row' },
-        html('div', { className: 'flash-score-chip no' }, html('i', null, '✕'), 'Errores: ' + errors),
-        html('div', { className: 'flash-score-chip yes' }, html('i', null, '✓'), 'Correctas: ' + correct),
+        html('div', { className: 'flash-score-chip no' }, html('i', null, 'âœ•'), 'Errores: ' + errors),
+        html('div', { className: 'flash-score-chip yes' }, html('i', null, 'âœ“'), 'Correctas: ' + correct),
       ),
       html('div', { className: 'orden-hint' }, 'Toca las palabras en el orden correcto'),
       html('div', { className: 'orden-answer-zone' + (checked === 'correct' ? ' correct-zone' : checked === 'wrong' ? ' wrong-zone' : '') },
@@ -3520,8 +3452,8 @@ function OrdenGame({ onBack, onFinish, playerName, questionsOverride, title: gam
       checked && html('div', { style: { borderRadius: 16, padding: '16px 20px', textAlign: 'center', fontWeight: 800, marginBottom: 10,
           background: checked === 'correct' ? 'var(--jade-light)' : '#FDE4DD',
           color: checked === 'correct' ? 'var(--jade-dark)' : 'var(--lacquer-dark)' } },
-        html('div', { style: { fontSize: 36 } }, checked === 'correct' ? '✓' : '✗'),
-        html('div', { style: { fontSize: 20, margin: '4px 0' } }, checked === 'correct' ? '¡Correcto!' : 'Incorrecto'),
+        html('div', { style: { fontSize: 36 } }, checked === 'correct' ? 'âœ“' : 'âœ—'),
+        html('div', { style: { fontSize: 20, margin: '4px 0' } }, checked === 'correct' ? 'Â¡Correcto!' : 'Incorrecto'),
         html('div', { className: 'hanzi-font', style: { fontSize: 22, marginTop: 8 } }, q.correct),
         html('div', { style: { fontSize: 14, marginTop: 4, fontWeight: 700 } }, q.pinyin),
         html('div', { style: { fontSize: 13, marginTop: 2, opacity: 0.8 } }, q.es),
@@ -3539,7 +3471,7 @@ function OrdenGame({ onBack, onFinish, playerName, questionsOverride, title: gam
         ? html('button', { className: 'primary-btn', onClick: handleCheck,
             style: placed.length < q.words.length ? { opacity: 0.5, pointerEvents: 'none' } : {} }, 'Comprobar')
         : html('button', { className: 'primary-btn', onClick: handleNext },
-            index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente →'
+            index + 1 >= questions.length ? 'Ver resultado' : 'Siguiente â†’'
           )
     )
   );
@@ -3548,6 +3480,6 @@ function OrdenGame({ onBack, onFinish, playerName, questionsOverride, title: gam
 const root = createRoot(document.getElementById('root'));
 root.render(html(App));
 </script>
-<!-- © 2026 大卫 · dawei.com.ar -->
+<!-- Â© 2026 å¤§å« Â· dawei.com.ar -->
 </body>
 </html>
