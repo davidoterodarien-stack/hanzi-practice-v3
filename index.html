@@ -763,8 +763,8 @@
 <script>
 // Proyecto Supabase DEDICADO a hanzi-practice-v2 ("shuozhongwen") — separado
 // de cualquier otra app.
-const SUPABASE_URL = 'https://twdhlxrxjbsqttjdndvu.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ql31--PfBKNUAB2H3pGc1g_5QP9vTuW';
+const SUPABASE_URL = 'https://pwqwlfrlaxnybnkdauvk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable__0T0_tkgiEdgUGtwMoSHjA_xRd8btWE';
 const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 </script>
 <script>
@@ -1123,14 +1123,35 @@ function AuthGate({ onAuthenticated }) {
     if (!name.trim()) { setErr('Ingresá tu nombre.'); return; }
     setLoading(true);
     setErr('');
-    const { data, error } = await db.auth.signInAnonymously();
-    if (error || !data.session) {
-      setErr(error?.message || 'No se pudo conectar. Verificá tu conexión.');
-      setLoading(false);
-      return;
+    // Intento 1: anonymous auth (requiere estar habilitado en Supabase)
+    let sessionData = null;
+    const anonRes = await db.auth.signInAnonymously();
+    if (!anonRes.error && anonRes.data?.session) {
+      sessionData = anonRes.data.session;
+    } else {
+      // Fallback: credenciales derivadas del dispositivo (estables, sin contraseña visible)
+      let did = localStorage.getItem('hanzi-device-id');
+      if (!did) {
+        did = (typeof crypto !== 'undefined' && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : Math.random().toString(36).slice(2) + Date.now().toString(36);
+        localStorage.setItem('hanzi-device-id', did);
+      }
+      const email = did + '@hanziapp.internal';
+      const pwd   = 'hz' + did.replace(/-/g, '').slice(0, 20);
+      let res = await db.auth.signInWithPassword({ email, password: pwd });
+      if (res.error) {
+        res = await db.auth.signUp({ email, password: pwd, options: { data: { name: name.trim() } } });
+      }
+      if (res.error || !res.data?.session) {
+        setErr('No se pudo conectar. Verificá tu conexión.');
+        setLoading(false);
+        return;
+      }
+      sessionData = res.data.session;
     }
     setLoading(false);
-    onAuthenticated(data.session, name.trim());
+    onAuthenticated(sessionData, name.trim());
   };
 
   return html('div', { className: 'name-modal-overlay' },
