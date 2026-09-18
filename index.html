@@ -13,18 +13,18 @@
 <meta name="author" content="大卫 · dawei.com.ar" />
 <meta name="copyright" content="© 2026 大卫 · dawei.com.ar" />
 <meta name="generator" content="ShuoZhongwen · 大卫 · dawei.com.ar" />
-<meta name="description" content="说中文 — Repaso interactivo de chino mandarín · 汉语课 CUI Nivel 2 · Ariel 老师" />
+<meta name="description" content="HanziPractice — Repaso interactivo de chino mandarín · 汉语课 CUI Nivel 3 · Ariel 老师" />
 <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="说中文 ShuoZhongwen · Repaso de chino" />
-<meta property="og:description" content="Lecciones, tarjetas, quiz y juegos de gramática para repasar chino mandarín. 汉语课 CUI · Nivel 2 · Ariel 老师" />
+<meta property="og:title" content="HanziPractice · Repaso de chino" />
+<meta property="og:description" content="Lecciones, tarjetas, quiz y juegos de gramática para repasar chino mandarín. 汉语课 CUI · Nivel 3 · Ariel 老师" />
 <meta property="og:image" content="https://davidoterodarien-stack.github.io/hanzi-practice-v2/preview.png" />
 <meta property="og:url" content="https://davidoterodarien-stack.github.io/hanzi-practice-v2" />
 <!-- Twitter/X -->
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="说中文 ShuoZhongwen · Repaso de chino" />
 <meta name="twitter:description" content="Lecciones, tarjetas, quiz y juegos de gramática · CUI Nivel 2" />
-<title>说中文 ShuoZhongwen - Repaso de chino mandarín</title>
+<title>HanziPractice - Repaso de chino mandarín</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTYiIGZpbGw9IiNDMTQzMkIiLz48Y2lyY2xlIGN4PSIzMiIgY3k9IjMyIiByPSIyNiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRTBBOTNCIiBzdHJva2Utd2lkdGg9IjIuNSIgb3BhY2l0eT0iMC42Ii8+PHRleHQgeD0iMzMiIHk9IjQ2IiBmb250LWZhbWlseT0iR2VvcmdpYSwgc2VyaWYiIGZvbnQtc2l6ZT0iMzQiIGZvbnQtd2VpZ2h0PSI5MDAiIGZpbGw9IiNGQkY0RTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuivtDwvdGV4dD48L3N2Zz4=" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,7 +278,8 @@
     border: 2px solid transparent;
     border-radius: 14px;
     padding: 16px 10px;
-    min-height: 64px;
+    min-height: 80px;
+    height: 80px;
     display: flex; align-items: center; justify-content: center;
     text-align: center;
     cursor: pointer;
@@ -286,8 +287,8 @@
     transition: all 0.15s ease;
     font-weight: 700;
   }
-  .match-tile.hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 34px; grid-column: span 1; }
-  .match-tile.text { font-size: 14px; line-height: 1.3; }
+  .match-tile.hanzi { font-family: 'Noto Sans SC', sans-serif; font-size: 32px; grid-column: span 1; }
+  .match-tile.text { font-size: 16px; line-height: 1.3; }
   .match-tile.selected { border-color: var(--gold); background: var(--gold-light); }
   .match-tile.correct { border-color: var(--jade); background: var(--jade-light); color: var(--jade-dark); cursor: default; }
   .match-tile.wrong { border-color: var(--error); background: #FDE4DD; animation: shake 0.3s; }
@@ -805,6 +806,43 @@ function shuffle(arr) {
 
 const LESSON_THEMES = {}; // se puebla 100% desde Supabase (tabla lesson_themes)
 
+function playCorrect() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const freqs = [523, 659, 784, 1047];
+    freqs.forEach((freq, i) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.09);
+      gain.gain.linearRampToValueAtTime(0.28, ctx.currentTime + i * 0.09 + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.09 + 0.25);
+      osc.start(ctx.currentTime + i * 0.09);
+      osc.stop(ctx.currentTime + i * 0.09 + 0.25);
+    });
+  } catch(e) {}
+}
+
+function playWrong() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18].forEach((offset) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = 'sawtooth';
+      osc.frequency.setValueAtTime(260, ctx.currentTime + offset);
+      osc.frequency.exponentialRampToValueAtTime(90, ctx.currentTime + offset + 0.22);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.22);
+      osc.start(ctx.currentTime + offset);
+      osc.stop(ctx.currentTime + offset + 0.22);
+    });
+  } catch(e) {}
+}
+
 
 // ----------------- Descarga resumen -----------------
 function downloadResumen(vocab, progress, lessons, playerName) {
@@ -916,7 +954,7 @@ function downloadResumen(vocab, progress, lessons, playerName) {
   </style></head><body>
   <h1>说中文 ShuoZhongwen · Resumen de repaso</h1>
   ${playerName ? `<p style="margin-top:0;font-size:18px">👋 <strong>${playerName}</strong></p>` : ''}
-  <p style="color:#6E645A;margin-top:0">汉语课 CUI · Nivel 2 · Ariel 老师 &nbsp;|&nbsp; ${date}</p>
+  <p style="color:#6E645A;margin-top:0">汉语课 CUI · Nivel 3 · Ariel 老师 &nbsp;|&nbsp; ${date}</p>
 
   <h2>📚 Lecciones</h2>
   <table><thead><tr>
@@ -1859,7 +1897,18 @@ function App() {
     );
   }
 
-  return html('div', { className: 'app' }, content);
+  const topbar = html('div', { className: 'topbar' },
+    html('div', { className: 'brand' },
+      html('div', { className: 'brand-mark hanzi-font' }, '说'),
+      html('div', { className: 'brand-text' },
+        html('strong', null, 'HanziPractice'),
+        html('span', null, '汉语课 CUI · Nivel 3 · Ariel 老师'),
+      ),
+    ),
+    screen.name === 'home' && html('button', { className: 'icon-btn', onClick: () => setScreen({ name: 'admin' }), title: 'Administrar vocabulario' }, '⚙')
+  );
+
+  return html('div', { className: 'app' }, topbar, content);
 }
 
 // ----------------- PanelLectura -----------------
@@ -1934,16 +1983,6 @@ function PanelLectura({ playerName }) {
 function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson, onAdmin, onPrueba, pruebaProgress, onDownload, onRefuerzo, playerName, onChangeName, streak, assignments }) {
   const regularCount = lessons.filter(id => id !== 'mod-paises' && id !== 'mod-numeros').length;
   return html(React.Fragment, null,
-    html('div', { className: 'topbar' },
-      html('div', { className: 'brand' },
-        html('div', { className: 'brand-mark hanzi-font' }, '说'),
-        html('div', { className: 'brand-text' },
-          html('strong', null, '说中文 ', html('span', { className: 'brand-latin' }, 'ShuoZhongwen')),
-          html('span', null, '汉语课 CUI · Nivel 2 · Ariel 老师'),
-        ),
-      ),
-      html('button', { className: 'icon-btn', onClick: onAdmin, title: 'Administrar vocabulario' }, '⚙')
-    ),
     playerName && html('div', { className: 'greeting-bar' },
       html('span', null, '👋 ¡Hola, ', html('strong', null, playerName), '!'),
       html('button', { className: 'change-name-btn', onClick: onChangeName, title: 'Cerrar sesión' }, '🚪'),
@@ -2277,6 +2316,7 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       return;
     }
     if (selected.pairId === tile.pairId) {
+      playCorrect();
       const newMatched = new Set(matchedPairs);
       newMatched.add(tile.pairId);
       setMatchedPairs(newMatched);
@@ -2297,6 +2337,7 @@ function MatchGame({ words, lessonId, onBack, onHome, onFinish, nextAction, save
       if (missedWord && !missedWords.find(m => m.hanzi === missedWord.hanzi)) {
         setMissedWords(prev => [...prev, missedWord]);
       }
+      playWrong();
       setWrongPair([selected.id, tile.id]);
       setTimeout(() => {
         setWrongPair(null);
@@ -2446,8 +2487,8 @@ function FlashcardGame({ words, lessonId, onBack, onHome, onFinish, nextAction, 
           html('div', { className: 'tap-hint' }, flipped ? 'Toca para ver el carácter' : 'Toca para ver la respuesta')
         ),
         flipped && html('div', { className: 'flash-controls' },
-          html('button', { className: 'flash-btn no', onClick: () => advance(false) }, 'No lo sabía'),
-          html('button', { className: 'flash-btn yes', onClick: () => advance(true) }, 'Lo sabía'),
+          html('button', { className: 'flash-btn no', onClick: () => { playWrong(); advance(false); } }, 'No lo sabía'),
+          html('button', { className: 'flash-btn yes', onClick: () => { playCorrect(); advance(true); } }, 'Lo sabía'),
         )
       )
     )
@@ -2505,6 +2546,7 @@ function QuizGame({ words, lessonId, onBack, onHome, onFinish, nextAction, saved
     if (selectedOpt) return;
     setSelectedOpt(opt);
     const isCorrect = opt === q.correct;
+    if (isCorrect) playCorrect(); else playWrong();
     const newCount = correctCount + (isCorrect ? 1 : 0);
     const newWrong = wrongCount + (isCorrect ? 0 : 1);
     const newReview = isCorrect ? reviewWords : [...reviewWords, { hanzi: q.hanzi, pinyin: q.pinyin, es: q.correct }];
@@ -2761,6 +2803,7 @@ function RefuerzoMC({ words, allWords, mode, title, onDone, onBack, playerName }
     if (selected !== null) return;
     setSelected(opt);
     const ok = opt === q.correct;
+    if (ok) playCorrect(); else playWrong();
     const nc = correct + (ok ? 1 : 0);
     setCorrectRef(nc);
     if (ok) setCorrect(nc);
@@ -3919,6 +3962,7 @@ function ClasificadorGameBody({ onBack, onFinish, playerName, rawQuestions }) {
     if (selected) return;
     setSelected(opt);
     const ok = opt === q.answer;
+    if (ok) playCorrect(); else playWrong();
     const nc = correct + (ok ? 1 : 0);
     setNewCorrectRef(nc);
     if (ok) setCorrect(nc);
@@ -4016,6 +4060,7 @@ function DialogoGameBody({ onBack, onFinish, playerName, rawQuestions }) {
     if (selected) return;
     setSelected(opt);
     const ok = opt === q.answer;
+    if (ok) playCorrect(); else playWrong();
     const newCorrect = correctRef + (ok ? 1 : 0);
     setCorrectRef(newCorrect);
     if (ok) setCorrect(newCorrect);
@@ -4146,6 +4191,7 @@ function OrdenGameBody({ onBack, onFinish, playerName, rawQuestions }) {
   const handleCheck = () => {
     const answer = placed.map(x => x.w).join('');
     const isCorrect = answer === q.correct;
+    if (isCorrect) playCorrect(); else playWrong();
     setChecked(isCorrect ? 'correct' : 'wrong');
     const newCorrect = correctRef + (isCorrect ? 1 : 0);
     setCorrectRef(newCorrect);
