@@ -82,7 +82,7 @@
   @media (min-width: 860px) {
     .app-shell { display: flex; align-items: flex-start; }
     .app { max-width: 100% !important; margin: 0 !important; flex: 1; min-width: 0; }
-    .topbar { display: none; }
+    .topbar { display: none !important; }
   }
   .topbar {
     display: flex;
@@ -1869,7 +1869,13 @@ function App() {
 
   useEffect(() => { saveProgress(progress); }, [progress]);
 
-  const lessons = Object.keys(vocab).sort();
+  const lessons = Object.keys(vocab).sort((a, b) => {
+    const na = parseFloat(a), nb = parseFloat(b);
+    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+    if (!isNaN(na)) return -1;
+    if (!isNaN(nb)) return 1;
+    return a.localeCompare(b);
+  });
 
   const updateLessonResult = (lessonId, mode, percent, missed) => {
     setProgress(prev => {
