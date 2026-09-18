@@ -1593,7 +1593,7 @@ function App() {
     if (!studentId) return;
     setContentLoading(true);
     Promise.all([
-      db.from('vocabulary').select('lesson,hanzi,pinyin,es').order('position'),
+      db.from('vocabulary').select('lesson,hanzi,pinyin,es'),
       db.from('lesson_themes').select('lesson,name,icon,hidden'),
     ]).then(([vocabRes, themesRes]) => {
       setVocab(supabaseRowsToVocab(vocabRes.data || []));
