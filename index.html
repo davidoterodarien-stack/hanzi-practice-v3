@@ -60,7 +60,7 @@
   #root { min-height: 100vh; }
   .hanzi-font { font-family: 'Noto Sans SC', sans-serif; }
 
-  /* layout */
+  /* layout — mobile por defecto */
   .app {
     max-width: 480px;
     margin: 0 auto;
@@ -68,6 +68,10 @@
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+  /* layout — desktop: cancela el max-width y expande todo */
+  @media (min-width: 860px) {
+    .app { max-width: 100% !important; margin: 0 !important; }
   }
   .topbar {
     display: flex;
