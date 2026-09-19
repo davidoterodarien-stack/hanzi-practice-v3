@@ -211,11 +211,13 @@
     font-family: var(--font-display); font-size: 12px; font-weight: 700;
     color: var(--ink); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .sidebar-lesson-pct {
-    font-family: var(--font-display); font-size: 11px; font-weight: 800;
-    color: var(--jade-dark); flex-shrink: 0;
+  .sidebar-lesson-pcts {
+    display: flex; gap: 4px; align-items: center; flex-shrink: 0;
+    font-family: var(--font-display); font-size: 10px; font-weight: 800;
   }
-  .sidebar-lesson-pct.zero { color: var(--ink-soft); }
+  .pct-ok { color: var(--jade-dark); }
+  .pct-err { color: var(--lacquer); }
+  .pct-zero { color: var(--ink-soft); font-size: 11px; }
   .sidebar-dual-bar {
     height: 6px; border-radius: 4px; background: var(--paper-deep);
     overflow: hidden; display: flex;
@@ -463,6 +465,8 @@
   }
   .flashcard {
     width: 100%;
+    min-height: 220px;
+    max-height: 340px;
     aspect-ratio: 4/3;
     background: #fff;
     border: 2px solid var(--paper-deep);
@@ -890,9 +894,9 @@
     .match-tile { min-height: 72px !important; height: 72px !important; }
     .match-tile.hanzi { font-size: 30px !important; }
     .quiz-prompt .q-hanzi { font-size: 100px !important; }
-    .flashcard-wrap { max-width: 100%; margin: 0 auto; }
-    .flashcard { min-height: 300px; }
-    .flashcard .front { font-size: 120px !important; }
+    .flashcard-wrap { max-width: 520px; margin: 0 auto; }
+    .flashcard { min-height: 200px !important; max-height: 280px !important; }
+    .flashcard .front { font-size: 90px !important; }
     .flash-controls { gap: 20px; }
     .flash-btn { font-size: 17px !important; padding: 18px 32px !important; }
     .quiz-options { max-width: 100%; margin: 0 auto; }
@@ -2144,8 +2148,13 @@ function App() {
             html('div', { className: 'sidebar-lesson-row-top' },
               html('span', { className: 'sidebar-lesson-icon' }, theme.icon || '汉'),
               html('span', { className: 'sidebar-lesson-label' }, 'L' + id + ' · ' + theme.name),
-              html('span', { className: 'sidebar-lesson-pct' + (okPct === 0 ? ' zero' : '') },
-                okPct > 0 ? okPct + '%' : '—'
+              html('span', { className: 'sidebar-lesson-pcts' },
+                okPct > 0
+                  ? html(React.Fragment, null,
+                      html('span', { className: 'pct-ok' }, '✓' + okPct + '%'),
+                      reviewPct > 0 && html('span', { className: 'pct-err' }, '✕' + reviewPct + '%'),
+                    )
+                  : html('span', { className: 'pct-zero' }, '—'),
               ),
             ),
             html('div', { className: 'sidebar-dual-bar' },
