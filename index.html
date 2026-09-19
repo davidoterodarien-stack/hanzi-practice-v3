@@ -211,13 +211,17 @@
     font-family: var(--font-display); font-size: 12px; font-weight: 700;
     color: var(--ink); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .sidebar-lesson-pcts {
-    display: flex; gap: 4px; align-items: center; flex-shrink: 0;
+  .pct-progress {
+    font-family: var(--font-display); font-size: 11px; font-weight: 800;
+    color: var(--ink-soft); flex-shrink: 0;
+  }
+  .sidebar-accuracy-row {
+    display: flex; justify-content: space-between;
     font-family: var(--font-display); font-size: 10px; font-weight: 800;
+    padding: 0 1px;
   }
   .pct-ok { color: var(--jade-dark); }
   .pct-err { color: var(--lacquer); }
-  .pct-zero { color: var(--ink-soft); font-size: 11px; }
   .sidebar-dual-bar {
     height: 6px; border-radius: 4px; background: var(--paper-deep);
     overflow: hidden; display: flex;
@@ -2148,18 +2152,15 @@ function App() {
             html('div', { className: 'sidebar-lesson-row-top' },
               html('span', { className: 'sidebar-lesson-icon' }, theme.icon || '汉'),
               html('span', { className: 'sidebar-lesson-label' }, 'L' + id + ' · ' + theme.name),
-              html('span', { className: 'sidebar-lesson-pcts' },
-                okPct > 0
-                  ? html(React.Fragment, null,
-                      html('span', { className: 'pct-ok' }, '✓' + okPct + '%'),
-                      reviewPct > 0 && html('span', { className: 'pct-err' }, '✕' + reviewPct + '%'),
-                    )
-                  : html('span', { className: 'pct-zero' }, '—'),
-              ),
+              html('span', { className: 'pct-progress' }, okPct > 0 ? okPct + '%' : '—'),
             ),
             html('div', { className: 'sidebar-dual-bar' },
               html('div', { className: 'sidebar-bar-ok', style: { width: okPct + '%' } }),
-              html('div', { className: 'sidebar-bar-review', style: { width: reviewPct + '%' } }),
+              html('div', { className: 'sidebar-bar-review', style: { width: (100 - okPct) + '%', opacity: okPct > 0 ? 1 : 0 } }),
+            ),
+            okPct > 0 && html('div', { className: 'sidebar-accuracy-row' },
+              html('span', { className: 'pct-ok' }, '✓ ' + okPct + '%'),
+              html('span', { className: 'pct-err' }, '✕ ' + (100 - okPct) + '%'),
             ),
           );
         }),
@@ -4198,7 +4199,7 @@ function WorkbookStrokeGame({ lessonId, onBack }) {
 
 // ----------------- Prueba: Clasificadores -----------------
 function ClasificadorGame(props) {
-  const raw = useGameQuestions('clasificador_questions', 'sentence,pinyin,answer,options,hint', r => r);
+  const raw = useGameQuestions('clasificador_questions', 'sentence,pinyin,answer,answer_pinyin,options,hint', r => r);
   if (raw === null) return html(GameStatusScreen, { onBack: props.onBack, title: 'Clasificadores', msg: '⏳ Cargando preguntas...' });
   if (raw.length === 0) return html(GameStatusScreen, { onBack: props.onBack, title: 'Clasificadores', msg: 'Todavía no hay preguntas cargadas para este juego. Pedile a tu laoshi que las suba desde el panel de administrador.' });
   return html(ClasificadorGameBody, { ...props, rawQuestions: raw });
@@ -4217,7 +4218,7 @@ function ClasificadorGameBody({ onBack, onFinish, playerName, rawQuestions }) {
   const isCorrect = selected && selected === q.answer;
   const parts = q.sentence.split('___');
   const fullSentence = q.sentence.replace('___', q.answer);
-  const fullPinyin = q.pinyin.replace('___', q.answer);
+  const fullPinyin = q.pinyin.replace('___', q.answer_pinyin || q.answer);
 
   const [newCorrectRef, setNewCorrectRef] = useState(0);
 
