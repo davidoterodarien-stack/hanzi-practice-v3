@@ -3660,39 +3660,195 @@ function calcExamScore(ans) {
   return { score, max };
 }
 
+function ResDetailRow({ ok, label, tu, correcto, extra }) {
+  return html('div', { style: {
+    display: 'flex', gap: 10, alignItems: 'flex-start',
+    padding: '8px 10px', borderRadius: 8, marginBottom: 4,
+    background: ok ? '#f0faf5' : '#fff5f5',
+    border: '1.5px solid ' + (ok ? 'var(--jade-dark)' : 'var(--lacquer)'),
+  }},
+    html('span', { style: { fontSize: 16, flexShrink: 0 } }, ok ? '✓' : '✗'),
+    html('div', { style: { flex: 1 } },
+      html('div', { style: { fontSize: 13, fontWeight: 700, color: 'var(--ink-dark)', fontFamily: 'Noto Serif SC, serif' } }, label),
+      !ok && html('div', { style: { fontSize: 12, marginTop: 3 } },
+        html('span', { style: { color: 'var(--lacquer)', fontWeight: 600 } }, 'Tu resp: '),
+        html('span', { style: { fontFamily: 'Noto Serif SC, serif' } }, tu || '—'),
+      ),
+      !ok && html('div', { style: { fontSize: 12, marginTop: 2 } },
+        html('span', { style: { color: 'var(--jade-dark)', fontWeight: 600 } }, 'Correcto: '),
+        html('span', { style: { fontFamily: 'Noto Serif SC, serif' } }, correcto),
+      ),
+      extra && html('div', { style: { fontSize: 11, color: 'var(--ink-soft)', marginTop: 3 } }, extra),
+    ),
+  );
+}
+
 function ExamenResultados({ answers, onRetry, onBack }) {
+  const [showDetail, setShowDetail] = useState(false);
   const { score, max } = calcExamScore(answers);
   const pct = Math.round((score / max) * 100);
   const nota = pct >= 60 ? (pct >= 80 ? '¡Excelente! 🎉' : 'Aprobado ✓') : 'A seguir practicando 📚';
   const color = pct >= 60 ? (pct >= 80 ? 'var(--jade-dark)' : '#1d6aa5') : 'var(--lacquer)';
-  return html('div', { style: { padding: '24px 16px', maxWidth: 540, margin: '0 auto' } },
-    html('div', { style: { textAlign: 'center', marginBottom: 24 } },
-      html('div', { style: { fontSize: 64, fontWeight: 900, color, fontFamily: 'var(--font-display)' } }, score + '/' + max),
-      html('div', { style: { fontSize: 22, fontWeight: 700, color, marginBottom: 4 } }, pct + '%'),
-      html('div', { style: { fontSize: 16, color: 'var(--ink-mid)' } }, nota),
-    ),
-    // Desglose por sección
-    html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 } },
-      [
-        { label: '练习一A · Conectar 3 columnas', pts: (() => { let s=0; const a=answers.ej1a||{}; EXAM_EJ1A.forEach((item,i)=>{ const r=a[i]||{}; if(r.pinyin===item.pinyin)s+=1; if(r.es===item.es)s+=1; }); return s; })(), max: 10 },
-        { label: '练习一B · Completar frases', pts: (() => { let s=0; const a=answers.ej1b||{}; EXAM_EJ1B_ANS.forEach((c,i)=>{ if(a[i]===c)s+=2; }); return s; })(), max: 12 },
-        { label: '练习二 · Opción múltiple', pts: (() => { let s=0; const a=answers.ej2||{}; EXAM_EJ2.forEach((it,i)=>{ if(a[i]===it.ans)s+=3; }); return s; })(), max: 18 },
-        { label: '练习三 · Ordenar palabras', pts: (() => { let s=0; const a=answers.ej3||{}; EXAM_EJ3.forEach((it,qi)=>{ if(((a[qi]||[]).map(c=>c.w).join(''))===it.correct)s+=4; }); return s; })(), max: 20 },
-        { label: '练习四A · Completar texto', pts: (() => { let s=0; const a=answers.ej4a||[]; EXAM_EJ4_PARTES.filter(p=>p.blank!==undefined).forEach((p,i)=>{ if(a[i]===p.ans)s+=2; }); return s; })(), max: 10 },
-        { label: '练习四B · Verdadero/Falso', pts: (() => { let s=0; const a=answers.ej4b||{}; EXAM_EJ4B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
-        { label: '练习五A · Escucha opciones', pts: (() => { let s=0; const a=answers.ej5a||{}; EXAM_EJ5A.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
-        { label: '练习五B · Escucha V/F', pts: (() => { let s=0; const a=answers.ej5b||{}; EXAM_EJ5B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
-      ].map(({ label, pts, max: m }) => {
-        const p = Math.round((pts / m) * 100);
-        return html('div', { key: label, style: { display: 'flex', alignItems: 'center', gap: 10, background: 'var(--paper-deep)', borderRadius: 8, padding: '8px 12px' } },
-          html('span', { style: { flex: 1, fontSize: 12, fontWeight: 600 } }, label),
-          html('span', { style: { fontWeight: 800, fontSize: 13, color: pts === m ? 'var(--jade-dark)' : pts === 0 ? 'var(--lacquer)' : 'var(--ink-mid)', minWidth: 50, textAlign: 'right' } }, pts + '/' + m),
-        );
-      })
-    ),
-    html('div', { style: { display: 'flex', gap: 10 } },
-      html('button', { className: 'secondary-btn', style: { flex: 1, margin: 0 }, onClick: onBack }, '← Volver al admin'),
-      html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onRetry }, '↺ Repetir examen'),
+
+  const secciones = [
+    { label: '练习一A · Conectar 3 columnas', pts: (() => { let s=0; const a=answers.ej1a||{}; EXAM_EJ1A.forEach((item,i)=>{ const r=a[i]||{}; if(r.pinyin===item.pinyin)s+=1; if(r.es===item.es)s+=1; }); return s; })(), max: 10 },
+    { label: '练习一B · Completar frases', pts: (() => { let s=0; const a=answers.ej1b||{}; EXAM_EJ1B_ANS.forEach((c,i)=>{ if(a[i]===c)s+=2; }); return s; })(), max: 12 },
+    { label: '练习二 · Opción múltiple', pts: (() => { let s=0; const a=answers.ej2||{}; EXAM_EJ2.forEach((it,i)=>{ if(a[i]===it.ans)s+=3; }); return s; })(), max: 18 },
+    { label: '练习三 · Ordenar palabras', pts: (() => { let s=0; const a=answers.ej3||{}; EXAM_EJ3.forEach((it,qi)=>{ if(((a[qi]||[]).map(c=>c.w).join(''))===it.correct)s+=4; }); return s; })(), max: 20 },
+    { label: '练习四A · Completar texto', pts: (() => { let s=0; const a=answers.ej4a||[]; EXAM_EJ4_PARTES.filter(p=>p.blank!==undefined).forEach((p,i)=>{ if(a[i]===p.ans)s+=2; }); return s; })(), max: 10 },
+    { label: '练习四B · Verdadero/Falso', pts: (() => { let s=0; const a=answers.ej4b||{}; EXAM_EJ4B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+    { label: '练习五A · Escucha opciones', pts: (() => { let s=0; const a=answers.ej5a||{}; EXAM_EJ5A.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+    { label: '练习五B · Escucha V/F', pts: (() => { let s=0; const a=answers.ej5b||{}; EXAM_EJ5B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+  ];
+
+  const buildDetail = () => {
+    const a1a = answers.ej1a || {}, a1b = answers.ej1b || {}, a2 = answers.ej2 || {};
+    const a3 = answers.ej3 || {}, a4a = answers.ej4a || [], a4b = answers.ej4b || {};
+    const a5a = answers.ej5a || {}, a5b = answers.ej5b || {};
+    const blancos = EXAM_EJ4_PARTES.filter(p => p.blank !== undefined);
+    return [
+      // 1A
+      html('div', { key: '1a', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习一A · Conectar'),
+        EXAM_EJ1A.map((item, i) => {
+          const r = a1a[i] || {};
+          const okP = r.pinyin === item.pinyin, okE = r.es === item.es;
+          return html(ResDetailRow, { key: i,
+            ok: okP && okE,
+            label: item.hanzi,
+            tu: (!okP ? 'pinyin: ' + (r.pinyin||'—') : '') + (!okE ? ((!okP?' · ':'') + 'sig: ' + (r.es||'—')) : ''),
+            correcto: item.pinyin + ' · ' + item.es,
+          });
+        })
+      ),
+      // 1B
+      html('div', { key: '1b', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习一B · Completar frases'),
+        EXAM_EJ1B_LEFT.map((left, i) => {
+          const ok = a1b[i] === EXAM_EJ1B_ANS[i];
+          return html(ResDetailRow, { key: i, ok,
+            label: left + ' + …',
+            tu: a1b[i] !== undefined ? EXAM_EJ1B_RIGHT[a1b[i]] : '—',
+            correcto: EXAM_EJ1B_RIGHT[EXAM_EJ1B_ANS[i]],
+          });
+        })
+      ),
+      // 2
+      html('div', { key: '2', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习二 · Opción múltiple'),
+        EXAM_EJ2.map((item, i) => {
+          const ok = a2[i] === item.ans;
+          return html(ResDetailRow, { key: i, ok,
+            label: item.q,
+            tu: a2[i] !== undefined ? item.opts[a2[i]] : '—',
+            correcto: item.opts[item.ans],
+          });
+        })
+      ),
+      // 3
+      html('div', { key: '3', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习三 · Ordenar palabras'),
+        EXAM_EJ3.map((item, qi) => {
+          const chosen = (a3[qi] || []).map(c => c.w).join('');
+          const ok = chosen === item.correct;
+          return html(ResDetailRow, { key: qi, ok,
+            label: item.words.join(' / '),
+            tu: chosen || '—',
+            correcto: item.correct,
+            extra: item.es,
+          });
+        })
+      ),
+      // 4A
+      html('div', { key: '4a', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习四A · Completar el texto'),
+        blancos.map((p, i) => {
+          const ok = a4a[i] === p.ans;
+          return html(ResDetailRow, { key: i, ok,
+            label: 'Hueco ' + (i+1) + ': «' + p.ans + '»',
+            tu: a4a[i] || '—',
+            correcto: p.ans,
+          });
+        })
+      ),
+      // 4B
+      html('div', { key: '4b', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习四B · Verdadero/Falso'),
+        EXAM_EJ4B.map((item, i) => {
+          const ok = a4b[i] === item.ans;
+          return html(ResDetailRow, { key: i, ok,
+            label: item.s,
+            tu: a4b[i] === undefined ? '—' : a4b[i] ? 'Verdadero' : 'Falso',
+            correcto: item.ans ? 'Verdadero' : 'Falso',
+            extra: !ok ? item.exp : null,
+          });
+        })
+      ),
+      // 5A
+      html('div', { key: '5a', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习五A · Escucha — Opción múltiple'),
+        EXAM_EJ5A.map((item, i) => {
+          const ok = a5a[i] === item.ans;
+          return html(ResDetailRow, { key: i, ok,
+            label: item.q,
+            tu: a5a[i] !== undefined ? item.opts[a5a[i]] : '—',
+            correcto: item.opts[item.ans],
+          });
+        })
+      ),
+      // 5B
+      html('div', { key: '5b', style: { marginBottom: 16 } },
+        html('div', { className: 'sim-sec-title', style: { fontSize: 13 } }, '练习五B · Escucha — Verdadero/Falso'),
+        EXAM_EJ5B.map((item, i) => {
+          const ok = a5b[i] === item.ans;
+          return html(ResDetailRow, { key: i, ok,
+            label: item.s,
+            tu: a5b[i] === undefined ? '—' : a5b[i] ? 'Verdadero' : 'Falso',
+            correcto: item.ans ? 'Verdadero' : 'Falso',
+            extra: !ok ? item.exp : null,
+          });
+        })
+      ),
+    ];
+  };
+
+  return html('main', { style: { paddingTop: 16, paddingBottom: 40 } },
+    html('div', { style: { padding: '0 16px', maxWidth: 580, margin: '0 auto' } },
+      // Puntaje total
+      html('div', { style: { textAlign: 'center', padding: '24px 0 20px' } },
+        html('div', { style: { fontSize: 72, fontWeight: 900, color, fontFamily: 'var(--font-display)', lineHeight: 1 } }, score + '/' + max),
+        html('div', { style: { fontSize: 24, fontWeight: 700, color, marginTop: 4 } }, pct + '%'),
+        html('div', { style: { fontSize: 16, color: 'var(--ink-mid)', marginTop: 4 } }, nota),
+      ),
+      // Resumen por sección
+      html('div', { style: { display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 20 } },
+        secciones.map(({ label, pts, max: m }) =>
+          html('div', { key: label, style: { display: 'flex', alignItems: 'center', gap: 10, background: 'var(--paper-deep)', borderRadius: 8, padding: '8px 12px' } },
+            html('div', { style: {
+              width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
+              background: pts === m ? 'var(--jade-dark)' : pts === 0 ? 'var(--lacquer)' : '#f59e0b',
+            }}),
+            html('span', { style: { flex: 1, fontSize: 12, fontWeight: 600 } }, label),
+            html('span', { style: { fontWeight: 800, fontSize: 13, color: pts === m ? 'var(--jade-dark)' : pts === 0 ? 'var(--lacquer)' : '#92400e' } }, pts + '/' + m),
+          )
+        )
+      ),
+      // Toggle detalle
+      html('button', {
+        onClick: () => setShowDetail(d => !d),
+        style: {
+          width: '100%', padding: '12px', borderRadius: 10, marginBottom: 16,
+          border: '2px solid var(--paper-deep)', background: '#fff',
+          fontFamily: 'Nunito, sans-serif', fontSize: 13, fontWeight: 700,
+          cursor: 'pointer', color: 'var(--ink-mid)',
+        }
+      }, showDetail ? '▲ Ocultar detalle pregunta a pregunta' : '▼ Ver detalle pregunta a pregunta'),
+      showDetail && html('div', null, ...buildDetail()),
+      // Botones
+      html('div', { style: { display: 'flex', gap: 10, marginTop: 8 } },
+        html('button', { className: 'secondary-btn', style: { flex: 1, margin: 0 }, onClick: onBack }, '← Volver al admin'),
+        html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onRetry }, '↺ Repetir examen'),
+      )
     )
   );
 }
