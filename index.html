@@ -354,6 +354,10 @@
   .mode-emoji.quiz { background: var(--blue-light); color: var(--blue-dark); }
   .mode-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; }
   .mode-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  .mode-stats-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .mode-stat-pct { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; color: var(--ink-soft); background: var(--paper-deep); border-radius: 4px; padding: 1px 6px; }
+  .mode-stat-ok  { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; color: var(--jade-dark); background: var(--jade-light); border-radius: 4px; padding: 1px 6px; }
+  .mode-stat-err { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; color: var(--lacquer);   background: #fde8e8; border-radius: 4px; padding: 1px 6px; }
 
   /* back / header row */
   .header-row {
@@ -2134,7 +2138,7 @@ function App() {
         .map(id => {
           const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: '汉' };
           const lp = progress.lessons[id] || {};
-          const best = Math.max(lp.match || 0, lp.cards || 0, lp.quiz || 0);
+          const best = Math.round(((lp.match || 0) + (lp.cards || 0) + (lp.quiz || 0)) / 3);
           // % a repasar: palabras marcadas como errores en la última sesión
           const missedCount = [
             ...(lp.match_missed || []),
@@ -2302,7 +2306,7 @@ function Home({ vocab, lessons, progress, totalWords, totalStars, onSelectLesson
           const words = vocab[id];
           const theme = LESSON_THEMES[id] || { name: 'Lección ' + id, icon: words[0]?.hanzi?.[0] || '汉' };
           const lp = progress.lessons[id] || {};
-          const best = Math.max(lp.match || 0, lp.cards || 0, lp.quiz || 0);
+          const best = Math.round(((lp.match || 0) + (lp.cards || 0) + (lp.quiz || 0)) / 3);
           const stars = [lp.match || 0, lp.cards || 0, lp.quiz || 0].filter(v => v >= 80).length;
           return html('button', {
             key: id,
@@ -2503,9 +2507,14 @@ function LessonMenu({ vocab, lessonId, progress, onBack, onSelectMode, onWorkboo
         ),
         modes.map(m => html('button', { key: m.id, className: 'mode-card', onClick: () => onSelectMode(m.id) },
           html('div', { className: 'mode-emoji ' + m.cls }, m.emoji),
-          html('div', null,
+          html('div', { style: { flex: 1 } },
             html('div', { className: 'mode-title' }, m.title),
-            html('div', { className: 'mode-sub' }, m.sub + (m.best ? ' · mejor: ' + m.best + '%' : '')),
+            html('div', { className: 'mode-sub' }, m.sub),
+            m.best ? html('div', { className: 'mode-stats-row' },
+              html('span', { className: 'mode-stat-pct' }, m.best + '% completado'),
+              html('span', { className: 'mode-stat-ok' }, '✓ ' + m.best + '%'),
+              html('span', { className: 'mode-stat-err' }, '✕ ' + (100 - m.best) + '%'),
+            ) : null,
           )
         ))
       ),
