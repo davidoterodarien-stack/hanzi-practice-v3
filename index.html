@@ -1788,6 +1788,18 @@ function App() {
   const [vocab, setVocab] = useState(loadVocab);
   const [progress, setProgress] = useState(loadProgress);
   const [screen, setScreen] = useState({ name: 'home' });
+  const [secretTaps, setSecretTaps] = useState(0);
+  const [showSecretExam, setShowSecretExam] = useState(false);
+  const secretTimer = React.useRef(null);
+  const handleSecretTap = () => {
+    setSecretTaps(n => {
+      const next = n + 1;
+      if (next >= 5) { setShowSecretExam(true); return 0; }
+      clearTimeout(secretTimer.current);
+      secretTimer.current = setTimeout(() => setSecretTaps(0), 1500);
+      return next;
+    });
+  };
   const [lastResults, setLastResults] = useState({});
   const [contentLoading, setContentLoading] = useState(true);
   const [themesTick, setThemesTick] = useState(0); // fuerza re-render al mutar LESSON_THEMES
@@ -2088,9 +2100,11 @@ function App() {
     );
   }
 
+  if (showSecretExam) return html(ExamenSimulacro, { onBack: () => setShowSecretExam(false) });
+
   const topbar = html('div', { className: 'topbar' },
     html('div', { className: 'brand' },
-      html('div', { className: 'brand-mark hanzi-font' }, '说'),
+      html('div', { className: 'brand-mark hanzi-font', onClick: handleSecretTap, style: { cursor: 'default', userSelect: 'none' } }, '说'),
       html('div', { className: 'brand-text' },
         html('strong', null, 'HanziPractice'),
         html('span', null, '汉语课 CUI · Nivel 3 · Ariel 老师'),
@@ -2106,7 +2120,7 @@ function App() {
 
   const sidebar = html('aside', { className: 'sidebar' },
     html('div', { className: 'sidebar-brand' },
-      html('div', { className: 'brand-mark hanzi-font' }, '说'),
+      html('div', { className: 'brand-mark hanzi-font', onClick: handleSecretTap, style: { cursor: 'default', userSelect: 'none' } }, '说'),
       html('div', { className: 'sidebar-brand-text' },
         html('strong', null, 'HanziPractice'),
         html('span', null, '汉语课 · Nivel 3'),
