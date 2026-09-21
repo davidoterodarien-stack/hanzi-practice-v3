@@ -3382,7 +3382,7 @@ function SimMC({ items, ptsCada, title, answers, setAnswers }) {
             html('button', {
               key: j,
               className: 'sim-opt-btn' + (answers[i] === j ? ' selected' : ''),
-              onClick: () => setAnswers(a => ({ ...a, [i]: j })),
+              onClick: () => setAnswers({ ...answers, [i]: j }),
             }, opt)
           )
         )
@@ -3400,11 +3400,11 @@ function SimVF({ items, ptsCada, title, answers, setAnswers }) {
         html('div', { style: { display: 'flex', gap: 8, marginTop: 8 } },
           html('button', {
             className: 'sim-opt-btn vf' + (answers[i] === true ? ' selected ok' : ''),
-            onClick: () => setAnswers(a => ({ ...a, [i]: true })),
+            onClick: () => setAnswers({ ...answers, [i]: true }),
           }, '✓ Verdadero'),
           html('button', {
             className: 'sim-opt-btn vf' + (answers[i] === false ? ' selected err' : ''),
-            onClick: () => setAnswers(a => ({ ...a, [i]: false })),
+            onClick: () => setAnswers({ ...answers, [i]: false }),
           }, '✗ Falso'),
         )
       )
@@ -3419,8 +3419,8 @@ function SimOrdenar({ items, answers, setAnswers }) {
       const chosen = answers[qi] || [];
       const available = item.words.map((w, i) => ({ w, i }))
         .filter(x => !chosen.find(c => c.i === x.i));
-      const tapAvail = (it) => setAnswers(a => ({ ...a, [qi]: [...(a[qi]||[]), it] }));
-      const tapChosen = (it) => setAnswers(a => ({ ...a, [qi]: (a[qi]||[]).filter(c => c.i !== it.i) }));
+      const tapAvail = (it) => setAnswers({ ...answers, [qi]: [...chosen, it] });
+      const tapChosen = (it) => setAnswers({ ...answers, [qi]: chosen.filter(c => c.i !== it.i) });
       return html('div', { key: qi, className: 'sim-q-block' },
         html('div', { className: 'sim-q-text', style: { fontSize: 13, color: 'var(--ink-soft)', marginBottom: 8 } }, (qi+1) + '. Ordená las palabras:'),
         html('div', {
@@ -3439,7 +3439,7 @@ function SimOrdenar({ items, answers, setAnswers }) {
         ),
         chosen.length > 0 && html('button', {
           style: { marginTop: 6, fontSize: 11, color: 'var(--ink-soft)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 },
-          onClick: () => setAnswers(a => ({ ...a, [qi]: [] })),
+          onClick: () => setAnswers({ ...answers, [qi]: [] }),
         }, '↺ Limpiar'),
       );
     })
@@ -3453,12 +3453,12 @@ function SimRellenar({ answers, setAnswers }) {
   const fillNext = (word) => {
     const newAns = [...(answers || Array(5).fill(null))];
     const idx = newAns.findIndex(v => v === null || v === undefined);
-    if (idx !== -1) { newAns[idx] = word; setAnswers(newAns); }
+    if (idx !== -1) { newAns[idx] = word; setAnswers([...newAns]); }
   };
   const clearBlank = (blankIdx) => {
     const newAns = [...(answers || Array(5).fill(null))];
     newAns[blankIdx] = null;
-    setAnswers(newAns);
+    setAnswers([...newAns]);
   };
   const ans = answers || Array(5).fill(null);
   return html('div', { className: 'sim-section' },
@@ -3497,8 +3497,8 @@ function SimRellenar({ answers, setAnswers }) {
 }
 
 function SimConectar1A({ answers, setAnswers }) {
-  const pinyins = shuffle([...EXAM_EJ1A.map(x => x.pinyin)]);
-  const meanings = shuffle([...EXAM_EJ1A.map(x => x.es)]);
+  const [pinyins] = useState(() => shuffle([...EXAM_EJ1A.map(x => x.pinyin)]));
+  const [meanings] = useState(() => shuffle([...EXAM_EJ1A.map(x => x.es)]));
   return html('div', { className: 'sim-section' },
     html('h3', { className: 'sim-sec-title' }, '练习一A · Conectar hanzi, pinyin y significado (2 pts c/u · 10 pts)'),
     html('p', { style: { fontSize: 12, color: 'var(--ink-soft)', marginBottom: 10 } }, 'Seleccioná el pinyin y el significado correcto para cada carácter.'),
@@ -3519,7 +3519,7 @@ function SimConectar1A({ answers, setAnswers }) {
               html('select', {
                 className: 'sim-select',
                 value: cur.pinyin || '',
-                onChange: e => setAnswers(a => ({ ...a, [i]: { ...(a[i]||{}), pinyin: e.target.value } })),
+                onChange: e => setAnswers({ ...answers, [i]: { ...(answers[i]||{}), pinyin: e.target.value } }),
               },
                 html('option', { value: '' }, '— elegí —'),
                 pinyins.map(p => html('option', { key: p, value: p }, p))
@@ -3529,7 +3529,7 @@ function SimConectar1A({ answers, setAnswers }) {
               html('select', {
                 className: 'sim-select',
                 value: cur.es || '',
-                onChange: e => setAnswers(a => ({ ...a, [i]: { ...(a[i]||{}), es: e.target.value } })),
+                onChange: e => setAnswers({ ...answers, [i]: { ...(answers[i]||{}), es: e.target.value } }),
               },
                 html('option', { value: '' }, '— elegí —'),
                 meanings.map(m => html('option', { key: m, value: m }, m))
@@ -3555,7 +3555,7 @@ function SimConectar1B({ answers, setAnswers }) {
         html('select', {
           className: 'sim-select',
           value: answers[i] !== undefined ? answers[i] : '',
-          onChange: e => setAnswers(a => ({ ...a, [i]: parseInt(e.target.value) })),
+          onChange: e => setAnswers({ ...answers, [i]: parseInt(e.target.value) }),
         },
           html('option', { value: '' }, '— elegí —'),
           EXAM_EJ1B_RIGHT.map((r, j) => html('option', { key: j, value: j }, r))
