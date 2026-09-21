@@ -354,6 +354,20 @@
   .mode-emoji.quiz { background: var(--blue-light); color: var(--blue-dark); }
   .mode-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; }
   .mode-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  /* Simulacro de examen */
+  .sim-section { margin-bottom: 8px; }
+  .sim-sec-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; margin: 0 0 12px; color: var(--ink-dark); }
+  .sim-q-block { padding: 12px 0; border-bottom: 1px solid var(--paper-deep); }
+  .sim-q-block:last-child { border-bottom: none; }
+  .sim-q-text { font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 600; color: var(--ink-dark); line-height: 1.5; }
+  .sim-opt-btn { padding: 10px 16px; border-radius: 10px; border: 2px solid var(--paper-deep); background: #fff; font-family: 'Noto Serif SC', serif; font-size: 15px; cursor: pointer; transition: all 0.1s; }
+  .sim-opt-btn:hover { border-color: var(--lacquer); }
+  .sim-opt-btn.selected { background: var(--lacquer); color: #fff; border-color: var(--lacquer); }
+  .sim-opt-btn.vf { font-family: 'Nunito', sans-serif; font-size: 13px; font-weight: 700; }
+  .sim-opt-btn.selected.ok { background: var(--jade-dark); border-color: var(--jade-dark); }
+  .sim-opt-btn.selected.err { background: var(--lacquer); border-color: var(--lacquer); }
+  .sim-select { padding: 8px 10px; border-radius: 8px; border: 1.5px solid var(--paper-deep); font-family: 'Nunito', sans-serif; font-size: 13px; background: #fff; min-width: 140px; }
+
   .mode-stats-row { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
   .mode-stat-pct { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; color: var(--ink-soft); background: var(--paper-deep); border-radius: 4px; padding: 1px 6px; }
   .mode-stat-ok  { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; color: var(--jade-dark); background: var(--jade-light); border-radius: 4px; padding: 1px 6px; }
@@ -3274,7 +3288,481 @@ function supabaseRowsToVocab(rows) {
   return vocab;
 }
 
+// ═══════════════════════════════════════════════════════════
+// SIMULACRO DE EXAMEN — Nivel III, Lecciones 9-11 (admin only)
+// ═══════════════════════════════════════════════════════════
+const EXAM_EJ1A = [
+  { hanzi: '蛋糕', pinyin: 'dàngāo', es: 'pastel' },
+  { hanzi: '便宜', pinyin: 'piányi', es: 'barato' },
+  { hanzi: '英语', pinyin: 'Yīngyǔ', es: 'inglés' },
+  { hanzi: '睡觉', pinyin: 'shuìjiào', es: 'dormir' },
+  { hanzi: '一刻', pinyin: 'kè', es: 'cuarto (de hora)' },
+];
+const EXAM_EJ1B_LEFT  = ['买', '差', '祝你', '我晚上', '他今年', '一张'];
+const EXAM_EJ1B_RIGHT = ['生日快乐', '在家看书', '一斤苹果', '音乐光盘', '二十二岁', '五分十点'];
+// correcto: LEFT[i] → RIGHT[ EXAM_EJ1B_ANS[i] ]
+const EXAM_EJ1B_ANS   = [2, 5, 0, 1, 4, 3];
+
+const EXAM_EJ2 = [
+  { q: '苹果多少钱一 ______？', opts: ['A 斤', 'B 个', 'C 瓶'], ans: 0 },
+  { q: '我 ______ 林娜去买生日蛋糕。', opts: ['A 都', 'B 跟', 'C 很'], ans: 1 },
+  { q: '这个星期天是我的 ______。', opts: ['A 聚会', 'B 快乐', 'C 生日'], ans: 2 },
+  { q: '我们早上八点 ______ 上课。', opts: ['A 分', 'B 半', 'C 差'], ans: 1 },
+  { q: '你的手机号码是 ______？', opts: ['A 多大', 'B 几', 'C 多少'], ans: 2 },
+  { q: '您 ______？', opts: ['A 怎么卖', 'B 贵姓', 'C 多少钱'], ans: 1 },
+];
+
+const EXAM_EJ3 = [
+  { words: ['去','下午','书店','星期一','我'], correct: '星期一下午我去书店', es: 'El lunes por la tarde voy a la librería.' },
+  { words: ['买','音乐光盘','你','几张','要'], correct: '你要买几张音乐光盘', es: '¿Cuántos CDs de música querés comprar?' },
+  { words: ['我们','见面','点','晚上','差一刻','七'], correct: '我们晚上差一刻七点见面', es: 'Nos encontramos a las siete menos cuarto de la noche.' },
+  { words: ['朋友','她','常常','玩儿','去','家'], correct: '她常常去朋友家玩儿', es: 'Ella a menudo va a la casa de su amigo a pasarla bien.' },
+  { words: ['是','号码','多少','你的','手机'], correct: '你的手机号码是多少', es: '¿Cuál es tu número de celular?' },
+];
+
+const EXAM_EJ4_PARTES = [
+  { t: '今天是星期六。大卫晚上有一个生日聚会。上午他' },
+  { blank: 0, ans: '跟' },
+  { t: '宋华去商场买东西。商场的苹果很便宜，他买了两斤。他' },
+  { blank: 1, ans: '还' },
+  { t: '买了三个面包。大卫问宋华："你晚上' },
+  { blank: 2, ans: '怎么' },
+  { t: '去聚会？"宋华说："我打的(dǎdī)去。"晚上七点' },
+  { blank: 3, ans: '半' },
+  { t: '，他们' },
+  { blank: 4, ans: '在' },
+  { t: '朋友家一起吃生日蛋糕，听中国音乐。' },
+];
+const EXAM_EJ4_BANCO = ['在', '半', '跟', '还', '怎么'];
+
+const EXAM_EJ4B = [
+  { s: '今天是星期天。', ans: false, exp: '→ 今天是星期六' },
+  { s: '大卫买了三斤苹果。', ans: false, exp: '→ 买了两斤' },
+  { s: '宋华晚上打的去聚会。', ans: true, exp: '✓ Correcto' },
+  { s: '聚会晚上七点半开始。', ans: true, exp: '✓ Correcto' },
+  { s: '他们在商场吃蛋糕。', ans: false, exp: '→ 在朋友家吃蛋糕' },
+];
+
+const EXAM_EJ5A = [
+  { q: '马大为早上 ______ 起床。', opts: ['A 七点', 'B 八点', 'C 九点'], ans: 1 },
+  { q: '他下午 ______ 下课。', opts: ['A 差一刻两点', 'B 两点', 'C 两点半'], ans: 0 },
+  { q: '晚上他在家 ______。', opts: ['A 听音乐', 'B 睡觉', 'C 看书'], ans: 2 },
+  { q: '马大为 ______ 吃早饭。', opts: ['A 7:00', 'B 7:30', 'C 8:00'], ans: 1 },
+  { q: '他几点睡觉？', opts: ['A 十点', 'B 十点半', 'C 十一点'], ans: 2 },
+];
+
+const EXAM_EJ5B = [
+  { s: '马大为每天早上八点起床。', ans: false, exp: '→ 七点起床' },
+  { s: '他在学院上课。', ans: false, exp: '→ No se menciona en el texto' },
+  { s: '晚上他去朋友家。', ans: false, exp: '→ Está en casa leyendo' },
+  { s: '差一刻两点是1:45。', ans: true, exp: '✓ Correcto' },
+  { s: '他十一点去睡觉。', ans: true, exp: '✓ Correcto' },
+];
+
+const EXAM_ORAL_PREGUNTAS = [
+  '你今年多大？','星期日是几号？','你哪年出生？你属什么？','今天是几月几号？',
+  '你什么时候生日？','明天上午你有没有课？','一斤苹果多少钱？',
+  '星期天你常常去哪儿？','请问，现在几点？','我们几点上课？','你为什么不能来上课？',
+];
+
+const EXAM_HORARIO_ROWS = [
+  { time: '上午', mon: '汉语课', tue: '文化课', wed: '汉语课', thu: '', fri: '汉语课', sat: '看朋友', sun: '' },
+  { time: '下午', mon: '', tue: '汉语课', wed: '', thu: '汉语课', fri: '打球 dǎ qiú', sat: '', sun: '生日聚会' },
+  { time: '晚上\nwǎnshang', mon: '朋友来', tue: '', wed: '游泳\nyóuyǒng', thu: '', fri: '', sat: '看京剧\njīngjù', sun: '' },
+];
+
+function SimMC({ items, ptsCada, title, answers, setAnswers }) {
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, title),
+    items.map((item, i) =>
+      html('div', { key: i, className: 'sim-q-block' },
+        html('div', { className: 'sim-q-text hanzi-font' }, (i+1) + '. ' + item.q),
+        html('div', { style: { display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 } },
+          item.opts.map((opt, j) =>
+            html('button', {
+              key: j,
+              className: 'sim-opt-btn' + (answers[i] === j ? ' selected' : ''),
+              onClick: () => setAnswers(a => ({ ...a, [i]: j })),
+            }, opt)
+          )
+        )
+      )
+    )
+  );
+}
+
+function SimVF({ items, ptsCada, title, answers, setAnswers }) {
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, title),
+    items.map((item, i) =>
+      html('div', { key: i, className: 'sim-q-block' },
+        html('div', { className: 'sim-q-text hanzi-font' }, (i+1) + '. ' + item.s),
+        html('div', { style: { display: 'flex', gap: 8, marginTop: 8 } },
+          html('button', {
+            className: 'sim-opt-btn vf' + (answers[i] === true ? ' selected ok' : ''),
+            onClick: () => setAnswers(a => ({ ...a, [i]: true })),
+          }, '✓ Verdadero'),
+          html('button', {
+            className: 'sim-opt-btn vf' + (answers[i] === false ? ' selected err' : ''),
+            onClick: () => setAnswers(a => ({ ...a, [i]: false })),
+          }, '✗ Falso'),
+        )
+      )
+    )
+  );
+}
+
+function SimOrdenar({ items, answers, setAnswers }) {
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, '练习三 · Ordenar las palabras (4 pts c/u · 20 pts)'),
+    items.map((item, qi) => {
+      const chosen = answers[qi] || [];
+      const available = item.words.map((w, i) => ({ w, i }))
+        .filter(x => !chosen.find(c => c.i === x.i));
+      const tapAvail = (it) => setAnswers(a => ({ ...a, [qi]: [...(a[qi]||[]), it] }));
+      const tapChosen = (it) => setAnswers(a => ({ ...a, [qi]: (a[qi]||[]).filter(c => c.i !== it.i) }));
+      return html('div', { key: qi, className: 'sim-q-block' },
+        html('div', { className: 'sim-q-text', style: { fontSize: 13, color: 'var(--ink-soft)', marginBottom: 8 } }, (qi+1) + '. Ordená las palabras:'),
+        html('div', {
+          style: {
+            minHeight: 48, background: 'var(--paper-deep)', borderRadius: 10,
+            padding: '8px 10px', display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8,
+            border: '2px dashed var(--paper-mid, #ddd)',
+          }
+        },
+          chosen.length === 0
+            ? html('span', { style: { color: 'var(--ink-soft)', fontSize: 13, alignSelf: 'center' } }, 'Tocá las palabras de abajo →')
+            : chosen.map(it => html('button', { key: it.i, className: 'word-chip placed', onClick: () => tapChosen(it) }, it.w))
+        ),
+        html('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6 } },
+          available.map(it => html('button', { key: it.i, className: 'word-chip', onClick: () => tapAvail(it) }, it.w))
+        ),
+        chosen.length > 0 && html('button', {
+          style: { marginTop: 6, fontSize: 11, color: 'var(--ink-soft)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 },
+          onClick: () => setAnswers(a => ({ ...a, [qi]: [] })),
+        }, '↺ Limpiar'),
+      );
+    })
+  );
+}
+
+function SimRellenar({ answers, setAnswers }) {
+  const bancoUsado = (answers || []).filter(Boolean);
+  const disponible = EXAM_EJ4_BANCO.filter(w => !bancoUsado.includes(w));
+  const blancos = EXAM_EJ4_PARTES.filter(p => p.blank !== undefined);
+  const fillNext = (word) => {
+    const newAns = [...(answers || Array(5).fill(null))];
+    const idx = newAns.findIndex(v => v === null || v === undefined);
+    if (idx !== -1) { newAns[idx] = word; setAnswers(newAns); }
+  };
+  const clearBlank = (blankIdx) => {
+    const newAns = [...(answers || Array(5).fill(null))];
+    newAns[blankIdx] = null;
+    setAnswers(newAns);
+  };
+  const ans = answers || Array(5).fill(null);
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, '练习四A · Completar el texto (2 pts c/u · 10 pts)'),
+    html('p', { style: { fontSize: 12, color: 'var(--ink-soft)', marginBottom: 10 } }, 'Banco de palabras: Tocá una palabra del banco para rellenar el próximo hueco. Tocá un hueco para liberar esa palabra.'),
+    html('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 } },
+      EXAM_EJ4_BANCO.map(w =>
+        html('button', {
+          key: w,
+          className: 'word-chip' + (disponible.includes(w) ? '' : ' placed'),
+          style: { opacity: disponible.includes(w) ? 1 : 0.4, cursor: disponible.includes(w) ? 'pointer' : 'default' },
+          onClick: () => disponible.includes(w) && fillNext(w),
+        }, w)
+      )
+    ),
+    html('div', { className: 'sim-q-text hanzi-font', style: { lineHeight: 2.2, fontSize: 18 } },
+      EXAM_EJ4_PARTES.map((p, i) =>
+        p.t
+          ? html('span', { key: i }, p.t)
+          : html('button', {
+              key: i,
+              onClick: () => ans[p.blank] && clearBlank(p.blank),
+              style: {
+                display: 'inline-block', minWidth: 60, padding: '2px 8px',
+                background: ans[p.blank] ? 'var(--gold-light)' : 'transparent',
+                border: '2px solid ' + (ans[p.blank] ? 'var(--gold)' : 'var(--lacquer)'),
+                borderRadius: 6, cursor: ans[p.blank] ? 'pointer' : 'default',
+                fontFamily: 'Nunito, sans-serif', fontSize: 15, fontWeight: 700,
+                color: ans[p.blank] ? '#6b4c00' : 'var(--lacquer)',
+                margin: '0 2px',
+              }
+            }, ans[p.blank] || '___')
+      )
+    )
+  );
+}
+
+function SimConectar1A({ answers, setAnswers }) {
+  const pinyins = shuffle([...EXAM_EJ1A.map(x => x.pinyin)]);
+  const meanings = shuffle([...EXAM_EJ1A.map(x => x.es)]);
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, '练习一A · Conectar hanzi, pinyin y significado (2 pts c/u · 10 pts)'),
+    html('p', { style: { fontSize: 12, color: 'var(--ink-soft)', marginBottom: 10 } }, 'Seleccioná el pinyin y el significado correcto para cada carácter.'),
+    html('table', { style: { width: '100%', borderCollapse: 'collapse', fontSize: 14 } },
+      html('thead', null,
+        html('tr', null,
+          html('th', { style: simThStyle }, '汉字'),
+          html('th', { style: simThStyle }, 'Pinyin'),
+          html('th', { style: simThStyle }, 'Significado'),
+        )
+      ),
+      html('tbody', null,
+        EXAM_EJ1A.map((item, i) => {
+          const cur = answers[i] || {};
+          return html('tr', { key: i },
+            html('td', { style: { ...simTdStyle, fontFamily: 'Noto Serif SC, serif', fontSize: 22, color: 'var(--lacquer)' } }, item.hanzi),
+            html('td', { style: simTdStyle },
+              html('select', {
+                className: 'sim-select',
+                value: cur.pinyin || '',
+                onChange: e => setAnswers(a => ({ ...a, [i]: { ...(a[i]||{}), pinyin: e.target.value } })),
+              },
+                html('option', { value: '' }, '— elegí —'),
+                pinyins.map(p => html('option', { key: p, value: p }, p))
+              )
+            ),
+            html('td', { style: simTdStyle },
+              html('select', {
+                className: 'sim-select',
+                value: cur.es || '',
+                onChange: e => setAnswers(a => ({ ...a, [i]: { ...(a[i]||{}), es: e.target.value } })),
+              },
+                html('option', { value: '' }, '— elegí —'),
+                meanings.map(m => html('option', { key: m, value: m }, m))
+              )
+            ),
+          );
+        })
+      )
+    )
+  );
+}
+
+const simThStyle = { background: 'var(--paper-deep)', padding: '8px 10px', textAlign: 'left', fontFamily: 'Nunito, sans-serif', fontSize: 12, fontWeight: 700, color: 'var(--ink-soft)' };
+const simTdStyle = { padding: '8px 10px', borderBottom: '1px solid var(--paper-deep)' };
+
+function SimConectar1B({ answers, setAnswers }) {
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, '练习一B · Completar frases (2 pts c/u · 12 pts)'),
+    EXAM_EJ1B_LEFT.map((left, i) =>
+      html('div', { key: i, className: 'sim-q-block', style: { display: 'flex', alignItems: 'center', gap: 10 } },
+        html('span', { style: { fontFamily: 'Noto Serif SC, serif', fontSize: 18, color: 'var(--lacquer)', minWidth: 80 } }, (i+1) + '. ' + left),
+        html('span', { style: { color: 'var(--ink-soft)' } }, '→'),
+        html('select', {
+          className: 'sim-select',
+          value: answers[i] !== undefined ? answers[i] : '',
+          onChange: e => setAnswers(a => ({ ...a, [i]: parseInt(e.target.value) })),
+        },
+          html('option', { value: '' }, '— elegí —'),
+          EXAM_EJ1B_RIGHT.map((r, j) => html('option', { key: j, value: j }, r))
+        )
+      )
+    )
+  );
+}
+
+function SimOral() {
+  const dias = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日'];
+  return html('div', { className: 'sim-section' },
+    html('h3', { className: 'sim-sec-title' }, '🎙️ Examen Oral · Nivel III'),
+    html('p', { style: { fontSize: 13, color: 'var(--ink-mid)', marginBottom: 16, lineHeight: 1.6 } },
+      'El examen oral tiene dos partes. Practicá en voz alta.'
+    ),
+    html('div', { style: { background: 'var(--jade-light)', borderRadius: 12, padding: '12px 14px', marginBottom: 16 } },
+      html('div', { style: { fontWeight: 700, fontSize: 13, color: 'var(--jade-dark)', marginBottom: 8 } }, 'Opción A — Diálogo con planilla de horarios'),
+      html('p', { style: { fontSize: 12, color: 'var(--ink-mid)', marginBottom: 10 } }, 'Dos amigos quieren acordar una actividad juntos según este horario:'),
+      html('div', { style: { overflowX: 'auto' } },
+        html('table', { style: { borderCollapse: 'collapse', fontSize: 12, width: '100%' } },
+          html('thead', null,
+            html('tr', null,
+              html('th', { style: { ...simThStyle, minWidth: 70 } }, ''),
+              dias.map(d => html('th', { key: d, style: simThStyle }, d))
+            )
+          ),
+          html('tbody', null,
+            EXAM_HORARIO_ROWS.map((row, i) =>
+              html('tr', { key: i },
+                html('td', { style: { ...simTdStyle, fontWeight: 700, fontSize: 11, whiteSpace: 'pre-line' } }, row.time),
+                [row.mon, row.tue, row.wed, row.thu, row.fri, row.sat, row.sun].map((cell, j) =>
+                  html('td', { key: j, style: { ...simTdStyle, fontSize: 12, textAlign: 'center', whiteSpace: 'pre-line', minWidth: 70 } }, cell || '')
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+    html('div', { style: { background: '#EEF2FF', borderRadius: 12, padding: '12px 14px', marginBottom: 16 } },
+      html('div', { style: { fontWeight: 700, fontSize: 13, color: '#3730a3', marginBottom: 6 } }, 'Opción B — Diálogo vendedor / comprador'),
+      html('p', { style: { fontSize: 12, color: 'var(--ink-mid)' } }, 'Diálogo sobre libros, CDs o frutas: preguntar precio y cantidad, pagar y dar el vuelto.'),
+    ),
+    html('div', { style: { marginTop: 16 } },
+      html('div', { style: { fontWeight: 700, fontSize: 13, marginBottom: 8 } }, 'Parte 2 — Responder preguntas (2 por alumno)'),
+      EXAM_ORAL_PREGUNTAS.map((p, i) =>
+        html('div', { key: i, className: 'sim-q-block', style: { display: 'flex', gap: 10, alignItems: 'flex-start' } },
+          html('span', { style: { minWidth: 22, fontWeight: 700, color: 'var(--ink-soft)', fontSize: 13 } }, String.fromCharCode(96+i+1) + '.'),
+          html('span', { className: 'hanzi-font', style: { fontSize: 17 } }, p),
+        )
+      )
+    )
+  );
+}
+
+function calcExamScore(ans) {
+  let score = 0, max = 0;
+  // EJ1A: 10 pts (2 cada uno)
+  max += 10;
+  const a1a = ans.ej1a || {};
+  EXAM_EJ1A.forEach((item, i) => {
+    const r = a1a[i] || {};
+    if (r.pinyin === item.pinyin) score += 1;
+    if (r.es === item.es) score += 1;
+  });
+  // EJ1B: 12 pts (2 cada uno)
+  max += 12;
+  const a1b = ans.ej1b || {};
+  EXAM_EJ1B_ANS.forEach((correct, i) => {
+    if (a1b[i] === correct) score += 2;
+  });
+  // EJ2: 18 pts (3 cada uno)
+  max += 18;
+  const a2 = ans.ej2 || {};
+  EXAM_EJ2.forEach((item, i) => { if (a2[i] === item.ans) score += 3; });
+  // EJ3: 20 pts (4 cada uno)
+  max += 20;
+  const a3 = ans.ej3 || {};
+  EXAM_EJ3.forEach((item, qi) => {
+    const chosen = (a3[qi] || []).map(c => c.w).join('');
+    if (chosen === item.correct) score += 4;
+  });
+  // EJ4A: 10 pts (2 cada hueco)
+  max += 10;
+  const a4a = ans.ej4a || [];
+  EXAM_EJ4_PARTES.filter(p => p.blank !== undefined).forEach((p, i) => {
+    if (a4a[i] === p.ans) score += 2;
+  });
+  // EJ4B: 10 pts (2 cada uno)
+  max += 10;
+  const a4b = ans.ej4b || {};
+  EXAM_EJ4B.forEach((item, i) => { if (a4b[i] === item.ans) score += 2; });
+  // EJ5A: 10 pts (2 cada uno)
+  max += 10;
+  const a5a = ans.ej5a || {};
+  EXAM_EJ5A.forEach((item, i) => { if (a5a[i] === item.ans) score += 2; });
+  // EJ5B: 10 pts (2 cada uno)
+  max += 10;
+  const a5b = ans.ej5b || {};
+  EXAM_EJ5B.forEach((item, i) => { if (a5b[i] === item.ans) score += 2; });
+  return { score, max };
+}
+
+function ExamenResultados({ answers, onRetry, onBack }) {
+  const { score, max } = calcExamScore(answers);
+  const pct = Math.round((score / max) * 100);
+  const nota = pct >= 60 ? (pct >= 80 ? '¡Excelente! 🎉' : 'Aprobado ✓') : 'A seguir practicando 📚';
+  const color = pct >= 60 ? (pct >= 80 ? 'var(--jade-dark)' : '#1d6aa5') : 'var(--lacquer)';
+  return html('div', { style: { padding: '24px 16px', maxWidth: 540, margin: '0 auto' } },
+    html('div', { style: { textAlign: 'center', marginBottom: 24 } },
+      html('div', { style: { fontSize: 64, fontWeight: 900, color, fontFamily: 'var(--font-display)' } }, score + '/' + max),
+      html('div', { style: { fontSize: 22, fontWeight: 700, color, marginBottom: 4 } }, pct + '%'),
+      html('div', { style: { fontSize: 16, color: 'var(--ink-mid)' } }, nota),
+    ),
+    // Desglose por sección
+    html('div', { style: { display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 } },
+      [
+        { label: '练习一A · Conectar 3 columnas', pts: (() => { let s=0; const a=answers.ej1a||{}; EXAM_EJ1A.forEach((item,i)=>{ const r=a[i]||{}; if(r.pinyin===item.pinyin)s+=1; if(r.es===item.es)s+=1; }); return s; })(), max: 10 },
+        { label: '练习一B · Completar frases', pts: (() => { let s=0; const a=answers.ej1b||{}; EXAM_EJ1B_ANS.forEach((c,i)=>{ if(a[i]===c)s+=2; }); return s; })(), max: 12 },
+        { label: '练习二 · Opción múltiple', pts: (() => { let s=0; const a=answers.ej2||{}; EXAM_EJ2.forEach((it,i)=>{ if(a[i]===it.ans)s+=3; }); return s; })(), max: 18 },
+        { label: '练习三 · Ordenar palabras', pts: (() => { let s=0; const a=answers.ej3||{}; EXAM_EJ3.forEach((it,qi)=>{ if(((a[qi]||[]).map(c=>c.w).join(''))===it.correct)s+=4; }); return s; })(), max: 20 },
+        { label: '练习四A · Completar texto', pts: (() => { let s=0; const a=answers.ej4a||[]; EXAM_EJ4_PARTES.filter(p=>p.blank!==undefined).forEach((p,i)=>{ if(a[i]===p.ans)s+=2; }); return s; })(), max: 10 },
+        { label: '练习四B · Verdadero/Falso', pts: (() => { let s=0; const a=answers.ej4b||{}; EXAM_EJ4B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+        { label: '练习五A · Escucha opciones', pts: (() => { let s=0; const a=answers.ej5a||{}; EXAM_EJ5A.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+        { label: '练习五B · Escucha V/F', pts: (() => { let s=0; const a=answers.ej5b||{}; EXAM_EJ5B.forEach((it,i)=>{ if(a[i]===it.ans)s+=2; }); return s; })(), max: 10 },
+      ].map(({ label, pts, max: m }) => {
+        const p = Math.round((pts / m) * 100);
+        return html('div', { key: label, style: { display: 'flex', alignItems: 'center', gap: 10, background: 'var(--paper-deep)', borderRadius: 8, padding: '8px 12px' } },
+          html('span', { style: { flex: 1, fontSize: 12, fontWeight: 600 } }, label),
+          html('span', { style: { fontWeight: 800, fontSize: 13, color: pts === m ? 'var(--jade-dark)' : pts === 0 ? 'var(--lacquer)' : 'var(--ink-mid)', minWidth: 50, textAlign: 'right' } }, pts + '/' + m),
+        );
+      })
+    ),
+    html('div', { style: { display: 'flex', gap: 10 } },
+      html('button', { className: 'secondary-btn', style: { flex: 1, margin: 0 }, onClick: onBack }, '← Volver al admin'),
+      html('button', { className: 'primary-btn', style: { flex: 1 }, onClick: onRetry }, '↺ Repetir examen'),
+    )
+  );
+}
+
+const SIM_SECTIONS = ['ej1a','ej1b','ej2','ej3','ej4a','ej4b','ej5a','ej5b','oral'];
+const SIM_LABELS   = ['1A','1B','2','3','4A','4B','5A','5B','Oral'];
+
+function ExamenSimulacro({ onBack }) {
+  const [sec, setSec] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [submitted, setSubmitted] = useState(false);
+  const setSecAns = (key) => (val) => setAnswers(a => ({ ...a, [key]: val }));
+
+  if (submitted) return html(ExamenResultados, {
+    answers,
+    onRetry: () => { setAnswers({}); setSec(0); setSubmitted(false); },
+    onBack,
+  });
+
+  const isLast = sec === SIM_SECTIONS.length - 1;
+
+  const renderSection = () => {
+    switch (SIM_SECTIONS[sec]) {
+      case 'ej1a': return html(SimConectar1A, { answers: answers.ej1a || {}, setAnswers: setSecAns('ej1a') });
+      case 'ej1b': return html(SimConectar1B, { answers: answers.ej1b || {}, setAnswers: setSecAns('ej1b') });
+      case 'ej2':  return html(SimMC, { items: EXAM_EJ2, ptsCada: 3, title: '练习二 · Opción múltiple (3 pts c/u · 18 pts)', answers: answers.ej2 || {}, setAnswers: setSecAns('ej2') });
+      case 'ej3':  return html(SimOrdenar, { items: EXAM_EJ3, answers: answers.ej3 || {}, setAnswers: setSecAns('ej3') });
+      case 'ej4a': return html(SimRellenar, { answers: answers.ej4a, setAnswers: setSecAns('ej4a') });
+      case 'ej4b': return html(SimVF, { items: EXAM_EJ4B, ptsCada: 2, title: '练习四B · Verdadero / Falso (2 pts c/u · 10 pts)', answers: answers.ej4b || {}, setAnswers: setSecAns('ej4b') });
+      case 'ej5a': return html(SimMC, { items: EXAM_EJ5A, ptsCada: 2, title: '练习五A · Comprensión auditiva — Opción múltiple (2 pts c/u · 10 pts)', answers: answers.ej5a || {}, setAnswers: setSecAns('ej5a') });
+      case 'ej5b': return html(SimVF, { items: EXAM_EJ5B, ptsCada: 2, title: '练习五B · Comprensión auditiva — Verdadero / Falso (2 pts c/u · 10 pts)', answers: answers.ej5b || {}, setAnswers: setSecAns('ej5b') });
+      case 'oral': return html(SimOral, null);
+    }
+  };
+
+  return html(React.Fragment, null,
+    html('main', { style: { paddingTop: 16, paddingBottom: 40 } },
+      html('div', { className: 'header-row' },
+        html('button', { className: 'back-btn', onClick: onBack }, '←'),
+        html('h1', null, '模拟考试 · Simulacro Nivel III'),
+      ),
+      // Barra de progreso de secciones
+      html('div', { style: { display: 'flex', gap: 4, padding: '0 16px', marginBottom: 16, overflowX: 'auto' } },
+        SIM_LABELS.map((label, i) =>
+          html('button', {
+            key: i,
+            onClick: () => setSec(i),
+            style: {
+              flex: '0 0 auto', padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+              border: 'none', cursor: 'pointer',
+              background: i === sec ? 'var(--lacquer)' : 'var(--paper-deep)',
+              color: i === sec ? '#fff' : 'var(--ink-mid)',
+            }
+          }, label)
+        )
+      ),
+      html('div', { style: { padding: '0 16px' } }, renderSection()),
+      html('div', { style: { display: 'flex', gap: 10, padding: '20px 16px 0' } },
+        sec > 0 && html('button', { className: 'secondary-btn', style: { margin: 0 }, onClick: () => setSec(s => s - 1) }, '← Anterior'),
+        html('div', { style: { flex: 1 } }),
+        isLast
+          ? html('button', { className: 'primary-btn', style: { margin: 0 }, onClick: () => setSubmitted(true) }, '🏁 Ver resultados')
+          : html('button', { className: 'primary-btn', style: { margin: 0 }, onClick: () => setSec(s => s + 1) }, 'Siguiente →'),
+      )
+    )
+  );
+}
+
 function AdminPanel({ vocab, onBack, onVocabUpdate, onReports }) {
+  const [showSimulacro, setShowSimulacro] = useState(false);
   const [session, setSession] = useState(null);
   const [loadingSession, setLoadingSession] = useState(true);
   const [role, setRole] = useState(null);
@@ -3626,6 +4114,8 @@ function AdminPanel({ vocab, onBack, onVocabUpdate, onReports }) {
 
   if (loadingSession) return html('main', { style: { paddingTop: 40, textAlign: 'center' } }, '⏳ Cargando...');
 
+  if (showSimulacro) return html(ExamenSimulacro, { onBack: () => setShowSimulacro(false) });
+
   // ── Editor de palabras ──
   if (editingLesson) {
     const theme = LESSON_THEMES[editingLesson] || { name: 'Lección ' + editingLesson };
@@ -3688,6 +4178,12 @@ function AdminPanel({ vocab, onBack, onVocabUpdate, onReports }) {
               style: { marginTop: 8, width: '100%' },
               onClick: onReports,
             }, '📊 Ver reportes de mis clases'),
+
+            html('button', {
+              className: 'secondary-btn',
+              style: { marginTop: 8, width: '100%', borderColor: 'var(--lacquer)', color: 'var(--lacquer)', fontWeight: 700 },
+              onClick: () => setShowSimulacro(true),
+            }, '模拟考试 · Simulacro de Examen Nivel III'),
 
             // ── Mis clases ──
             html('div', null,
