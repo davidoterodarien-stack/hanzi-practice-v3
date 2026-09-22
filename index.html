@@ -3436,6 +3436,39 @@ const EXAM_EJ5B = [
 
 // ── Diálogos para práctica oral ──
 const DIALOGOS_PRACTICA = {
+  reunion: {
+    titulo: '朋友们去买东西 — Amigos que van de compras',
+    roles: ['朋友A (David)', '朋友B (Lin)'],
+    turns: [
+      { quien: 0, texto: '喂，你好，林娜！这个星期六你有没有时间？', pinyin: 'Wèi, nǐ hǎo, Línnà! Zhège xīngqīliù nǐ yǒu méiyou shíjiān?', es: '¡Hola Lin! ¿Tenés tiempo este sábado?' },
+      { quien: 1, texto: '有！你想做什么？', pinyin: 'Yǒu! Nǐ xiǎng zuò shénme?', es: '¡Sí! ¿Qué tenés en mente?' },
+      { quien: 0, texto: '我们一起去商场买东西，怎么样？', pinyin: 'Wǒmen yīqǐ qù shāngchǎng mǎi dōngxi, zěnmeyàng?', es: '¿Vamos juntos al shopping a comprar cosas?' },
+      { quien: 1, texto: '好主意！几点见面？在哪儿见？', pinyin: 'Hǎo zhǔyi! Jǐ diǎn jiànmiàn? Zài nǎr jiàn?', es: '¡Buena idea! ¿A qué hora y dónde nos encontramos?' },
+      { quien: 0, texto: '上午十点，在学院门口，好吗？', pinyin: 'Shàngwǔ shí diǎn, zài xuéyuàn ménkǒu, hǎo ma?', es: 'A las diez de la mañana, en la entrada del instituto, ¿te parece?' },
+      { quien: 1, texto: '好的，没问题！那你想买什么？', pinyin: 'Hǎo de, méi wèntí! Nà nǐ xiǎng mǎi shénme?', es: '¡Perfecto, sin problema! ¿Y qué querés comprar?' },
+      { quien: 0, texto: '我想买一张音乐光盘，还想买一点儿水果。你呢？', pinyin: 'Wǒ xiǎng mǎi yī zhāng yīnyuè guāngpán, hái xiǎng mǎi yīdiǎnr shuǐguǒ. Nǐ ne?', es: 'Quiero comprar un CD de música y también un poco de fruta. ¿Y vos?' },
+      { quien: 1, texto: '我想买苹果和蛋糕，是我朋友的生日！', pinyin: 'Wǒ xiǎng mǎi píngguǒ hé dàngāo, shì wǒ péngyou de shēngrì!', es: '¡Quiero comprar manzanas y una torta, es el cumpleaños de mi amigo!' },
+      { quien: 0, texto: '太好了！祝你朋友生日快乐！星期六见！', pinyin: 'Tài hǎo le! Zhù nǐ péngyou shēngrì kuàilè! Xīngqīliù jiàn!', es: '¡Qué bueno! ¡Feliz cumpleaños a tu amigo! ¡Nos vemos el sábado!' },
+      { quien: 1, texto: '好，再见！', pinyin: 'Hǎo, zàijiàn!', es: '¡Hasta el sábado!' },
+    ]
+  },
+  compras: {
+    titulo: '在商场买东西 — En el shopping (compra + regateo)',
+    roles: ['老板 (vendedor)', 'Cliente'],
+    turns: [
+      { quien: 1, texto: '你好！这张光盘多少钱？', pinyin: 'Nǐ hǎo! Zhè zhāng guāngpán duōshao qián?', es: '¡Hola! ¿Cuánto cuesta este CD?' },
+      { quien: 0, texto: '十五块钱。', pinyin: 'Shíwǔ kuài qián.', es: 'Quince yuan.' },
+      { quien: 1, texto: '太贵了！便宜一点儿，好吗？', pinyin: 'Tài guì le! Piányi yīdiǎnr, hǎo ma?', es: '¡Es muy caro! ¿Un poco más barato, por favor?' },
+      { quien: 0, texto: '好，十二块钱，怎么样？', pinyin: 'Hǎo, shíèr kuài qián, zěnmeyàng?', es: 'Bueno, doce yuan, ¿qué te parece?' },
+      { quien: 1, texto: '好的，我买。苹果多少钱一斤？', pinyin: 'Hǎo de, wǒ mǎi. Píngguǒ duōshao qián yī jīn?', es: 'Bien, lo compro. ¿A cuánto está el medio kilo de manzanas?' },
+      { quien: 0, texto: '三块钱一斤。你要几斤？', pinyin: 'Sān kuài qián yī jīn. Nǐ yào jǐ jīn?', es: 'Tres yuan el medio kilo. ¿Cuántos jin querés?' },
+      { quien: 1, texto: '我要两斤。一共多少钱？', pinyin: 'Wǒ yào liǎng jīn. Yīgòng duōshao qián?', es: 'Quiero dos jin. ¿Cuánto es en total?' },
+      { quien: 0, texto: '光盘十二块，苹果六块，一共十八块钱。', pinyin: 'Guāngpán shíèr kuài, píngguǒ liù kuài, yīgòng shíbā kuài qián.', es: 'El CD doce yuan, las manzanas seis yuan, en total dieciocho yuan.' },
+      { quien: 1, texto: '给你二十块钱。', pinyin: 'Gěi nǐ èrshí kuài qián.', es: 'Aquí tiene veinte yuan.' },
+      { quien: 0, texto: '找你两块钱。谢谢，再见！', pinyin: 'Zhǎo nǐ liǎng kuài qián. Xièxie, zàijiàn!', es: 'Le devuelvo dos yuan. ¡Gracias, hasta luego!' },
+      { quien: 1, texto: '谢谢！再见！', pinyin: 'Xièxie! Zàijiàn!', es: '¡Gracias! ¡Hasta luego!' },
+    ]
+  },
   vendedor: {
     titulo: 'Vendedor y cliente — frutas / CDs',
     roles: ['老板 (vendedor)', 'Cliente'],
@@ -3469,6 +3502,14 @@ const DIALOGOS_PRACTICA = {
 };
 
 const DIAL_AVATARES = {
+  reunion: [
+    { emoji: '🧑', nombre: 'David', color: '#E8EAF6', acento: '#3949ab' },
+    { emoji: '👩', nombre: 'Lin', color: '#FCE4EC', acento: '#c2185b' },
+  ],
+  compras: [
+    { emoji: '🧑‍💼', nombre: '老板', color: '#FFF3E0', acento: '#e65100' },
+    { emoji: '🙋', nombre: 'Cliente', color: '#E3F2FD', acento: '#1565c0' },
+  ],
   vendedor: [
     { emoji: '🧑‍💼', nombre: '老板', color: '#FFF3E0', acento: '#e65100' },
     { emoji: '🙋', nombre: 'Cliente', color: '#E3F2FD', acento: '#1565c0' },
@@ -3567,10 +3608,28 @@ function DialogoPractica({ onBack }) {
       html('h1', null, '🎙️ Práctica oral'),
     ),
     html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, 'Elegí el escenario que querés practicar:'),
-    html('button', { className: 'mode-card', style: { width: '100%', marginBottom: 12 }, onClick: () => setEscenario('vendedor') },
+    // ── Diálogos nuevos para el oral ──
+    html('div', { style: { fontSize: 10, fontWeight: 800, color: 'var(--lacquer)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 } }, '⭐ Para el examen oral'),
+    html('button', { className: 'mode-card', style: { width: '100%', marginBottom: 10, borderColor: 'var(--lacquer)', borderWidth: 2 }, onClick: () => setEscenario('reunion') },
+      html('div', { className: 'mode-emoji', style: { background: '#E8EAF6', fontSize: 24 } }, '📞'),
+      html('div', null,
+        html('div', { className: 'mode-title' }, '朋友们去买东西 — Acordar salida + compras'),
+        html('div', { className: 'mode-sub' }, 'Llamada entre amigos: día, hora, lugar y qué comprar'),
+      )
+    ),
+    html('button', { className: 'mode-card', style: { width: '100%', marginBottom: 16, borderColor: 'var(--lacquer)', borderWidth: 2 }, onClick: () => setEscenario('compras') },
+      html('div', { className: 'mode-emoji', style: { background: '#FFF3E0', fontSize: 24 } }, '🛒'),
+      html('div', null,
+        html('div', { className: 'mode-title' }, '在商场买东西 — En el shopping (CD + frutas)'),
+        html('div', { className: 'mode-sub' }, 'Preguntar precio, regatear, pagar y recibir vuelto'),
+      )
+    ),
+    // ── Diálogos originales ──
+    html('div', { style: { fontSize: 10, fontWeight: 800, color: 'var(--ink-soft)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 } }, 'Práctica adicional'),
+    html('button', { className: 'mode-card', style: { width: '100%', marginBottom: 10 }, onClick: () => setEscenario('vendedor') },
       html('div', { className: 'mode-emoji', style: { background: '#FFF3E0', fontSize: 24 } }, '🛍️'),
       html('div', null,
-        html('div', { className: 'mode-title' }, 'Opción B — Vendedor / Cliente'),
+        html('div', { className: 'mode-title' }, 'Opción B — Vendedor / Cliente (frutas)'),
         html('div', { className: 'mode-sub' }, 'Frutas, precio, cantidad y vuelto'),
       )
     ),
