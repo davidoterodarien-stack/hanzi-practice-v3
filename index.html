@@ -354,6 +354,17 @@
   .mode-emoji.quiz { background: var(--blue-light); color: var(--blue-dark); }
   .mode-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; }
   .mode-sub { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
+  /* Popup evaluación final */
+  .exam-popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .exam-popup-card { background: #fff; border-radius: 20px; padding: 28px 24px 24px; max-width: 340px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.22); animation: popIn 0.35s cubic-bezier(.34,1.56,.64,1); }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .exam-popup-emoji { font-size: 52px; line-height: 1; margin-bottom: 12px; }
+  .exam-popup-title { font-family: var(--font-display); font-size: 20px; font-weight: 900; color: var(--lacquer); margin: 0 0 10px; }
+  .exam-popup-msg { font-family: 'Nunito', sans-serif; font-size: 15px; color: var(--ink-mid); line-height: 1.55; margin: 0 0 18px; }
+  .exam-popup-hanzi { font-family: 'Noto Serif SC', serif; font-size: 22px; color: var(--lacquer); margin: 10px 0 18px; letter-spacing: 2px; }
+  .exam-popup-btn { background: var(--lacquer); color: #fff; border: none; border-radius: 12px; padding: 12px 32px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; width: 100%; }
+  .exam-popup-btn:hover { opacity: 0.88; }
+
   /* Simulacro de examen */
   .sim-section { margin-bottom: 8px; }
   .sim-sec-title { font-family: var(--font-display); font-size: 15px; font-weight: 800; margin: 0 0 12px; color: var(--ink-dark); }
@@ -1790,16 +1801,23 @@ function App() {
   const [screen, setScreen] = useState({ name: 'home' });
   const [secretTaps, setSecretTaps] = useState(0);
   const [showSecretExam, setShowSecretExam] = useState(false);
+  const [showExamPopup, setShowExamPopup] = useState(() => {
+    const hoy = new Date(); return hoy.getFullYear() === 2026 && hoy.getMonth() === 8 && hoy.getDate() === 22;
+  });
+  const [showDialogo, setShowDialogo] = useState(false);
   const secretTimer = React.useRef(null);
   const handleSecretTap = () => {
-    setSecretTaps(n => {
-      const next = n + 1;
-      if (next >= 5) { setShowSecretExam(true); return 0; }
-      clearTimeout(secretTimer.current);
-      secretTimer.current = setTimeout(() => setSecretTaps(0), 1500);
-      return next;
-    });
+    clearTimeout(secretTimer.current);
+    setSecretTaps(n => n + 1);
+    secretTimer.current = setTimeout(() => setSecretTaps(0), 2000);
   };
+  useEffect(() => {
+    if (secretTaps >= 5) {
+      setShowSecretExam(true);
+      setSecretTaps(0);
+      clearTimeout(secretTimer.current);
+    }
+  }, [secretTaps]);
   const [lastResults, setLastResults] = useState({});
   const [contentLoading, setContentLoading] = useState(true);
   const [themesTick, setThemesTick] = useState(0); // fuerza re-render al mutar LESSON_THEMES
@@ -2100,7 +2118,39 @@ function App() {
     );
   }
 
-  if (showSecretExam) return html(ExamenSimulacro, { onBack: () => setShowSecretExam(false) });
+  if (showSecretExam) {
+    if (showDialogo === 'oral') return html(DialogoPractica, { onBack: () => setShowDialogo(false) });
+    if (showDialogo === 'escrito') return html(ExamenSimulacro, { onBack: () => setShowDialogo(false) });
+    return html('main', { style: { paddingTop: 16, paddingBottom: 40 } },
+      html('div', { style: { padding: '0 16px', maxWidth: 480, margin: '0 auto' } },
+        html('div', { className: 'header-row' },
+          html('button', { className: 'back-btn', onClick: () => setShowSecretExam(false) }, '←'),
+          html('h1', null, '模拟考试 · Nivel III'),
+        ),
+        html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, 'Elegí qué querés practicar:'),
+        html('button', {
+          className: 'mode-card', style: { width: '100%', marginBottom: 12 },
+          onClick: () => setShowDialogo('oral'),
+        },
+          html('div', { className: 'mode-emoji', style: { background: '#EDE9FE', fontSize: 24 } }, '🎙️'),
+          html('div', null,
+            html('div', { className: 'mode-title' }, 'Práctica oral — Diálogo'),
+            html('div', { className: 'mode-sub' }, 'Elegí tu rol y practicá en voz alta'),
+          )
+        ),
+        html('button', {
+          className: 'mode-card', style: { width: '100%' },
+          onClick: () => setShowDialogo('escrito'),
+        },
+          html('div', { className: 'mode-emoji', style: { background: '#FEF3C7', fontSize: 24 } }, '📝'),
+          html('div', null,
+            html('div', { className: 'mode-title' }, 'Examen escrito — Simulacro'),
+            html('div', { className: 'mode-sub' }, 'Todas las secciones · 100 pts'),
+          )
+        ),
+      )
+    );
+  }
 
   const topbar = html('div', { className: 'topbar' },
     html('div', { className: 'brand' },
@@ -2204,7 +2254,18 @@ function App() {
     playerName && html('button', { className: 'sidebar-signout', onClick: handleSignOut }, '🚪 ' + playerName + ' · Salir'),
   );
 
-  return html('div', { className: 'app-shell' }, sidebar, html('div', { className: 'app' }, topbar, content));
+  const examPopup = showExamPopup ? html('div', { className: 'exam-popup-overlay', onClick: () => setShowExamPopup(false) },
+    html('div', { className: 'exam-popup-card', onClick: e => e.stopPropagation() },
+      html('div', { className: 'exam-popup-emoji' }, '🎓'),
+      html('div', { className: 'exam-popup-title' }, '¡Hoy es el gran día!'),
+      html('div', { className: 'exam-popup-msg' }, 'Les deseamos a todos los alumnos mucho éxito en la evaluación final de hoy. ¡Confíen en lo que estudiaron!'),
+      html('div', { className: 'exam-popup-hanzi hanzi-font' }, '加油！祝你们成功！'),
+      html('div', { style: { fontFamily: "'Nunito', sans-serif", fontSize: 12, color: 'var(--ink-soft)', marginBottom: 14 } }, 'jiā yóu! zhù nǐmen chénggōng!'),
+      html('button', { className: 'exam-popup-btn', onClick: () => setShowExamPopup(false) }, '¡Vamos! 💪'),
+    )
+  ) : null;
+
+  return html('div', { className: 'app-shell' }, sidebar, html('div', { className: 'app' }, topbar, content), examPopup);
 }
 
 // ----------------- PanelLectura -----------------
@@ -3373,6 +3434,172 @@ const EXAM_EJ5B = [
   { s: '他十一点去睡觉。', ans: true, exp: '✓ Correcto' },
 ];
 
+// ── Diálogos para práctica oral ──
+const DIALOGOS_PRACTICA = {
+  vendedor: {
+    titulo: 'Vendedor y cliente — frutas / CDs',
+    roles: ['老板 (vendedor)', 'Cliente'],
+    turns: [
+      { quien: 1, texto: '你好！老板，苹果多少钱一斤？', pinyin: 'Nǐ hǎo! Lǎobǎn, píngguǒ duōshao qián yī jīn?', es: '¡Hola! ¿A cuánto está el kilo de manzanas?' },
+      { quien: 0, texto: '你好！苹果三块二毛一斤。', pinyin: 'Nǐ hǎo! Píngguǒ sān kuài èr máo yī jīn.', es: '¡Hola! Las manzanas son 3,20 yuan el kilo.' },
+      { quien: 1, texto: '太贵了！便宜一点儿，好吗？', pinyin: 'Tài guì le! Piányi yīdiǎnr, hǎo ma?', es: '¡Demasiado caro! ¿Un poco más barato, por favor?' },
+      { quien: 0, texto: '好，三块钱一斤。你要几斤？', pinyin: 'Hǎo, sān kuài qián yī jīn. Nǐ yào jǐ jīn?', es: 'Bueno, 3 yuan el kilo. ¿Cuántos kilos querés?' },
+      { quien: 1, texto: '我要两斤。一共多少钱？', pinyin: 'Wǒ yào liǎng jīn. Yīgòng duōshao qián?', es: 'Quiero dos kilos. ¿Cuánto es en total?' },
+      { quien: 0, texto: '一共六块钱。', pinyin: 'Yīgòng liù kuài qián.', es: 'En total son 6 yuan.' },
+      { quien: 1, texto: '给你十块钱。', pinyin: 'Gěi nǐ shí kuài qián.', es: 'Aquí tiene diez yuan.' },
+      { quien: 0, texto: '找你四块钱。谢谢！', pinyin: 'Zhǎo nǐ sì kuài qián. Xièxie!', es: 'Le devuelvo cuatro yuan. ¡Gracias!' },
+      { quien: 1, texto: '谢谢，再见！', pinyin: 'Xièxie, zàijiàn!', es: '¡Gracias, hasta luego!' },
+      { quien: 0, texto: '再见！', pinyin: 'Zàijiàn!', es: '¡Hasta luego!' },
+    ]
+  },
+  amigos: {
+    titulo: 'Dos amigos — acordar una actividad',
+    roles: ['朋友A', '朋友B'],
+    turns: [
+      { quien: 0, texto: '喂，你好！这个星期六晚上你有没有时间？', pinyin: 'Wèi, nǐ hǎo! Zhège xīngqīliù wǎnshang nǐ yǒu méiyou shíjiān?', es: '¡Hola! ¿Tenés tiempo el sábado por la noche?' },
+      { quien: 1, texto: '对不起，星期六晚上我去看京剧。星期三晚上怎么样？', pinyin: 'Duìbuqǐ, xīngqīliù wǎnshang wǒ qù kàn jīngjù. Xīngqīsān wǎnshang zěnmeyàng?', es: 'Lo siento, el sábado por la noche voy a ver ópera de Pekín. ¿Qué tal el miércoles por la noche?' },
+      { quien: 0, texto: '星期三晚上可以。我们去游泳，好吗？', pinyin: 'Xīngqīsān wǎnshang kěyǐ. Wǒmen qù yóuyǒng, hǎo ma?', es: 'El miércoles por la noche está bien. ¿Vamos a nadar?' },
+      { quien: 1, texto: '好主意！几点见面？', pinyin: 'Hǎo zhǔyi! Jǐ diǎn jiànmiàn?', es: '¡Buena idea! ¿A qué hora nos encontramos?' },
+      { quien: 0, texto: '晚上七点，在学院门口，怎么样？', pinyin: 'Wǎnshang qī diǎn, zài xuéyuàn ménkǒu, zěnmeyàng?', es: 'A las siete de la noche, en la entrada del instituto. ¿Te parece?' },
+      { quien: 1, texto: '好的，没问题！星期三晚上七点见！', pinyin: 'Hǎo de, méi wèntí! Xīngqīsān wǎnshang qī diǎn jiàn!', es: '¡Perfecto, sin problema! ¡Nos vemos el miércoles a las siete!' },
+      { quien: 0, texto: '好，再见！', pinyin: 'Hǎo, zàijiàn!', es: '¡Genial, hasta luego!' },
+      { quien: 1, texto: '再见！', pinyin: 'Zàijiàn!', es: '¡Hasta luego!' },
+    ]
+  },
+};
+
+function DialogoPractica({ onBack }) {
+  const [escenario, setEscenario] = useState(null); // 'vendedor' | 'amigos'
+  const [miRol, setMiRol] = useState(null);         // 0 | 1
+  const [turno, setTurno] = useState(0);
+  const [mostrarResp, setMostrarResp] = useState(false);
+
+  if (!escenario) return html('div', { style: { padding: '20px 16px', maxWidth: 480, margin: '0 auto' } },
+    html('div', { className: 'header-row' },
+      html('button', { className: 'back-btn', onClick: onBack }, '←'),
+      html('h1', null, '🎙️ Práctica oral'),
+    ),
+    html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, 'Elegí el escenario que querés practicar:'),
+    html('button', {
+      className: 'mode-card', style: { width: '100%', marginBottom: 12 },
+      onClick: () => setEscenario('vendedor'),
+    },
+      html('div', { className: 'mode-emoji', style: { background: '#FFF3E0', fontSize: 24 } }, '🛍️'),
+      html('div', null,
+        html('div', { className: 'mode-title' }, 'Opción B — Vendedor / Cliente'),
+        html('div', { className: 'mode-sub' }, 'Frutas, precio, cantidad y vuelto'),
+      )
+    ),
+    html('button', {
+      className: 'mode-card', style: { width: '100%' },
+      onClick: () => setEscenario('amigos'),
+    },
+      html('div', { className: 'mode-emoji', style: { background: '#E8F5E9', fontSize: 24 } }, '📅'),
+      html('div', null,
+        html('div', { className: 'mode-title' }, 'Opción A — Acordar una actividad'),
+        html('div', { className: 'mode-sub' }, 'Dos amigos, horarios y plan semanal'),
+      )
+    ),
+  );
+
+  const dial = DIALOGOS_PRACTICA[escenario];
+
+  if (miRol === null) return html('div', { style: { padding: '20px 16px', maxWidth: 480, margin: '0 auto' } },
+    html('div', { className: 'header-row' },
+      html('button', { className: 'back-btn', onClick: () => setEscenario(null) }, '←'),
+      html('h1', null, dial.titulo),
+    ),
+    html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, '¿Qué rol querés practicar?'),
+    dial.roles.map((rol, i) =>
+      html('button', { key: i,
+        className: 'mode-card', style: { width: '100%', marginBottom: 12 },
+        onClick: () => { setMiRol(i); setTurno(0); setMostrarResp(false); },
+      },
+        html('div', { className: 'mode-emoji', style: { background: i === 0 ? '#FFF3E0' : '#E3F2FD', fontSize: 22 } }, i === 0 ? '🧑‍💼' : '🙋'),
+        html('div', null,
+          html('div', { className: 'mode-title' }, rol),
+          html('div', { className: 'mode-sub' }, 'La app hace de ' + dial.roles[1 - i]),
+        )
+      )
+    ),
+  );
+
+  const turnoActual = dial.turns[turno];
+  const esAppTurn = turnoActual.quien !== miRol;
+  const esUltimo = turno >= dial.turns.length - 1;
+
+  const siguiente = () => {
+    if (esUltimo) { setTurno(0); setMostrarResp(false); }
+    else { setTurno(t => t + 1); setMostrarResp(false); }
+  };
+
+  return html('main', { style: { paddingTop: 16, paddingBottom: 40 } },
+    html('div', { style: { padding: '0 16px', maxWidth: 500, margin: '0 auto' } },
+      html('div', { className: 'header-row' },
+        html('button', { className: 'back-btn', onClick: () => setMiRol(null) }, '←'),
+        html('h1', { style: { fontSize: 16 } }, dial.titulo),
+      ),
+      // Progreso
+      html('div', { style: { display: 'flex', gap: 4, marginBottom: 20 } },
+        dial.turns.map((t, i) =>
+          html('div', { key: i, style: {
+            flex: 1, height: 4, borderRadius: 2,
+            background: i < turno ? 'var(--jade-dark)' : i === turno ? 'var(--lacquer)' : 'var(--paper-deep)',
+          }})
+        )
+      ),
+      // Rol indicator
+      html('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, color: 'var(--ink-soft)', marginBottom: 16 } },
+        html('span', null, 'Vos: ' + dial.roles[miRol]),
+        html('span', null, 'App: ' + dial.roles[1 - miRol]),
+      ),
+      esAppTurn
+        // Turno de la app: mostrar la línea
+        ? html('div', null,
+            html('div', { style: {
+              background: 'var(--paper-deep)', borderRadius: 16, padding: '18px 20px',
+              marginBottom: 16, borderLeft: '4px solid var(--lacquer)',
+            }},
+              html('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--lacquer)', marginBottom: 8 } }, dial.roles[1 - miRol] + ' dice:'),
+              html('div', { className: 'hanzi-font', style: { fontSize: 22, color: 'var(--lacquer)', lineHeight: 1.4, marginBottom: 8 } }, turnoActual.texto),
+              html('div', { style: { fontSize: 14, color: 'var(--ink-mid)', fontWeight: 600, marginBottom: 4 } }, turnoActual.pinyin),
+              html('div', { style: { fontSize: 13, color: 'var(--ink-soft)' } }, turnoActual.es),
+            ),
+            html('button', {
+              className: 'primary-btn', style: { width: '100%' },
+              onClick: siguiente,
+            }, esUltimo ? '🔁 Repetir diálogo' : 'Mi turno →'),
+          )
+        // Tu turno: pensar y ver sugerencia
+        : html('div', null,
+            html('div', { style: {
+              background: '#EEF2FF', borderRadius: 16, padding: '18px 20px',
+              marginBottom: 16, borderLeft: '4px solid #6366f1',
+              textAlign: 'center',
+            }},
+              html('div', { style: { fontSize: 13, fontWeight: 700, color: '#4338ca', marginBottom: 12 } }, '🎤 Tu turno — ' + dial.roles[miRol]),
+              !mostrarResp
+                ? html('div', { style: { color: '#6366f1', fontSize: 14, fontStyle: 'italic' } }, 'Pensá tu respuesta en voz alta…')
+                : html('div', null,
+                    html('div', { className: 'hanzi-font', style: { fontSize: 22, color: '#4338ca', lineHeight: 1.4, marginBottom: 8 } }, turnoActual.texto),
+                    html('div', { style: { fontSize: 14, color: '#6366f1', fontWeight: 600, marginBottom: 4 } }, turnoActual.pinyin),
+                    html('div', { style: { fontSize: 13, color: 'var(--ink-soft)' } }, turnoActual.es),
+                  ),
+            ),
+            !mostrarResp
+              ? html('button', {
+                  className: 'secondary-btn', style: { width: '100%', marginBottom: 10, borderColor: '#6366f1', color: '#4338ca' },
+                  onClick: () => setMostrarResp(true),
+                }, '💡 Ver respuesta sugerida')
+              : html('button', {
+                  className: 'primary-btn', style: { width: '100%' },
+                  onClick: siguiente,
+                }, esUltimo ? '🔁 Repetir diálogo' : 'Siguiente →'),
+          ),
+    )
+  );
+}
+
 const EXAM_ORAL_PREGUNTAS = [
   '你今年多大？','星期日是几号？','你哪年出生？你属什么？','今天是几月几号？',
   '你什么时候生日？','明天上午你有没有课？','一斤苹果多少钱？',
@@ -3579,10 +3806,20 @@ function SimConectar1B({ answers, setAnswers }) {
   );
 }
 
-function SimOral() {
+function SimOral({ onPracticarDialogo }) {
   const dias = ['星期一','星期二','星期三','星期四','星期五','星期六','星期日'];
   return html('div', { className: 'sim-section' },
     html('h3', { className: 'sim-sec-title' }, '🎙️ Examen Oral · Nivel III'),
+    html('button', {
+      onClick: onPracticarDialogo,
+      style: {
+        width: '100%', marginBottom: 16, padding: '14px',
+        background: 'linear-gradient(135deg, #7c3aed, #6366f1)',
+        color: '#fff', border: 'none', borderRadius: 12,
+        fontFamily: 'var(--font-display)', fontSize: 15, fontWeight: 800,
+        cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+      }
+    }, '🎙️ Practicar diálogo interactivo →'),
     html('p', { style: { fontSize: 13, color: 'var(--ink-mid)', marginBottom: 16, lineHeight: 1.6 } },
       'El examen oral tiene dos partes. Practicá en voz alta.'
     ),
@@ -3874,7 +4111,10 @@ function ExamenSimulacro({ onBack }) {
   const [sec, setSec] = useState(0);
   const [answers, setAnswers] = useState({});
   const [submitted, setSubmitted] = useState(false);
+  const [practicaOral, setPracticaOral] = useState(false);
   const setSecAns = (key) => (val) => setAnswers(a => ({ ...a, [key]: val }));
+
+  if (practicaOral) return html(DialogoPractica, { onBack: () => setPracticaOral(false) });
 
   if (submitted) return html(ExamenResultados, {
     answers,
@@ -3894,7 +4134,7 @@ function ExamenSimulacro({ onBack }) {
       case 'ej4b': return html(SimVF, { items: EXAM_EJ4B, ptsCada: 2, title: '练习四B · Verdadero / Falso (2 pts c/u · 10 pts)', answers: answers.ej4b || {}, setAnswers: setSecAns('ej4b') });
       case 'ej5a': return html(SimMC, { items: EXAM_EJ5A, ptsCada: 2, title: '练习五A · Comprensión auditiva — Opción múltiple (2 pts c/u · 10 pts)', answers: answers.ej5a || {}, setAnswers: setSecAns('ej5a') });
       case 'ej5b': return html(SimVF, { items: EXAM_EJ5B, ptsCada: 2, title: '练习五B · Comprensión auditiva — Verdadero / Falso (2 pts c/u · 10 pts)', answers: answers.ej5b || {}, setAnswers: setSecAns('ej5b') });
-      case 'oral': return html(SimOral, null);
+      case 'oral': return html(SimOral, { onPracticarDialogo: () => setPracticaOral(true) });
     }
   };
 
