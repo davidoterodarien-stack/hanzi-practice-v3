@@ -3440,11 +3440,11 @@ const DIALOGOS_PRACTICA = {
     titulo: 'Vendedor y cliente — frutas / CDs',
     roles: ['老板 (vendedor)', 'Cliente'],
     turns: [
-      { quien: 1, texto: '你好！老板，苹果多少钱一斤？', pinyin: 'Nǐ hǎo! Lǎobǎn, píngguǒ duōshao qián yī jīn?', es: '¡Hola! ¿A cuánto está el kilo de manzanas?' },
-      { quien: 0, texto: '你好！苹果三块二毛一斤。', pinyin: 'Nǐ hǎo! Píngguǒ sān kuài èr máo yī jīn.', es: '¡Hola! Las manzanas son 3,20 yuan el kilo.' },
+      { quien: 1, texto: '你好！老板，苹果多少钱一斤？', pinyin: 'Nǐ hǎo! Lǎobǎn, píngguǒ duōshao qián yī jīn?', es: '¡Hola! ¿A cuánto está el medio kilo de manzanas?' },
+      { quien: 0, texto: '你好！苹果三块二毛一斤。', pinyin: 'Nǐ hǎo! Píngguǒ sān kuài èr máo yī jīn.', es: '¡Hola! Las manzanas son 3,20 yuan el medio kilo (500g).' },
       { quien: 1, texto: '太贵了！便宜一点儿，好吗？', pinyin: 'Tài guì le! Piányi yīdiǎnr, hǎo ma?', es: '¡Demasiado caro! ¿Un poco más barato, por favor?' },
-      { quien: 0, texto: '好，三块钱一斤。你要几斤？', pinyin: 'Hǎo, sān kuài qián yī jīn. Nǐ yào jǐ jīn?', es: 'Bueno, 3 yuan el kilo. ¿Cuántos kilos querés?' },
-      { quien: 1, texto: '我要两斤。一共多少钱？', pinyin: 'Wǒ yào liǎng jīn. Yīgòng duōshao qián?', es: 'Quiero dos kilos. ¿Cuánto es en total?' },
+      { quien: 0, texto: '好，三块钱一斤。你要几斤？', pinyin: 'Hǎo, sān kuài qián yī jīn. Nǐ yào jǐ jīn?', es: 'Bueno, 3 yuan el medio kilo. ¿Cuántos jin querés?' },
+      { quien: 1, texto: '我要两斤。一共多少钱？', pinyin: 'Wǒ yào liǎng jīn. Yīgòng duōshao qián?', es: 'Quiero dos jin (1kg). ¿Cuánto es en total?' },
       { quien: 0, texto: '一共六块钱。', pinyin: 'Yīgòng liù kuài qián.', es: 'En total son 6 yuan.' },
       { quien: 1, texto: '给你十块钱。', pinyin: 'Gěi nǐ shí kuài qián.', es: 'Aquí tiene diez yuan.' },
       { quien: 0, texto: '找你四块钱。谢谢！', pinyin: 'Zhǎo nǐ sì kuài qián. Xièxie!', es: 'Le devuelvo cuatro yuan. ¡Gracias!' },
@@ -3468,11 +3468,98 @@ const DIALOGOS_PRACTICA = {
   },
 };
 
+const DIAL_AVATARES = {
+  vendedor: [
+    { emoji: '🧑‍💼', nombre: '老板', color: '#FFF3E0', acento: '#e65100' },
+    { emoji: '🙋', nombre: 'Cliente', color: '#E3F2FD', acento: '#1565c0' },
+  ],
+  amigos: [
+    { emoji: '🧑', nombre: '朋友A', color: '#F3E5F5', acento: '#6a1b9a' },
+    { emoji: '👩', nombre: '朋友B', color: '#E8F5E9', acento: '#2e7d32' },
+  ],
+};
+
+function hablarChino(texto) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang = 'zh-CN';
+  u.rate = 0.85;
+  // Intentar usar voz china si existe
+  const voces = window.speechSynthesis.getVoices();
+  const vozCh = voces.find(v => v.lang.startsWith('zh'));
+  if (vozCh) u.voice = vozCh;
+  window.speechSynthesis.speak(u);
+}
+
+function AvatarBurbuja({ avatar, nombre, texto, pinyin, es, miTurno, mostrarResp, onMostrar, onSiguiente, onAudio, esUltimo }) {
+  const bg = miTurno ? '#EEF2FF' : avatar.color;
+  const borde = miTurno ? '#6366f1' : avatar.acento;
+  const textColor = miTurno ? '#4338ca' : avatar.acento;
+  return html('div', { style: { marginBottom: 16 } },
+    // Fila con avatar + burbuja
+    html('div', { style: { display: 'flex', gap: 12, alignItems: 'flex-start', flexDirection: miTurno ? 'row-reverse' : 'row' } },
+      // Avatar
+      html('div', { style: {
+        width: 52, height: 52, borderRadius: '50%', flexShrink: 0,
+        background: avatar.color, border: '2px solid ' + avatar.acento,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        fontSize: 24, lineHeight: 1,
+      }},
+        avatar.emoji,
+        html('div', { style: { fontSize: 8, fontWeight: 800, color: avatar.acento, fontFamily: "'Nunito',sans-serif", marginTop: 1 } }, avatar.nombre),
+      ),
+      // Burbuja
+      html('div', { style: {
+        flex: 1, background: bg, borderRadius: miTurno ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
+        padding: '14px 16px', border: '2px solid ' + borde,
+      }},
+        html('div', { style: { fontSize: 11, fontWeight: 700, color: textColor, marginBottom: 8 } },
+          miTurno ? '🎤 Tu turno — ' + nombre : nombre + ' dice:',
+        ),
+        miTurno && !mostrarResp
+          ? html('div', { style: { color: '#6366f1', fontSize: 14, fontStyle: 'italic' } }, 'Pensá tu respuesta en voz alta…')
+          : html('div', null,
+              html('div', { className: 'hanzi-font', style: { fontSize: 22, color: textColor, lineHeight: 1.4, marginBottom: 6 } }, texto),
+              html('div', { style: { fontSize: 13, color: 'var(--ink-mid)', fontWeight: 600, marginBottom: 3 } }, pinyin),
+              html('div', { style: { fontSize: 12, color: 'var(--ink-soft)' } }, es),
+              // Botón audio
+              !miTurno && html('button', {
+                onClick: () => hablarChino(texto),
+                style: { marginTop: 8, background: 'none', border: '1.5px solid ' + avatar.acento, borderRadius: 8, padding: '3px 10px', fontSize: 13, color: avatar.acento, cursor: 'pointer', fontWeight: 700 },
+              }, '🔊 Escuchar'),
+            ),
+      ),
+    ),
+    // Botones de acción
+    html('div', { style: { marginTop: 10 } },
+      miTurno
+        ? !mostrarResp
+          ? html('button', {
+              className: 'secondary-btn', style: { width: '100%', borderColor: '#6366f1', color: '#4338ca' },
+              onClick: onMostrar,
+            }, '💡 Ver respuesta sugerida')
+          : html('button', { className: 'primary-btn', style: { width: '100%' }, onClick: onSiguiente },
+              esUltimo ? '🔁 Repetir diálogo' : 'Siguiente →')
+        : html('button', { className: 'primary-btn', style: { width: '100%' }, onClick: onSiguiente },
+            esUltimo ? '🔁 Repetir diálogo' : 'Mi turno →'),
+    ),
+  );
+}
+
 function DialogoPractica({ onBack }) {
-  const [escenario, setEscenario] = useState(null); // 'vendedor' | 'amigos'
-  const [miRol, setMiRol] = useState(null);         // 0 | 1
+  const [escenario, setEscenario] = useState(null);
+  const [miRol, setMiRol] = useState(null);
   const [turno, setTurno] = useState(0);
   const [mostrarResp, setMostrarResp] = useState(false);
+
+  // Hook debe estar antes de cualquier return condicional
+  useEffect(() => {
+    if (escenario === null || miRol === null) return;
+    const dial = DIALOGOS_PRACTICA[escenario];
+    const turnoActual = dial.turns[turno];
+    if (turnoActual.quien !== miRol) hablarChino(turnoActual.texto);
+  }, [turno, escenario, miRol]);
 
   if (!escenario) return html('div', { style: { padding: '20px 16px', maxWidth: 480, margin: '0 auto' } },
     html('div', { className: 'header-row' },
@@ -3480,20 +3567,14 @@ function DialogoPractica({ onBack }) {
       html('h1', null, '🎙️ Práctica oral'),
     ),
     html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, 'Elegí el escenario que querés practicar:'),
-    html('button', {
-      className: 'mode-card', style: { width: '100%', marginBottom: 12 },
-      onClick: () => setEscenario('vendedor'),
-    },
+    html('button', { className: 'mode-card', style: { width: '100%', marginBottom: 12 }, onClick: () => setEscenario('vendedor') },
       html('div', { className: 'mode-emoji', style: { background: '#FFF3E0', fontSize: 24 } }, '🛍️'),
       html('div', null,
         html('div', { className: 'mode-title' }, 'Opción B — Vendedor / Cliente'),
         html('div', { className: 'mode-sub' }, 'Frutas, precio, cantidad y vuelto'),
       )
     ),
-    html('button', {
-      className: 'mode-card', style: { width: '100%' },
-      onClick: () => setEscenario('amigos'),
-    },
+    html('button', { className: 'mode-card', style: { width: '100%' }, onClick: () => setEscenario('amigos') },
       html('div', { className: 'mode-emoji', style: { background: '#E8F5E9', fontSize: 24 } }, '📅'),
       html('div', null,
         html('div', { className: 'mode-title' }, 'Opción A — Acordar una actividad'),
@@ -3503,6 +3584,7 @@ function DialogoPractica({ onBack }) {
   );
 
   const dial = DIALOGOS_PRACTICA[escenario];
+  const avatares = DIAL_AVATARES[escenario];
 
   if (miRol === null) return html('div', { style: { padding: '20px 16px', maxWidth: 480, margin: '0 auto' } },
     html('div', { className: 'header-row' },
@@ -3510,25 +3592,32 @@ function DialogoPractica({ onBack }) {
       html('h1', null, dial.titulo),
     ),
     html('p', { style: { color: 'var(--ink-soft)', fontSize: 14, marginBottom: 20 } }, '¿Qué rol querés practicar?'),
-    dial.roles.map((rol, i) =>
-      html('button', { key: i,
+    dial.roles.map((rol, i) => {
+      const av = avatares[i];
+      return html('button', { key: i,
         className: 'mode-card', style: { width: '100%', marginBottom: 12 },
         onClick: () => { setMiRol(i); setTurno(0); setMostrarResp(false); },
       },
-        html('div', { className: 'mode-emoji', style: { background: i === 0 ? '#FFF3E0' : '#E3F2FD', fontSize: 22 } }, i === 0 ? '🧑‍💼' : '🙋'),
+        html('div', { style: {
+          width: 44, height: 44, borderRadius: '50%', background: av.color,
+          border: '2px solid ' + av.acento, display: 'flex', alignItems: 'center',
+          justifyContent: 'center', fontSize: 22, flexShrink: 0,
+        }}, av.emoji),
         html('div', null,
           html('div', { className: 'mode-title' }, rol),
           html('div', { className: 'mode-sub' }, 'La app hace de ' + dial.roles[1 - i]),
         )
-      )
-    ),
+      );
+    }),
   );
 
   const turnoActual = dial.turns[turno];
   const esAppTurn = turnoActual.quien !== miRol;
   const esUltimo = turno >= dial.turns.length - 1;
+  const avatarHablante = avatares[turnoActual.quien];
 
   const siguiente = () => {
+    window.speechSynthesis && window.speechSynthesis.cancel();
     if (esUltimo) { setTurno(0); setMostrarResp(false); }
     else { setTurno(t => t + 1); setMostrarResp(false); }
   };
@@ -3536,66 +3625,43 @@ function DialogoPractica({ onBack }) {
   return html('main', { style: { paddingTop: 16, paddingBottom: 40 } },
     html('div', { style: { padding: '0 16px', maxWidth: 500, margin: '0 auto' } },
       html('div', { className: 'header-row' },
-        html('button', { className: 'back-btn', onClick: () => setMiRol(null) }, '←'),
+        html('button', { className: 'back-btn', onClick: () => { window.speechSynthesis && window.speechSynthesis.cancel(); setMiRol(null); } }, '←'),
         html('h1', { style: { fontSize: 16 } }, dial.titulo),
       ),
       // Progreso
-      html('div', { style: { display: 'flex', gap: 4, marginBottom: 20 } },
+      html('div', { style: { display: 'flex', gap: 4, marginBottom: 16 } },
         dial.turns.map((t, i) =>
           html('div', { key: i, style: {
-            flex: 1, height: 4, borderRadius: 2,
+            flex: 1, height: 5, borderRadius: 3,
             background: i < turno ? 'var(--jade-dark)' : i === turno ? 'var(--lacquer)' : 'var(--paper-deep)',
           }})
         )
       ),
-      // Rol indicator
-      html('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: 11, fontWeight: 700, color: 'var(--ink-soft)', marginBottom: 16 } },
-        html('span', null, 'Vos: ' + dial.roles[miRol]),
-        html('span', null, 'App: ' + dial.roles[1 - miRol]),
+      // Mini avatares de rol
+      html('div', { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, padding: '8px 12px', background: 'var(--paper-deep)', borderRadius: 10 } },
+        html('div', { style: { display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: avatares[miRol].acento } },
+          html('span', { style: { fontSize: 18 } }, avatares[miRol].emoji),
+          'Vos: ' + dial.roles[miRol],
+        ),
+        html('div', { style: { fontSize: 11, color: 'var(--ink-soft)' } }, turno + 1 + ' / ' + dial.turns.length),
+        html('div', { style: { display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, fontWeight: 700, color: avatares[1-miRol].acento } },
+          'App: ' + dial.roles[1 - miRol],
+          html('span', { style: { fontSize: 18 } }, avatares[1-miRol].emoji),
+        ),
       ),
-      esAppTurn
-        // Turno de la app: mostrar la línea
-        ? html('div', null,
-            html('div', { style: {
-              background: 'var(--paper-deep)', borderRadius: 16, padding: '18px 20px',
-              marginBottom: 16, borderLeft: '4px solid var(--lacquer)',
-            }},
-              html('div', { style: { fontSize: 11, fontWeight: 700, color: 'var(--lacquer)', marginBottom: 8 } }, dial.roles[1 - miRol] + ' dice:'),
-              html('div', { className: 'hanzi-font', style: { fontSize: 22, color: 'var(--lacquer)', lineHeight: 1.4, marginBottom: 8 } }, turnoActual.texto),
-              html('div', { style: { fontSize: 14, color: 'var(--ink-mid)', fontWeight: 600, marginBottom: 4 } }, turnoActual.pinyin),
-              html('div', { style: { fontSize: 13, color: 'var(--ink-soft)' } }, turnoActual.es),
-            ),
-            html('button', {
-              className: 'primary-btn', style: { width: '100%' },
-              onClick: siguiente,
-            }, esUltimo ? '🔁 Repetir diálogo' : 'Mi turno →'),
-          )
-        // Tu turno: pensar y ver sugerencia
-        : html('div', null,
-            html('div', { style: {
-              background: '#EEF2FF', borderRadius: 16, padding: '18px 20px',
-              marginBottom: 16, borderLeft: '4px solid #6366f1',
-              textAlign: 'center',
-            }},
-              html('div', { style: { fontSize: 13, fontWeight: 700, color: '#4338ca', marginBottom: 12 } }, '🎤 Tu turno — ' + dial.roles[miRol]),
-              !mostrarResp
-                ? html('div', { style: { color: '#6366f1', fontSize: 14, fontStyle: 'italic' } }, 'Pensá tu respuesta en voz alta…')
-                : html('div', null,
-                    html('div', { className: 'hanzi-font', style: { fontSize: 22, color: '#4338ca', lineHeight: 1.4, marginBottom: 8 } }, turnoActual.texto),
-                    html('div', { style: { fontSize: 14, color: '#6366f1', fontWeight: 600, marginBottom: 4 } }, turnoActual.pinyin),
-                    html('div', { style: { fontSize: 13, color: 'var(--ink-soft)' } }, turnoActual.es),
-                  ),
-            ),
-            !mostrarResp
-              ? html('button', {
-                  className: 'secondary-btn', style: { width: '100%', marginBottom: 10, borderColor: '#6366f1', color: '#4338ca' },
-                  onClick: () => setMostrarResp(true),
-                }, '💡 Ver respuesta sugerida')
-              : html('button', {
-                  className: 'primary-btn', style: { width: '100%' },
-                  onClick: siguiente,
-                }, esUltimo ? '🔁 Repetir diálogo' : 'Siguiente →'),
-          ),
+      html(AvatarBurbuja, {
+        avatar: avatarHablante,
+        nombre: dial.roles[turnoActual.quien],
+        texto: turnoActual.texto,
+        pinyin: turnoActual.pinyin,
+        es: turnoActual.es,
+        miTurno: !esAppTurn,
+        mostrarResp,
+        onMostrar: () => setMostrarResp(true),
+        onSiguiente: siguiente,
+        onAudio: () => hablarChino(turnoActual.texto),
+        esUltimo,
+      }),
     )
   );
 }
